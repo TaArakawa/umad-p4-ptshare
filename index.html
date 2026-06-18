@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>絶ケフカ P4 真偽判定カンペ</title>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1e1e24;
+            --text-color: #e2e8f0;
+            --accent-true: #22c55e;
+            --accent-false: #ef4444;
+            --btn-idle: #334155;
+            --border-color: #2d3748;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            margin: 0;
+            color: #a7f3d0;
+        }
+
+        .reset-btn {
+            background-color: #b91c1c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            margin: 15px 0 5px 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-local {
+            border-left: 4px solid #38bdf8;
+        }
+
+        .info-area {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .label-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .icon {
+            font-size: 1.2rem;
+        }
+
+        .result-text {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #94a3b8;
+            min-height: 1.2rem;
+        }
+
+        .result-text.active-true {
+            color: var(--accent-true);
+        }
+
+        .result-text.active-false {
+            color: var(--accent-false);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            border: none;
+            color: #94a3b8;
+            background-color: var(--btn-idle);
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .action-btn.active-true {
+            background-color: var(--accent-true);
+            color: #052e16;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+        }
+
+        .action-btn.active-false {
+            background-color: var(--accent-false);
+            color: #450a0a;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            background-color: #38bdf8;
+            color: #0369a1;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: auto;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>絶ケフカ P4 カンペ</h1>
+            <button class="reset-btn" id="resetBtn">一括 RESET</button>
+        </div>
+
+        <!-- 前半デバフ -->
+        <div class="section-title">【前半】早デバフ</div>
+
+        <div class="card" id="card-earlyWater">
+            <div class="info-area">
+                <div class="label-row"><span class="icon">💧</span>早水</div>
+                <div class="result-text" id="res-earlyWater">---</div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-true" onclick="setDecision('earlyWater', 'true')">真</button>
+                <button class="action-btn btn-false" onclick="setDecision('earlyWater', 'false')">偽</button>
+            </div>
+        </div>
+
+        <div class="card" id="card-earlyLightning">
+            <div class="info-area">
+                <div class="label-row"><span class="icon">⚡</span>早雷</div>
+                <div class="result-text" id="res-earlyLightning">---</div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-true" onclick="setDecision('earlyLightning', 'true')">真</button>
+                <button class="action-btn btn-false" onclick="setDecision('earlyLightning', 'false')">偽</button>
+            </div>
+        </div>
+
+        <div class="card" id="card-earlyEye">
+            <div class="info-area">
+                <div class="label-row"><span class="icon">👁️</span>早視線</div>
+                <div class="result-text" id="res-earlyEye">---</div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-true" onclick="setDecision('earlyEye', 'true')">真</button>
+                <button class="action-btn btn-false" onclick="setDecision('earlyEye', 'false')">偽</button>
+            </div>
+        </div>
+
+        <div class="card" id="card-fire">
+            <div class="info-area">
+                <div class="label-row"><span class="icon">🔥</span>火（ファイガ）</div>
+                <div class="result-text" id="res-fire">---</div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-true" onclick="setDecision('fire', 'true')">真</button>
+                <button class="action-btn btn-false" onclick="setDecision('fire', 'false')">偽</button>
+            </div>
+        </div>
+
+        <!-- 後半デバフ -->
+        <div class="section-title">【後半】晩デバフ</div>
+
+        <div class="card" id="card-lateWater">
+            <div class="info-area">
+                <div class="label-row"><span class="icon">💧</span>晩水</div>
+                <div class="result-text" id="res-lateWater">---</div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-true" onclick="setDecision('lateWater', 'true')">真</button>
+                <button class="action-btn btn-false" onclick="setDecision('lateWater', 'false')">偽</button>
+            </div>
+        </div>
+
+        <div class="card" id="card-lateLightning">
+            <div class="info-area">
+                <div class="label-row"><span class="icon">⚡</span>晩雷</div>
+                <div class="result-text" id="res-lateLightning">---</div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-true" onclick="setDecision('lateLightning', 'true')">真</button>
+                <button class="action-btn btn-false" onclick="setDecision('lateLightning', 'false')">偽</button>
+            </div>
+        </div>
+
+        <div class="card" id="card-lateEye">
+            <div class="info-area">
+                <div class="label-row"><span class="icon">👁️</span>晩視線</div>
+                <div class="result-text" id="res-lateEye">---</div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-true" onclick="setDecision('lateEye', 'true')">真</button>
+                <button class="action-btn btn-false" onclick="setDecision('lateEye', 'false')">偽</button>
+            </div>
+        </div>
+
+        <div class="card" id="card-water">
+            <div class="info-area">
+                <div class="label-row"><span class="icon">❄️</span>水（ブリザガ）</div>
+                <div class="result-text" id="res-water">---</div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-true" onclick="setDecision('water', 'true')">真</button>
+                <button class="action-btn btn-false" onclick="setDecision('water', 'false')">偽</button>
+            </div>
+        </div>
+
+        <!-- 安置・個人要素 -->
+        <div class="section-title">安置 ＆ 個人用</div>
+
+        <div class="card" id="card-lineLightning">
+            <div class="info-area">
+                <div class="label-row"><span class="icon">⚡</span>雷直線（縦横）</div>
+                <div class="result-text" id="res-lineLightning">---</div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-true" onclick="setDecision('lineLightning', 'true')">真</button>
+                <button class="action-btn btn-false" onclick="setDecision('lineLightning', 'false')">偽</button>
+            </div>
+        </div>
+
+        <div class="card" id="card-iceFan">
+            <div class="info-area">
+                <div class="label-row"><span class="icon">❄️</span>氷扇形（斜め）</div>
+                <div class="result-text" id="res-iceFan">---</div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-true" onclick="setDecision('iceFan', 'true')">真</button>
+                <button class="action-btn btn-false" onclick="setDecision('iceFan', 'false')">偽</button>
+            </div>
+        </div>
+
+        <!-- 加速度爆弾（完全非共有・個人ローカル保持エリア） -->
+        <div class="card card-local" id="card-bomb">
+            <div class="info-area">
+                <div class="label-row"><span class="icon">⏳</span>加速度爆弾 <span class="badge">個人用</span></div>
+                <div class="result-text" id="res-bomb">---</div>
+            </div>
+            <div class="btn-group">
+                <button class="action-btn btn-true" id="local-bomb-true" onclick="setLocalBomb('true')">真</button>
+                <button class="action-btn btn-false" id="local-bomb-false" onclick="setLocalBomb('false')">偽</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKの読み込み -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFKYzhiYnxDwXYiICGmw5xHNKK087ukwU",
+            authDomain: "umad-p4-ptshare.firebaseapp.com",
+            databaseURL: "https://umad-p4-ptshare-default-rtdb.firebaseio.com",
+            projectId: "umad-p4-ptshare",
+            storageBucket: "umad-p4-ptshare.firebasestorage.app",
+            messagingSenderId: "762185143937",
+            appId: "1:762185143937:web:a55f50400de4d11ed89f80"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const dbRef = ref(db, 'kfk_p4_state');
+
+        // ギミック判定テキストの定義（ご指定の呼び替えルール）
+        const rules = {
+            earlyWater: { true: "分担（頭割り）", false: "散開" },
+            earlyLightning: { true: "散開", false: "分担（頭割り）" },
+            earlyEye: { true: "見ない", false: "見る" },
+            fire: { true: "タケノコ（離れる）", false: "ドーナツ（近づく）" },
+            lateWater: { true: "分担（頭割り）", false: "散開" },
+            lateLightning: { true: "散開", false: "分担（頭割り）" },
+            lateEye: { true: "見ない", false: "見る" },
+            water: { true: "ドーナツ（近づく）", false: "タケノコ（離れる）" },
+            lineLightning: { true: "踏まない", false: "踏む" },
+            iceFan: { true: "踏まない", false: "踏む" },
+            bomb: { true: "停止（動かない）", false: "行動（動く）" }
+        };
+
+        // 共有データの状態をローカルに保持するオブジェクト
+        let currentState = {};
+
+        // サーバーデータのリアルタイム監視・同期
+        onValue(dbRef, (snapshot) => {
+            const data = snapshot.val() || {};
+            currentState = data;
+
+            Object.keys(rules).forEach(key => {
+                if (key === 'bomb') return; // 加速度爆弾は同期スキップ
+
+                const value = data[key];
+                const card = document.getElementById(`card-${key}`);
+                const resText = document.getElementById(`res-${key}`);
+                const btnTrue = card.querySelector('.btn-true');
+                const btnFalse = card.querySelector('.btn-false');
+
+                // ボタンとテキストの初期化
+                btnTrue.classList.remove('active-true');
+                btnFalse.classList.remove('active-false');
+                resText.classList.remove('active-true', 'active-false');
+
+                if (value === 'true') {
+                    btnTrue.classList.add('active-true');
+                    resText.classList.add('active-true');
+                    resText.innerText = rules[key].true;
+                } else if (value === 'false') {
+                    btnFalse.classList.add('active-false');
+                    resText.classList.add('active-false');
+                    resText.innerText = rules[key].false;
+                } else {
+                    resText.innerText = "---";
+                }
+            });
+        });
+
+        // 共有ボタンが押されたときの処理
+        window.setDecision = function (key, status) {
+            // すでに同じ状態なら何もしない（誤連打キープ）
+            if (currentState[key] === status) return;
+
+            currentState[key] = status;
+            set(dbRef, currentState);
+        };
+
+        // 一括リセット処理
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            const resetData = {};
+            Object.keys(rules).forEach(key => {
+                if (key !== 'bomb') resetData[key] = "none";
+            });
+            set(dbRef, resetData);
+
+            // 個人用の加速度爆弾も同時にリセット
+            setLocalBomb('none');
+        });
+
+        // 【個人用】加速度爆弾の処理（Firebaseに送らずローカルストレージで管理）
+        window.setLocalBomb = function (status) {
+            const btnTrue = document.getElementById('local-bomb-true');
+            const btnFalse = document.getElementById('local-bomb-false');
+            const resText = document.getElementById('res-bomb');
+
+            btnTrue.classList.remove('active-true');
+            btnFalse.classList.remove('active-false');
+            resText.classList.remove('active-true', 'active-false');
+
+            if (status === 'true') {
+                btnTrue.classList.add('active-true');
+                resText.classList.add('active-true');
+                resText.innerText = rules.bomb.true;
+                localStorage.setItem('kfk_local_bomb', 'true');
+            } else if (status === 'false') {
+                btnFalse.classList.add('active-false');
+                resText.classList.add('active-false');
+                resText.innerText = rules.bomb.false;
+                localStorage.setItem('kfk_local_bomb', 'false');
+            } else {
+                resText.innerText = "---";
+                localStorage.removeItem('kfk_local_bomb');
+            }
+        };
+
+        // ページ読み込み時に前回の個人用加速度爆弾の状態を復元
+        const savedBomb = localStorage.getItem('kfk_local_bomb');
+        if (savedBomb) {
+            setLocalBomb(savedBomb);
+        }
+    </script>
+
+</body>
+
+</html>
