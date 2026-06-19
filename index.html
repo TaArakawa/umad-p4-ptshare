@@ -16,20 +16,57 @@
             --border-color: #2d3748;
         }
 
-        body {
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
             font-family: 'Helvetica Neue', Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            margin: 0;
-            padding: 10px;
+        }
+
+        body.hud-mode {
+            overflow: auto;
+        }
+
+        /* 画面スクロールスナップ用コンテナ */
+        .scroll-container {
+            width: 100%;
+            height: 100dvh;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .container {
+        body.hud-mode .scroll-container {
+            height: auto;
+            overflow: visible;
+            scroll-snap-type: none;
+            padding: 5px 0;
+        }
+
+        .section-page {
             width: 100%;
             max-width: 500px;
+            min-height: 100dvh;
+            scroll-snap-align: start;
+            box-sizing: border-box;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            flex-shrink: 0;
+        }
+
+        body.hud-mode .section-page {
+            min-height: auto;
+            max-width: 960px;
+            padding: 5px;
         }
 
         .header {
@@ -216,13 +253,6 @@
         }
 
         /* HUD Mode Styles */
-        body.hud-mode {
-            padding: 5px;
-        }
-
-        body.hud-mode .container {
-            max-width: 960px;
-        }
 
         body.hud-mode h1,
         body.hud-mode .section-title {
@@ -254,28 +284,32 @@
 
         /* Timeline Section Styles */
         .timeline-section {
-            margin-top: 25px;
+            margin-top: 15px;
             width: 100%;
             border-top: 1px solid var(--border-color);
-            padding-top: 15px;
+            padding-top: 10px;
         }
 
         .timeline-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
             width: 100%;
             position: relative;
+        }
+
+        #tl-step7 {
+            grid-column: span 2;
         }
 
         .timeline-item {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 12px 14px;
+            padding: 8px 10px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 5px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
             box-sizing: border-box;
             transition: all 0.2s ease;
@@ -301,19 +335,19 @@
         .tl-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding-bottom: 6px;
-            margin-bottom: 4px;
+            padding-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .tl-num {
             background-color: #475569;
             color: #cbd5e1;
             font-weight: bold;
-            font-size: 0.75rem;
-            width: 20px;
-            height: 20px;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -334,7 +368,7 @@
 
         .tl-name {
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #94a3b8;
             transition: all 0.2s ease;
         }
@@ -350,7 +384,7 @@
         .tl-content {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
             width: 100%;
         }
 
@@ -360,30 +394,30 @@
             align-items: center;
             background-color: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-            padding: 6px 10px;
+            border-radius: 5px;
+            padding: 4px 6px;
             box-sizing: border-box;
-            min-height: 38px;
+            min-height: 30px;
         }
 
         .tl-label {
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
+            gap: 4px;
+            font-size: 0.75rem;
             font-weight: bold;
             color: #cbd5e1;
         }
 
         .tl-label .gimmick-icon-mini {
-            height: 18px;
+            height: 16px;
             width: auto;
             border-radius: 2px;
         }
 
         .tl-label .icon {
-            font-size: 1rem;
-            width: 18px;
+            font-size: 0.9rem;
+            width: 16px;
             text-align: center;
             display: inline-block;
         }
@@ -391,14 +425,14 @@
         /* Badge Pills */
         .badge-pill {
             display: inline-block;
-            padding: 3px 10px;
-            border-radius: 6px;
+            padding: 2px 6px;
+            border-radius: 4px;
             font-weight: 800;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #ffffff;
             text-align: center;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            min-width: 70px;
+            min-width: 60px;
             box-sizing: border-box;
         }
 
@@ -459,31 +493,6 @@
         body.hud-mode #tl-step7 {
             grid-column: span 2;
         }
-
-        body.hud-mode .timeline-item {
-            padding: 8px 10px;
-            gap: 6px;
-        }
-
-        body.hud-mode .tl-row {
-            padding: 4px 8px;
-            min-height: 32px;
-        }
-
-        body.hud-mode .tl-label {
-            font-size: 0.8rem;
-            gap: 4px;
-        }
-
-        body.hud-mode .tl-label .gimmick-icon-mini {
-            height: 16px;
-        }
-
-        body.hud-mode .badge-pill {
-            padding: 2px 6px;
-            font-size: 0.75rem;
-            min-width: 60px;
-        }
     </style>
 </head>
 
@@ -495,234 +504,239 @@
         }
     </script>
 
-    <div class="container">
-        <div class="header">
-            <h1>絶ケフカ P4 カンペ</h1>
-            <div class="toggle-group">
-                <button class="toggle-btn active" id="btn-mode-mobile" onclick="setMode('mobile')">📱 モバイル</button>
-                <button class="toggle-btn" id="btn-mode-hud" onclick="setMode('hud')">💻 HUD</button>
-            </div>
-            <button class="reset-btn" id="resetBtn">一括 RESET</button>
-        </div>
-
-        <!-- 前半デバフ -->
-        <div class="section-title">【前半】早デバフ</div>
-
-        <div class="grid-container">
-            <div class="card" id="card-earlyWater">
-                <div class="info-area">
-                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173625101-e820e8d8.webp"
-                            class="gimmick-icon">早水</div>
-                    <div class="result-text" id="res-earlyWater">---</div>
+    <div class="scroll-container">
+        <!-- 入力ページ -->
+        <div class="section-page" id="page-inputs">
+            <div class="header">
+                <h1>絶ケフカ P4 カンペ</h1>
+                <div class="toggle-group">
+                    <button class="toggle-btn active" id="btn-mode-mobile" onclick="setMode('mobile')">📱 モバイル</button>
+                    <button class="toggle-btn" id="btn-mode-hud" onclick="setMode('hud')">💻 HUD</button>
                 </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-true" onclick="setDecision('earlyWater', 'true')">🔵　真　🔵</button>
-                    <button class="action-btn btn-false" onclick="setDecision('earlyWater', 'false')">❓　偽　❓</button>
-                </div>
+                <button class="reset-btn" id="resetBtn">一括 RESET</button>
             </div>
 
-            <div class="card" id="card-earlyLightning">
-                <div class="info-area">
-                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173604458-cd2d39e5.webp"
-                            class="gimmick-icon">早雷</div>
-                    <div class="result-text" id="res-earlyLightning">---</div>
-                </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-true" onclick="setDecision('earlyLightning', 'true')">🔵　真　🔵</button>
-                    <button class="action-btn btn-false" onclick="setDecision('earlyLightning', 'false')">❓　偽　❓</button>
-                </div>
-            </div>
+            <!-- 前半デバフ -->
+            <div class="section-title">【前半】早デバフ</div>
 
-            <div class="card" id="card-earlyEye">
-                <div class="info-area">
-                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173577888-f3f065c8.webp"
-                            class="gimmick-icon">早視線</div>
-                    <div class="result-text" id="res-earlyEye">---</div>
-                </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-true" onclick="setDecision('earlyEye', 'true')">🔵　真　🔵</button>
-                    <button class="action-btn btn-false" onclick="setDecision('earlyEye', 'false')">❓　偽　❓</button>
-                </div>
-            </div>
-
-            <div class="card" id="card-fire">
-                <div class="info-area">
-                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173720029-86a7ea3d.webp"
-                            class="gimmick-icon">ほのお（カオス）</div>
-                    <div class="result-text" id="res-fire">---</div>
-                </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-true" onclick="setDecision('fire', 'true')">🔵　真　🔵</button>
-                    <button class="action-btn btn-false" onclick="setDecision('fire', 'false')">❓　偽　❓</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 後半デバフ -->
-        <div class="section-title">【後半】遅デバフ</div>
-
-        <div class="grid-container">
-            <div class="card" id="card-lateWater">
-                <div class="info-area">
-                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173625101-e820e8d8.webp"
-                            class="gimmick-icon">遅水</div>
-                    <div class="result-text" id="res-lateWater">---</div>
-                </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-true" onclick="setDecision('lateWater', 'true')">🔵　真　🔵</button>
-                    <button class="action-btn btn-false" onclick="setDecision('lateWater', 'false')">❓　偽　❓</button>
-                </div>
-            </div>
-
-            <div class="card" id="card-lateLightning">
-                <div class="info-area">
-                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173604458-cd2d39e5.webp"
-                            class="gimmick-icon">遅雷</div>
-                    <div class="result-text" id="res-lateLightning">---</div>
-                </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-true" onclick="setDecision('lateLightning', 'true')">🔵　真　🔵</button>
-                    <button class="action-btn btn-false" onclick="setDecision('lateLightning', 'false')">❓　偽　❓</button>
-                </div>
-            </div>
-
-            <div class="card" id="card-lateEye">
-                <div class="info-area">
-                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173577888-f3f065c8.webp"
-                            class="gimmick-icon">遅視線</div>
-                    <div class="result-text" id="res-lateEye">---</div>
-                </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-true" onclick="setDecision('lateEye', 'true')">🔵　真　🔵</button>
-                    <button class="action-btn btn-false" onclick="setDecision('lateEye', 'false')">❓　偽　❓</button>
-                </div>
-            </div>
-
-            <div class="card" id="card-water">
-                <div class="info-area">
-                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173691316-247cfd5e.webp"
-                            class="gimmick-icon">つなみ（カオス）</div>
-                    <div class="result-text" id="res-water">---</div>
-                </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-true" onclick="setDecision('water', 'true')">🔵　真　🔵</button>
-                    <button class="action-btn btn-false" onclick="setDecision('water', 'false')">❓　偽　❓</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 安置・個人要素 -->
-        <div class="section-title">安置 ＆ 個人用</div>
-
-        <div class="grid-container">
-            <div class="card" id="card-lineLightning">
-                <div class="info-area">
-                    <div class="label-row"><span class="icon">⚡</span>雷床（斜め）</div>
-                    <div class="result-text" id="res-lineLightning">---</div>
-                </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-true" onclick="setDecision('lineLightning', 'true')">🔵　真　🔵</button>
-                    <button class="action-btn btn-false" onclick="setDecision('lineLightning', 'false')">❓　偽　❓</button>
-                </div>
-            </div>
-
-            <div class="card" id="card-iceFan">
-                <div class="info-area">
-                    <div class="label-row"><span class="icon">❄️</span>氷床（扇）</div>
-                    <div class="result-text" id="res-iceFan">---</div>
-                </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-true" onclick="setDecision('iceFan', 'true')">🔵　真　🔵</button>
-                    <button class="action-btn btn-false" onclick="setDecision('iceFan', 'false')">❓　偽　❓</button>
-                </div>
-            </div>
-
-            <!-- 加速度爆弾（完全非共有・個人ローカル保持エリア） -->
-            <div class="card card-local" id="card-bomb">
-                <div class="info-area">
-                    <div class="label-row"><span class="icon">⏳</span>加速度爆弾 <span class="badge">個人用</span></div>
-                    <div class="result-text" id="res-bomb">---</div>
-                </div>
-                <div class="btn-group">
-                    <button class="action-btn btn-true" id="local-bomb-true" onclick="setLocalBomb('true')">🔵　真　🔵</button>
-                    <button class="action-btn btn-false" id="local-bomb-false"
-                        onclick="setLocalBomb('false')">❓　偽　❓</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- タイムラインセクション -->
-        <div class="timeline-section">
-            <div class="section-title">【時系列タイムライン】</div>
-            <div class="timeline-list">
-                <div class="timeline-item ready" id="tl-step1">
-                    <div class="tl-header">
-                        <span class="tl-num">1</span>
-                        <span class="tl-name">無の氾濫</span>
+            <div class="grid-container">
+                <div class="card" id="card-earlyWater">
+                    <div class="info-area">
+                        <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173625101-e820e8d8.webp"
+                                class="gimmick-icon">早水</div>
+                        <div class="result-text" id="res-earlyWater">---</div>
                     </div>
-                    <div class="tl-content" id="tl-res-flood">
-                        <div class="tl-row">
-                            <span class="tl-label"><span class="icon">🟣</span>アラガン</span>
-                            <span class="badge-pill pill-blue">異色 (外周)</span>
+                    <div class="btn-group">
+                        <button class="action-btn btn-true" onclick="setDecision('earlyWater', 'true')">🔵　真　🔵</button>
+                        <button class="action-btn btn-false" onclick="setDecision('earlyWater', 'false')">❓　偽　❓</button>
+                    </div>
+                </div>
+
+                <div class="card" id="card-earlyLightning">
+                    <div class="info-area">
+                        <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173604458-cd2d39e5.webp"
+                                class="gimmick-icon">早雷</div>
+                        <div class="result-text" id="res-earlyLightning">---</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn btn-true" onclick="setDecision('earlyLightning', 'true')">🔵　真　🔵</button>
+                        <button class="action-btn btn-false" onclick="setDecision('earlyLightning', 'false')">❓　偽　❓</button>
+                    </div>
+                </div>
+
+                <div class="card" id="card-earlyEye">
+                    <div class="info-area">
+                        <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173577888-f3f065c8.webp"
+                                class="gimmick-icon">早視線</div>
+                        <div class="result-text" id="res-earlyEye">---</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn btn-true" onclick="setDecision('earlyEye', 'true')">🔵　真　🔵</button>
+                        <button class="action-btn btn-false" onclick="setDecision('earlyEye', 'false')">❓　偽　❓</button>
+                    </div>
+                </div>
+
+                <div class="card" id="card-fire">
+                    <div class="info-area">
+                        <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173720029-86a7ea3d.webp"
+                                class="gimmick-icon">ほのお（カオス）</div>
+                        <div class="result-text" id="res-fire">---</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn btn-true" onclick="setDecision('fire', 'true')">🔵　真　🔵</button>
+                        <button class="action-btn btn-false" onclick="setDecision('fire', 'false')">❓　偽　❓</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 後半デバフ -->
+            <div class="section-title">【後半】遅デバフ</div>
+
+            <div class="grid-container">
+                <div class="card" id="card-lateWater">
+                    <div class="info-area">
+                        <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173625101-e820e8d8.webp"
+                                class="gimmick-icon">遅水</div>
+                        <div class="result-text" id="res-lateWater">---</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn btn-true" onclick="setDecision('lateWater', 'true')">🔵　真　🔵</button>
+                        <button class="action-btn btn-false" onclick="setDecision('lateWater', 'false')">❓　偽　❓</button>
+                    </div>
+                </div>
+
+                <div class="card" id="card-lateLightning">
+                    <div class="info-area">
+                        <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173604458-cd2d39e5.webp"
+                                class="gimmick-icon">遅雷</div>
+                        <div class="result-text" id="res-lateLightning">---</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn btn-true" onclick="setDecision('lateLightning', 'true')">🔵　真　🔵</button>
+                        <button class="action-btn btn-false" onclick="setDecision('lateLightning', 'false')">❓　偽　❓</button>
+                    </div>
+                </div>
+
+                <div class="card" id="card-lateEye">
+                    <div class="info-area">
+                        <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173577888-f3f065c8.webp"
+                                class="gimmick-icon">遅視線</div>
+                        <div class="result-text" id="res-lateEye">---</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn btn-true" onclick="setDecision('lateEye', 'true')">🔵　真　🔵</button>
+                        <button class="action-btn btn-false" onclick="setDecision('lateEye', 'false')">❓　偽　❓</button>
+                    </div>
+                </div>
+
+                <div class="card" id="card-water">
+                    <div class="info-area">
+                        <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173691316-247cfd5e.webp"
+                                class="gimmick-icon">つなみ（カオス）</div>
+                        <div class="result-text" id="res-water">---</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn btn-true" onclick="setDecision('water', 'true')">🔵　真　🔵</button>
+                        <button class="action-btn btn-false" onclick="setDecision('water', 'false')">❓　偽　❓</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 安置・個人要素 -->
+            <div class="section-title">安置 ＆ 個人用</div>
+
+            <div class="grid-container">
+                <div class="card" id="card-lineLightning">
+                    <div class="info-area">
+                        <div class="label-row"><span class="icon">⚡</span>雷床（斜め）</div>
+                        <div class="result-text" id="res-lineLightning">---</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn btn-true" onclick="setDecision('lineLightning', 'true')">🔵　真　🔵</button>
+                        <button class="action-btn btn-false" onclick="setDecision('lineLightning', 'false')">❓　偽　❓</button>
+                    </div>
+                </div>
+
+                <div class="card" id="card-iceFan">
+                    <div class="info-area">
+                        <div class="label-row"><span class="icon">❄️</span>氷床（扇）</div>
+                        <div class="result-text" id="res-iceFan">---</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn btn-true" onclick="setDecision('iceFan', 'true')">🔵　真　🔵</button>
+                        <button class="action-btn btn-false" onclick="setDecision('iceFan', 'false')">❓　偽　❓</button>
+                    </div>
+                </div>
+
+                <!-- 加速度爆弾（完全非共有・個人ローカル保持エリア） -->
+                <div class="card card-local" id="card-bomb">
+                    <div class="info-area">
+                        <div class="label-row"><span class="icon">⏳</span>加速度爆弾 <span class="badge">個人用</span></div>
+                        <div class="result-text" id="res-bomb">---</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn btn-true" id="local-bomb-true" onclick="setLocalBomb('true')">🔵　真　🔵</button>
+                        <button class="action-btn btn-false" id="local-bomb-false"
+                            onclick="setLocalBomb('false')">❓　偽　❓</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- タイムラインページ -->
+        <div class="section-page" id="page-timeline">
+            <div class="timeline-section">
+                <div class="section-title">【時系列タイムライン】</div>
+                <div class="timeline-list">
+                    <div class="timeline-item ready" id="tl-step1">
+                        <div class="tl-header">
+                            <span class="tl-num">1</span>
+                            <span class="tl-name">無の氾濫</span>
                         </div>
-                        <div class="tl-row">
-                            <span class="tl-label"><span class="icon">🟢</span>死の超越</span>
-                            <span class="badge-pill pill-green">同色 (内周)</span>
+                        <div class="tl-content" id="tl-res-flood">
+                            <div class="tl-row">
+                                <span class="tl-label"><span class="icon">🟣</span>アラガン</span>
+                                <span class="badge-pill pill-blue">異色 (外周)</span>
+                            </div>
+                            <div class="tl-row">
+                                <span class="tl-label"><span class="icon">🟢</span>死の超越</span>
+                                <span class="badge-pill pill-green">同色 (内周)</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="timeline-item" id="tl-step2">
-                    <div class="tl-header">
-                        <span class="tl-num">2</span>
-                        <span class="tl-name">早水 ＆ 早雷</span>
+                    <div class="timeline-item" id="tl-step2">
+                        <div class="tl-header">
+                            <span class="tl-num">2</span>
+                            <span class="tl-name">早水 ＆ 早雷</span>
+                        </div>
+                        <div class="tl-content" id="tl-res-earlyWaterLightning">
+                            <!-- JSで動的に構築 -->
+                        </div>
                     </div>
-                    <div class="tl-content" id="tl-res-earlyWaterLightning">
-                        <!-- JSで動的に構築 -->
+                    <div class="timeline-item" id="tl-step3">
+                        <div class="tl-header">
+                            <span class="tl-num">3</span>
+                            <span class="tl-name">早視線 ＆ 雷床記録</span>
+                        </div>
+                        <div class="tl-content" id="tl-res-earlyEyeLightningFloor">
+                            <!-- JSで動的に構築 -->
+                        </div>
                     </div>
-                </div>
-                <div class="timeline-item" id="tl-step3">
-                    <div class="tl-header">
-                        <span class="tl-num">3</span>
-                        <span class="tl-name">早視線 ＆ 雷床記録</span>
+                    <div class="timeline-item" id="tl-step4">
+                        <div class="tl-header">
+                            <span class="tl-num">4</span>
+                            <span class="tl-name">ほのお</span>
+                        </div>
+                        <div class="tl-content" id="tl-res-fire">
+                            <!-- JSで動的に構築 -->
+                        </div>
                     </div>
-                    <div class="tl-content" id="tl-res-earlyEyeLightningFloor">
-                        <!-- JSで動的に構築 -->
+                    <div class="timeline-item" id="tl-step5">
+                        <div class="tl-header">
+                            <span class="tl-num">5</span>
+                            <span class="tl-name">遅水 ＆ 遅雷 ＆ 氷床記録</span>
+                        </div>
+                        <div class="tl-content" id="tl-res-lateWaterLightningIceFloor">
+                            <!-- JSで動的に構築 -->
+                        </div>
                     </div>
-                </div>
-                <div class="timeline-item" id="tl-step4">
-                    <div class="tl-header">
-                        <span class="tl-num">4</span>
-                        <span class="tl-name">ほのお</span>
+                    <div class="timeline-item" id="tl-step6">
+                        <div class="tl-header">
+                            <span class="tl-num">6</span>
+                            <span class="tl-name">遅視線</span>
+                        </div>
+                        <div class="tl-content" id="tl-res-lateEye">
+                            <!-- JSで動的に構築 -->
+                        </div>
                     </div>
-                    <div class="tl-content" id="tl-res-fire">
-                        <!-- JSで動的に構築 -->
-                    </div>
-                </div>
-                <div class="timeline-item" id="tl-step5">
-                    <div class="tl-header">
-                        <span class="tl-num">5</span>
-                        <span class="tl-name">遅水 ＆ 遅雷 ＆ 氷床記録</span>
-                    </div>
-                    <div class="tl-content" id="tl-res-lateWaterLightningIceFloor">
-                        <!-- JSで動的に構築 -->
-                    </div>
-                </div>
-                <div class="timeline-item" id="tl-step6">
-                    <div class="tl-header">
-                        <span class="tl-num">6</span>
-                        <span class="tl-name">遅視線</span>
-                    </div>
-                    <div class="tl-content" id="tl-res-lateEye">
-                        <!-- JSで動的に構築 -->
-                    </div>
-                </div>
-                <div class="timeline-item" id="tl-step7">
-                    <div class="tl-header">
-                        <span class="tl-num">7</span>
-                        <span class="tl-name">つなみ ＆ 雷床 ＆ 氷床</span>
-                    </div>
-                    <div class="tl-content" id="tl-res-waterLightningIceFloor">
-                        <!-- JSで動的に構築 -->
+                    <div class="timeline-item" id="tl-step7">
+                        <div class="tl-header">
+                            <span class="tl-num">7</span>
+                            <span class="tl-name">つなみ ＆ 雷床 ＆ 氷床</span>
+                        </div>
+                        <div class="tl-content" id="tl-res-waterLightningIceFloor">
+                            <!-- JSで動的に構築 -->
+                        </div>
                     </div>
                 </div>
             </div>
