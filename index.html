@@ -251,6 +251,239 @@
         body.hud-mode .result-text {
             font-size: 1.05rem;
         }
+
+        /* Timeline Section Styles */
+        .timeline-section {
+            margin-top: 25px;
+            width: 100%;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        .timeline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            position: relative;
+        }
+
+        .timeline-item {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+            opacity: 0.65;
+        }
+
+        /* 確定済みのハイライト */
+        .timeline-item.ready {
+            opacity: 1;
+            border-color: #059669;
+            background: linear-gradient(145deg, #1e1e24, #0f2d1e);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+        }
+
+        /* 無の氾濫（常に確定）の特別なハイライト */
+        #tl-step1 {
+            opacity: 1;
+            border-color: #0284c7;
+            background: linear-gradient(145deg, #1e1e24, #0b2535);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+        }
+
+        .tl-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 6px;
+            margin-bottom: 4px;
+        }
+
+        .tl-num {
+            background-color: #475569;
+            color: #cbd5e1;
+            font-weight: bold;
+            font-size: 0.75rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .timeline-item.ready .tl-num {
+            background-color: #10b981;
+            color: #ffffff;
+        }
+
+        #tl-step1 .tl-num {
+            background-color: #0284c7;
+            color: #ffffff;
+        }
+
+        .tl-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            transition: all 0.2s ease;
+        }
+
+        .timeline-item.ready .tl-name {
+            color: #f1f5f9;
+        }
+
+        #tl-step1 .tl-name {
+            color: #f1f5f9;
+        }
+
+        .tl-content {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .tl-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 6px 10px;
+            box-sizing: border-box;
+            min-height: 38px;
+        }
+
+        .tl-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #cbd5e1;
+        }
+
+        .tl-label .gimmick-icon-mini {
+            height: 18px;
+            width: auto;
+            border-radius: 2px;
+        }
+
+        .tl-label .icon {
+            font-size: 1rem;
+            width: 18px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        /* Badge Pills */
+        .badge-pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            color: #ffffff;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            min-width: 70px;
+            box-sizing: border-box;
+        }
+
+        .pill-green {
+            background-color: #15803d;
+            border: 1px solid #22c55e;
+            color: #ffffff;
+        }
+
+        .pill-red {
+            background-color: #b91c1c;
+            border: 1px solid #ef4444;
+            color: #ffffff;
+        }
+
+        .pill-purple {
+            background-color: #6b21a8;
+            border: 1px solid #a855f7;
+            color: #ffffff;
+        }
+
+        .pill-yellow {
+            background-color: #854d0e;
+            border: 1px solid #eab308;
+            color: #ffffff;
+        }
+
+        .pill-blue {
+            background-color: #1d4ed8;
+            border: 1px solid #3b82f6;
+            color: #ffffff;
+        }
+
+        .pill-orange {
+            background-color: #c2410c;
+            border: 1px solid #f97316;
+            color: #ffffff;
+        }
+
+        .pill-gray {
+            background-color: #334155;
+            border: 1px solid #475569;
+            color: #94a3b8;
+        }
+
+        /* HUD Mode for Timeline */
+        body.hud-mode .timeline-section {
+            margin-top: 15px;
+            padding-top: 10px;
+        }
+
+        body.hud-mode .timeline-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        body.hud-mode #tl-step7 {
+            grid-column: span 2;
+        }
+
+        body.hud-mode .timeline-item {
+            padding: 8px 10px;
+            gap: 6px;
+        }
+
+        body.hud-mode .tl-row {
+            padding: 4px 8px;
+            min-height: 32px;
+        }
+
+        body.hud-mode .tl-label {
+            font-size: 0.8rem;
+            gap: 4px;
+        }
+
+        body.hud-mode .tl-label .gimmick-icon-mini {
+            height: 16px;
+        }
+
+        body.hud-mode .badge-pill {
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            min-width: 60px;
+        }
     </style>
 </head>
 
@@ -417,6 +650,83 @@
                 </div>
             </div>
         </div>
+
+        <!-- タイムラインセクション -->
+        <div class="timeline-section">
+            <div class="section-title">【時系列タイムライン】</div>
+            <div class="timeline-list">
+                <div class="timeline-item ready" id="tl-step1">
+                    <div class="tl-header">
+                        <span class="tl-num">1</span>
+                        <span class="tl-name">無の氾濫</span>
+                    </div>
+                    <div class="tl-content" id="tl-res-flood">
+                        <div class="tl-row">
+                            <span class="tl-label"><span class="icon">🟣</span>アラガン</span>
+                            <span class="badge-pill pill-blue">異色 (外周)</span>
+                        </div>
+                        <div class="tl-row">
+                            <span class="tl-label"><span class="icon">🟢</span>死の超越</span>
+                            <span class="badge-pill pill-green">同色 (内周)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item" id="tl-step2">
+                    <div class="tl-header">
+                        <span class="tl-num">2</span>
+                        <span class="tl-name">早水 ＆ 早雷</span>
+                    </div>
+                    <div class="tl-content" id="tl-res-earlyWaterLightning">
+                        <!-- JSで動的に構築 -->
+                    </div>
+                </div>
+                <div class="timeline-item" id="tl-step3">
+                    <div class="tl-header">
+                        <span class="tl-num">3</span>
+                        <span class="tl-name">早視線 ＆ 雷床記録</span>
+                    </div>
+                    <div class="tl-content" id="tl-res-earlyEyeLightningFloor">
+                        <!-- JSで動的に構築 -->
+                    </div>
+                </div>
+                <div class="timeline-item" id="tl-step4">
+                    <div class="tl-header">
+                        <span class="tl-num">4</span>
+                        <span class="tl-name">ほのお</span>
+                    </div>
+                    <div class="tl-content" id="tl-res-fire">
+                        <!-- JSで動的に構築 -->
+                    </div>
+                </div>
+                <div class="timeline-item" id="tl-step5">
+                    <div class="tl-header">
+                        <span class="tl-num">5</span>
+                        <span class="tl-name">遅水 ＆ 遅雷 ＆ 氷床記録</span>
+                    </div>
+                    <div class="tl-content" id="tl-res-lateWaterLightningIceFloor">
+                        <!-- JSで動的に構築 -->
+                    </div>
+                </div>
+                <div class="timeline-item" id="tl-step6">
+                    <div class="tl-header">
+                        <span class="tl-num">6</span>
+                        <span class="tl-name">遅視線</span>
+                    </div>
+                    <div class="tl-content" id="tl-res-lateEye">
+                        <!-- JSで動的に構築 -->
+                    </div>
+                </div>
+                <div class="timeline-item" id="tl-step7">
+                    <div class="tl-header">
+                        <span class="tl-num">7</span>
+                        <span class="tl-name">つなみ ＆ 雷床 ＆ 氷床</span>
+                    </div>
+                    <div class="tl-content" id="tl-res-waterLightningIceFloor">
+                        <!-- JSで動的に構築 -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Firebase SDKの読み込み -->
@@ -453,6 +763,119 @@
             bomb: { true: "停止（動かない）", false: "行動（動く）" }
         };
 
+        // 時系列タイムラインの更新
+        function updateTimeline() {
+            const getPill = (text, type) => {
+                return `<span class="badge-pill pill-${type}">${text}</span>`;
+            };
+
+            const getPillForKey = (key, val, trueText, falseText, trueType, falseType) => {
+                if (val === 'true') {
+                    return getPill(trueText, trueType);
+                } else if (val === 'false') {
+                    return getPill(falseText, falseType);
+                } else {
+                    return getPill('未入力', 'gray');
+                }
+            };
+
+            const getRowHtml = (iconHtml, label, key, val, trueText, falseText, trueType, falseType) => {
+                const pill = getPillForKey(key, val, trueText, falseText, trueType, falseType);
+                return `
+                    <div class="tl-row">
+                        <span class="tl-label">${iconHtml}${label}</span>
+                        ${pill}
+                    </div>
+                `;
+            };
+
+            const isValReady = (val) => {
+                return val === 'true' || val === 'false';
+            };
+
+            const setStepReady = (stepId, isReady) => {
+                const item = document.getElementById(stepId);
+                if (item) {
+                    if (isReady) {
+                        item.classList.add('ready');
+                    } else {
+                        item.classList.remove('ready');
+                    }
+                }
+            };
+
+            const iconWater = `<img src="https://yan-flash.com/api/uploads/1781173625101-e820e8d8.webp" class="gimmick-icon-mini">`;
+            const iconLightning = `<img src="https://yan-flash.com/api/uploads/1781173604458-cd2d39e5.webp" class="gimmick-icon-mini">`;
+            const iconEye = `<img src="https://yan-flash.com/api/uploads/1781173577888-f3f065c8.webp" class="gimmick-icon-mini">`;
+            const iconFire = `<img src="https://yan-flash.com/api/uploads/1781173720029-86a7ea3d.webp" class="gimmick-icon-mini">`;
+            const iconWave = `<img src="https://yan-flash.com/api/uploads/1781173691316-247cfd5e.webp" class="gimmick-icon-mini">`;
+            const iconLineLightning = `<span class="icon">⚡</span>`;
+            const iconIceFan = `<span class="icon">❄️</span>`;
+
+            // Step 1: 無の氾濫 (常に確定状態)
+            setStepReady('tl-step1', true);
+
+            // Step 2: 早水 ＆ 早雷
+            const t2 = document.getElementById('tl-res-earlyWaterLightning');
+            if (t2) {
+                const ready = isValReady(currentState.earlyWater) && isValReady(currentState.earlyLightning);
+                setStepReady('tl-step2', ready);
+                t2.innerHTML = 
+                    getRowHtml(iconWater, '早水', 'earlyWater', currentState.earlyWater, '分担', '散開', 'green', 'red') +
+                    getRowHtml(iconLightning, '早雷', 'earlyLightning', currentState.earlyLightning, '散開', '分担', 'red', 'green');
+            }
+
+            // Step 3: 早視線 ＆ 雷床記録
+            const t3 = document.getElementById('tl-res-earlyEyeLightningFloor');
+            if (t3) {
+                const ready = isValReady(currentState.earlyEye) && isValReady(currentState.lineLightning);
+                setStepReady('tl-step3', ready);
+                t3.innerHTML = 
+                    getRowHtml(iconEye, '早視線', 'earlyEye', currentState.earlyEye, '見ない', '見る', 'purple', 'yellow') +
+                    getRowHtml(iconLineLightning, '雷床', 'lineLightning', currentState.lineLightning, '踏まない', '踏む', 'green', 'yellow');
+            }
+
+            // Step 4: ほのお
+            const t4 = document.getElementById('tl-res-fire');
+            if (t4) {
+                const ready = isValReady(currentState.fire);
+                setStepReady('tl-step4', ready);
+                t4.innerHTML = 
+                    getRowHtml(iconFire, 'ほのお', 'fire', currentState.fire, '離れる', '近づく', 'orange', 'blue');
+            }
+
+            // Step 5: 遅水 ＆ 遅雷 ＆ 氷床記録
+            const t5 = document.getElementById('tl-res-lateWaterLightningIceFloor');
+            if (t5) {
+                const ready = isValReady(currentState.lateWater) && isValReady(currentState.lateLightning) && isValReady(currentState.iceFan);
+                setStepReady('tl-step5', ready);
+                t5.innerHTML = 
+                    getRowHtml(iconWater, '遅水', 'lateWater', currentState.lateWater, '分担', '散開', 'green', 'red') +
+                    getRowHtml(iconLightning, '遅雷', 'lateLightning', currentState.lateLightning, '散開', '分担', 'red', 'green') +
+                    getRowHtml(iconIceFan, '氷床', 'iceFan', currentState.iceFan, '踏まない', '踏む', 'green', 'yellow');
+            }
+
+            // Step 6: 遅視線
+            const t6 = document.getElementById('tl-res-lateEye');
+            if (t6) {
+                const ready = isValReady(currentState.lateEye);
+                setStepReady('tl-step6', ready);
+                t6.innerHTML = 
+                    getRowHtml(iconEye, '遅視線', 'lateEye', currentState.lateEye, '見ない', '見る', 'purple', 'yellow');
+            }
+
+            // Step 7: つなみ ＆ 雷床 ＆ 氷床
+            const t7 = document.getElementById('tl-res-waterLightningIceFloor');
+            if (t7) {
+                const ready = isValReady(currentState.water) && isValReady(currentState.lineLightning) && isValReady(currentState.iceFan);
+                setStepReady('tl-step7', ready);
+                t7.innerHTML = 
+                    getRowHtml(iconWave, 'つなみ', 'water', currentState.water, '近づく', '離れる', 'blue', 'orange') +
+                    getRowHtml(iconLineLightning, '雷床', 'lineLightning', currentState.lineLightning, '踏まない', '踏む', 'green', 'yellow') +
+                    getRowHtml(iconIceFan, '氷床', 'iceFan', currentState.iceFan, '踏まない', '踏む', 'green', 'yellow');
+            }
+        }
+
         // 共有データの状態をローカルに保持するオブジェクト
         let currentState = {};
 
@@ -467,6 +890,7 @@
                 const value = data[key];
                 const card = document.getElementById(`card-${key}`);
                 const resText = document.getElementById(`res-${key}`);
+                if (!card) return;
                 const btnTrue = card.querySelector('.btn-true');
                 const btnFalse = card.querySelector('.btn-false');
 
@@ -487,6 +911,9 @@
                     resText.innerText = "---";
                 }
             });
+
+            // タイムラインを更新
+            updateTimeline();
         });
 
         // 共有ボタンが押されたときの処理
@@ -563,6 +990,9 @@
         // ページ読み込み時に保存されたモードを復元
         const savedMode = localStorage.getItem('kfk_ui_mode') || 'mobile';
         setMode(savedMode);
+
+        // 初期表示用タイムライン描画
+        updateTimeline();
     </script>
 
 </body>
