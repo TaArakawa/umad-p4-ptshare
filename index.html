@@ -56,7 +56,7 @@
             min-height: 100dvh;
             scroll-snap-align: start;
             box-sizing: border-box;
-            padding: 10px 14px;
+            padding: 8px 10px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -73,31 +73,33 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             width: 100%;
         }
 
         h1 {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             margin: 0;
             color: #a7f3d0;
+            white-space: nowrap;
         }
 
         .reset-btn {
             background-color: #b91c1c;
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 4px 8px;
             border-radius: 6px;
             font-weight: bold;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         .section-title {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #94a3b8;
-            margin: 10px 0 4px 4px;
+            margin: 6px 0 2px 4px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             font-weight: bold;
@@ -106,19 +108,19 @@
         .grid-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 6px;
-            margin-bottom: 4px;
+            gap: 4px;
+            margin-bottom: 2px;
         }
 
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 6px 10px;
+            padding: 4px 8px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 88px;
+            min-height: 80px;
             box-sizing: border-box;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         }
@@ -138,7 +140,7 @@
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             width: 100%;
             gap: 2px;
         }
@@ -148,7 +150,7 @@
             align-items: center;
             gap: 4px;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             margin-bottom: 0;
             align-self: flex-start;
         }
@@ -165,10 +167,10 @@
         }
 
         .result-text {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 800;
             color: #94a3b8;
-            min-height: 1.2rem;
+            min-height: 1.1rem;
             align-self: center;
             text-align: center;
         }
@@ -192,9 +194,9 @@
             color: #94a3b8;
             background-color: var(--btn-idle);
             font-weight: bold;
-            font-size: 0.9rem;
-            padding: 6px 0;
-            border-radius: 6px;
+            font-size: 0.8rem;
+            padding: 4px 0;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.1s ease;
             flex: 1;
@@ -236,8 +238,8 @@
             background: none;
             border: none;
             color: #94a3b8;
-            padding: 4px 8px;
-            font-size: 0.8rem;
+            padding: 3px 6px;
+            font-size: 0.7rem;
             font-weight: bold;
             border-radius: 4px;
             cursor: pointer;
@@ -245,6 +247,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            white-space: nowrap;
         }
 
         .toggle-btn.active {
@@ -510,7 +513,7 @@
             <div class="header">
                 <h1>絶ケフカ P4 カンペ</h1>
                 <div class="toggle-group">
-                    <button class="toggle-btn active" id="btn-mode-mobile" onclick="setMode('mobile')">📱 モバイル</button>
+                    <button class="toggle-btn active" id="btn-mode-mobile" onclick="setMode('mobile')">📱 スマホ</button>
                     <button class="toggle-btn" id="btn-mode-hud" onclick="setMode('hud')">💻 HUD</button>
                 </div>
                 <button class="reset-btn" id="resetBtn">一括 RESET</button>
@@ -675,12 +678,12 @@
                         </div>
                         <div class="tl-content" id="tl-res-flood">
                             <div class="tl-row">
-                                <span class="tl-label"><span class="icon">🟣</span>アラガン</span>
-                                <span class="badge-pill pill-blue">異色 (外周)</span>
+                                <span class="tl-label"><span class="icon">🟡</span>アラガン</span>
+                                <span class="badge-pill pill-yellow">異色</span>
                             </div>
                             <div class="tl-row">
-                                <span class="tl-label"><span class="icon">🟢</span>死の超越</span>
-                                <span class="badge-pill pill-green">同色 (内周)</span>
+                                <span class="tl-label"><span class="icon">🟣</span>死の超越</span>
+                                <span class="badge-pill pill-purple">同色</span>
                             </div>
                         </div>
                     </div>
