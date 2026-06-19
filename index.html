@@ -750,12 +750,12 @@
 
         // ギミック判定テキストの定義（ご指定の呼び替えルール）
         const rules = {
-            earlyWater: { true: "分担（頭割り）", false: "散開" },
-            earlyLightning: { true: "散開", false: "分担（頭割り）" },
+            earlyWater: { true: "頭割り", false: "ひとり受け" },
+            earlyLightning: { true: "ひとり受け", false: "頭割り" },
             earlyEye: { true: "見ない", false: "見る" },
             fire: { true: "タケノコ（離れる）", false: "ドーナツ（近づく）" },
-            lateWater: { true: "分担（頭割り）", false: "散開" },
-            lateLightning: { true: "散開", false: "分担（頭割り）" },
+            lateWater: { true: "頭割り", false: "ひとり受け" },
+            lateLightning: { true: "ひとり受け", false: "頭割り" },
             lateEye: { true: "見ない", false: "見る" },
             water: { true: "ドーナツ（近づく）", false: "タケノコ（離れる）" },
             lineLightning: { true: "踏まない", false: "踏む" },
@@ -821,8 +821,8 @@
                 const ready = isValReady(currentState.earlyWater) && isValReady(currentState.earlyLightning);
                 setStepReady('tl-step2', ready);
                 t2.innerHTML = 
-                    getRowHtml(iconWater, '早水', 'earlyWater', currentState.earlyWater, '分担', '散開', 'green', 'red') +
-                    getRowHtml(iconLightning, '早雷', 'earlyLightning', currentState.earlyLightning, '散開', '分担', 'red', 'green');
+                    getRowHtml(iconWater, '早水', 'earlyWater', currentState.earlyWater, '頭割り', 'ひとり受け', 'green', 'red') +
+                    getRowHtml(iconLightning, '早雷', 'earlyLightning', currentState.earlyLightning, 'ひとり受け', '頭割り', 'red', 'green');
             }
 
             // Step 3: 早視線 ＆ 雷床記録
@@ -850,8 +850,8 @@
                 const ready = isValReady(currentState.lateWater) && isValReady(currentState.lateLightning) && isValReady(currentState.iceFan);
                 setStepReady('tl-step5', ready);
                 t5.innerHTML = 
-                    getRowHtml(iconWater, '遅水', 'lateWater', currentState.lateWater, '分担', '散開', 'green', 'red') +
-                    getRowHtml(iconLightning, '遅雷', 'lateLightning', currentState.lateLightning, '散開', '分担', 'red', 'green') +
+                    getRowHtml(iconWater, '遅水', 'lateWater', currentState.lateWater, '頭割り', 'ひとり受け', 'green', 'red') +
+                    getRowHtml(iconLightning, '遅雷', 'lateLightning', currentState.lateLightning, 'ひとり受け', '頭割り', 'red', 'green') +
                     getRowHtml(iconIceFan, '氷床', 'iceFan', currentState.iceFan, '踏まない', '踏む', 'green', 'yellow');
             }
 
