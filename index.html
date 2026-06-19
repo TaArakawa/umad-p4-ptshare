@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>絶ケフカ P4 真偽判定カンペ</title>
+    <title>絶妖星乱舞 P4 真偽判定カンペ</title>
     <style>
         :root {
             --bg-color: #121214;
@@ -87,7 +87,8 @@
         }
 
         .card-local {
-            background-color: #172554; /* 濃い青色にして他のカードと区別 */
+            background-color: #172554;
+            /* 濃い青色にして他のカードと区別 */
             border-left: 4px solid #38bdf8;
             border-color: #1e3a8a;
         }
@@ -99,7 +100,7 @@
         .info-area {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: stretch;
             margin-bottom: 4px;
             width: 100%;
             gap: 2px;
@@ -112,10 +113,18 @@
             font-weight: bold;
             font-size: 0.95rem;
             margin-bottom: 0;
+            align-self: flex-start;
         }
 
         .icon {
             font-size: 1.1rem;
+        }
+
+        .gimmick-icon {
+            height: 20px;
+            width: auto;
+            border-radius: 2px;
+            margin-right: 4px;
         }
 
         .result-text {
@@ -123,6 +132,8 @@
             font-weight: 800;
             color: #94a3b8;
             min-height: 1.2rem;
+            align-self: center;
+            text-align: center;
         }
 
         .result-text.active-true {
@@ -191,7 +202,7 @@
         <div class="grid-container">
             <div class="card" id="card-earlyWater">
                 <div class="info-area">
-                    <div class="label-row"><span class="icon">💧</span>早水</div>
+                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173625101-e820e8d8.webp" class="gimmick-icon">早水</div>
                     <div class="result-text" id="res-earlyWater">---</div>
                 </div>
                 <div class="btn-group">
@@ -202,7 +213,7 @@
 
             <div class="card" id="card-earlyLightning">
                 <div class="info-area">
-                    <div class="label-row"><span class="icon">⚡</span>早雷</div>
+                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173604458-cd2d39e5.webp" class="gimmick-icon">早雷</div>
                     <div class="result-text" id="res-earlyLightning">---</div>
                 </div>
                 <div class="btn-group">
@@ -213,7 +224,7 @@
 
             <div class="card" id="card-earlyEye">
                 <div class="info-area">
-                    <div class="label-row"><span class="icon">👁️</span>早視線</div>
+                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173577888-f3f065c8.webp" class="gimmick-icon">早視線</div>
                     <div class="result-text" id="res-earlyEye">---</div>
                 </div>
                 <div class="btn-group">
@@ -224,7 +235,7 @@
 
             <div class="card" id="card-fire">
                 <div class="info-area">
-                    <div class="label-row"><span class="icon">🔥</span>ほのお（カオス）</div>
+                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173720029-86a7ea3d.webp" class="gimmick-icon">ほのお（カオス）</div>
                     <div class="result-text" id="res-fire">---</div>
                 </div>
                 <div class="btn-group">
@@ -240,7 +251,7 @@
         <div class="grid-container">
             <div class="card" id="card-lateWater">
                 <div class="info-area">
-                    <div class="label-row"><span class="icon">💧</span>遅水</div>
+                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173625101-e820e8d8.webp" class="gimmick-icon">遅水</div>
                     <div class="result-text" id="res-lateWater">---</div>
                 </div>
                 <div class="btn-group">
@@ -251,7 +262,7 @@
 
             <div class="card" id="card-lateLightning">
                 <div class="info-area">
-                    <div class="label-row"><span class="icon">⚡</span>遅雷</div>
+                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173604458-cd2d39e5.webp" class="gimmick-icon">遅雷</div>
                     <div class="result-text" id="res-lateLightning">---</div>
                 </div>
                 <div class="btn-group">
@@ -262,7 +273,7 @@
 
             <div class="card" id="card-lateEye">
                 <div class="info-area">
-                    <div class="label-row"><span class="icon">👁️</span>遅視線</div>
+                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173577888-f3f065c8.webp" class="gimmick-icon">遅視線</div>
                     <div class="result-text" id="res-lateEye">---</div>
                 </div>
                 <div class="btn-group">
@@ -273,7 +284,7 @@
 
             <div class="card" id="card-water">
                 <div class="info-area">
-                    <div class="label-row"><span class="icon">🌊</span>つなみ（カオス）</div>
+                    <div class="label-row"><img src="https://yan-flash.com/api/uploads/1781173691316-247cfd5e.webp" class="gimmick-icon">つなみ（カオス）</div>
                     <div class="result-text" id="res-water">---</div>
                 </div>
                 <div class="btn-group">
@@ -317,7 +328,8 @@
                 </div>
                 <div class="btn-group">
                     <button class="action-btn btn-true" id="local-bomb-true" onclick="setLocalBomb('true')">真</button>
-                    <button class="action-btn btn-false" id="local-bomb-false" onclick="setLocalBomb('false')">偽</button>
+                    <button class="action-btn btn-false" id="local-bomb-false"
+                        onclick="setLocalBomb('false')">偽</button>
                 </div>
             </div>
         </div>
