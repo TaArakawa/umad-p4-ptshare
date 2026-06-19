@@ -185,14 +185,90 @@
             margin-left: 4px;
             font-weight: bold;
         }
+
+        /* Mode Switcher CSS */
+        .toggle-group {
+            display: flex;
+            background-color: var(--btn-idle);
+            border-radius: 6px;
+            padding: 2px;
+            gap: 2px;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-btn.active {
+            background-color: #38bdf8;
+            color: #0369a1;
+        }
+
+        /* HUD Mode Styles */
+        body.hud-mode {
+            padding: 5px;
+        }
+
+        body.hud-mode .container {
+            max-width: 960px;
+        }
+
+        body.hud-mode h1,
+        body.hud-mode .section-title {
+            display: none;
+        }
+
+        body.hud-mode .header {
+            margin-bottom: 6px;
+        }
+
+        body.hud-mode .grid-container {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        body.hud-mode #card-bomb {
+            grid-column: span 2;
+        }
+
+        body.hud-mode .card {
+            min-height: 84px;
+            padding: 4px 8px;
+        }
+
+        body.hud-mode .result-text {
+            font-size: 1.05rem;
+        }
     </style>
 </head>
 
 <body>
+    <script>
+        // FOUC（レイアウトのガタつき）を防ぐため、レンダリング前にモードを適用
+        if (localStorage.getItem('kfk_ui_mode') === 'hud') {
+            document.body.classList.add('hud-mode');
+        }
+    </script>
 
     <div class="container">
         <div class="header">
-            <h1>絶妖星乱舞 P4 カンペ</h1>
+            <h1>絶ケフカ P4 カンペ</h1>
+            <div class="toggle-group">
+                <button class="toggle-btn active" id="btn-mode-mobile" onclick="setMode('mobile')">📱 モバイル</button>
+                <button class="toggle-btn" id="btn-mode-hud" onclick="setMode('hud')">💻 HUD</button>
+            </div>
             <button class="reset-btn" id="resetBtn">一括 RESET</button>
         </div>
 
@@ -465,6 +541,28 @@
         if (savedBomb) {
             setLocalBomb(savedBomb);
         }
+
+        // HUDモード切り替えの処理
+        window.setMode = function (mode) {
+            const btnMobile = document.getElementById('btn-mode-mobile');
+            const btnHud = document.getElementById('btn-mode-hud');
+
+            if (mode === 'hud') {
+                document.body.classList.add('hud-mode');
+                btnMobile.classList.remove('active');
+                btnHud.classList.add('active');
+                localStorage.setItem('kfk_ui_mode', 'hud');
+            } else {
+                document.body.classList.remove('hud-mode');
+                btnMobile.classList.add('active');
+                btnHud.classList.remove('active');
+                localStorage.setItem('kfk_ui_mode', 'mobile');
+            }
+        };
+
+        // ページ読み込み時に保存されたモードを復元
+        const savedMode = localStorage.getItem('kfk_ui_mode') || 'mobile';
+        setMode(savedMode);
     </script>
 
 </body>
