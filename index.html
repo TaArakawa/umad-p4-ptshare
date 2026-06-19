@@ -45,9 +45,16 @@
 
         body.hud-mode .scroll-container {
             height: auto;
-            overflow: visible;
+            overflow: auto;
             scroll-snap-type: none;
-            padding: 5px 0;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 15px;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
         }
 
         .section-page {
@@ -67,6 +74,153 @@
             min-height: auto;
             max-width: 960px;
             padding: 5px;
+        }
+
+        body.hud-mode #page-inputs {
+            grid-column: 1;
+            grid-row: 1;
+            max-width: 100%;
+        }
+
+        body.hud-mode #page-timeline {
+            grid-column: 1;
+            grid-row: 2;
+            max-width: 100%;
+        }
+
+        #page-cheat-sheet {
+            display: none;
+        }
+
+        body.hud-mode #page-cheat-sheet {
+            display: flex;
+            flex-direction: column;
+            grid-column: 2;
+            grid-row: 1 / span 2;
+            max-width: 360px;
+            min-height: auto;
+            padding: 5px;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .cheat-sheet-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        /* HTML Table styles matching application style */
+        .cheat-sheet-table-html {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.72rem;
+            color: #cbd5e1;
+            font-family: inherit;
+        }
+
+        .cheat-sheet-table-html th,
+        .cheat-sheet-table-html td {
+            border: 1px solid var(--border-color);
+            padding: 3px 5px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 1.1;
+        }
+
+        /* Merged rows / titles */
+        .cheat-sheet-table-html td.row-center {
+            text-align: center;
+            font-weight: bold;
+            color: #cbd5e1;
+        }
+
+        /* Section dividers */
+        .cheat-sheet-table-html td.section-header {
+            background-color: #1e293b;
+            color: #a7f3d0;
+            font-weight: bold;
+            font-size: 0.75rem;
+            text-align: left;
+            border-top: 2px solid var(--border-color);
+        }
+
+        /* Debuff icons */
+        .dbf-icon {
+            height: 24px;
+            width: auto;
+            border-radius: 3px;
+            vertical-align: middle;
+            display: inline-block;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .swap-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 24px;
+        }
+
+        .swap-label {
+            position: absolute;
+            left: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ef4444;
+            color: #ffffff;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 0.55rem;
+            font-weight: bold;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+
+        .cheat-sheet-diagram-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .cheat-sheet-diagram-img {
+            max-height: 220px;
+            width: auto;
+            aspect-ratio: 1 / 1;
+            border-radius: 6px;
+            object-fit: contain;
+        }
+
+        @media (max-width: 1024px) {
+            body.hud-mode .scroll-container {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            body.hud-mode #page-cheat-sheet {
+                grid-column: 1;
+                grid-row: 3;
+                max-width: 100%;
+            }
+            body.hud-mode #page-inputs,
+            body.hud-mode #page-timeline {
+                grid-column: 1;
+            }
         }
 
         .header {
@@ -742,6 +896,123 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- カンペページ (PC版専用) -->
+        <div class="section-page" id="page-cheat-sheet">
+            <div class="cheat-sheet-card">
+                <table class="cheat-sheet-table-html">
+                    <tr>
+                        <td colspan="3" class="row-center">決戦 散開</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="row-center">サンダガ → じしん</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="row-center">ビンビンビンタ　右手 → 全員頭割り　左手 → ロール散開</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="section-header">ブラックホール1回目（優先度 ケフカから時計）</td>
+                    </tr>
+                    <tr>
+                        <td><img src="icons/attack1.png" class="dbf-icon" alt="黄1"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><img src="icons/attack1.png" class="dbf-icon" alt="黄1"></td>
+                        <td><img src="icons/attack2.png" class="dbf-icon" alt="黄2"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="row-center">サンダガ → ダビング（半面）＋ビンタ</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="section-header">ブラックホール2回目（優先度 ケフカから時計）</td>
+                    </tr>
+                    <tr>
+                        <td><img src="icons/attack1.png" class="dbf-icon" alt="黄1"></td>
+                        <td><img src="icons/attack2.png" class="dbf-icon" alt="黄2"></td>
+                        <td><img src="icons/attack3.png" class="dbf-icon" alt="黄3"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="swap-container">
+                                <span class="swap-label">交代</span>
+                                <img src="icons/bind1.png" class="dbf-icon" alt="紫1">
+                            </div>
+                        </td>
+                        <td><img src="icons/attack2.png" class="dbf-icon" alt="黄2"></td>
+                        <td><img src="icons/attack3.png" class="dbf-icon" alt="黄3"></td>
+                    </tr>
+                    <tr>
+                        <td><img src="icons/bind1.png" class="dbf-icon" alt="紫1"></td>
+                        <td>
+                            <div class="swap-container">
+                                <span class="swap-label">交代</span>
+                                <img src="icons/bind2.png" class="dbf-icon" alt="紫2">
+                            </div>
+                        </td>
+                        <td><img src="icons/attack3.png" class="dbf-icon" alt="黄3"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="row-center">ダビング＋ボクチン → サンダガ</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="section-header">ブラックホール3回目（優先度 ケフカから時計）</td>
+                    </tr>
+                    <tr>
+                        <td><img src="icons/bind1.png" class="dbf-icon" alt="紫1"></td>
+                        <td><img src="icons/bind2.png" class="dbf-icon" alt="紫2"></td>
+                        <td><img src="icons/bind3.png" class="dbf-icon" alt="紫3"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="swap-container">
+                                <span class="swap-label">交代</span>
+                                <img src="icons/stop1.png" class="dbf-icon" alt="赤1">
+                            </div>
+                        </td>
+                        <td><img src="icons/bind2.png" class="dbf-icon" alt="紫2"></td>
+                        <td><img src="icons/bind3.png" class="dbf-icon" alt="紫3"></td>
+                    </tr>
+                    <tr>
+                        <td><img src="icons/stop1.png" class="dbf-icon" alt="赤1"></td>
+                        <td>
+                            <div class="swap-container">
+                                <span class="swap-label">交代</span>
+                                <img src="icons/stop2.png" class="dbf-icon" alt="赤2">
+                            </div>
+                        </td>
+                        <td><img src="icons/bind3.png" class="dbf-icon" alt="紫3"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="row-center">ビンビンビンタ＋ホリヴァーティ</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="section-header">ブラックホール4回目</td>
+                    </tr>
+                    <tr>
+                        <td><img src="icons/stop1.png" class="dbf-icon" alt="赤1"></td>
+                        <td><img src="icons/stop2.png" class="dbf-icon" alt="赤2"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><img src="icons/stop2.png" class="dbf-icon" alt="赤2"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="row-center">ボクチン → 地団駄</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="row-center">ブリザガ（動き続ける）　タケノコ</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="cheat-sheet-diagram-card">
+                <img src="kfk_diagram.png" alt="散開図" class="cheat-sheet-diagram-img">
             </div>
         </div>
     </div>
