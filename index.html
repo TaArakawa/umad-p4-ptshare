@@ -21,7 +21,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 15px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -36,12 +36,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
             width: 100%;
         }
 
         h1 {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             margin: 0;
             color: #a7f3d0;
         }
@@ -50,57 +50,76 @@
             background-color: #b91c1c;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 6px;
             font-weight: bold;
+            font-size: 0.85rem;
             cursor: pointer;
         }
 
         .section-title {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: #94a3b8;
-            margin: 15px 0 5px 5px;
+            margin: 10px 0 4px 4px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            font-weight: bold;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            margin-bottom: 4px;
         }
 
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 10px;
+            border-radius: 8px;
+            padding: 8px 10px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: space-between;
+            min-height: 80px;
+            box-sizing: border-box;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         }
 
         .card-local {
+            background-color: #172554; /* 濃い青色にして他のカードと区別 */
             border-left: 4px solid #38bdf8;
+            border-color: #1e3a8a;
+        }
+
+        #card-bomb {
+            grid-column: span 2;
         }
 
         .info-area {
             display: flex;
-            flex-direction: column;
-            flex-grow: 1;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            width: 100%;
         }
 
         .label-row {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 4px;
+            font-size: 0.95rem;
+            margin-bottom: 0;
         }
 
         .icon {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .result-text {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 800;
             color: #94a3b8;
             min-height: 1.2rem;
@@ -116,7 +135,8 @@
 
         .btn-group {
             display: flex;
-            gap: 8px;
+            gap: 4px;
+            width: 100%;
         }
 
         .action-btn {
@@ -124,32 +144,34 @@
             color: #94a3b8;
             background-color: var(--btn-idle);
             font-weight: bold;
-            font-size: 1rem;
-            padding: 10px 18px;
-            border-radius: 8px;
+            font-size: 0.9rem;
+            padding: 6px 0;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.1s ease;
+            flex: 1;
+            text-align: center;
         }
 
         .action-btn.active-true {
             background-color: var(--accent-true);
             color: #052e16;
-            box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
         }
 
         .action-btn.active-false {
             background-color: var(--accent-false);
             color: #450a0a;
-            box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
         }
 
         .badge {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             background-color: #38bdf8;
             color: #0369a1;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: auto;
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin-left: 4px;
             font-weight: bold;
         }
     </style>
@@ -166,131 +188,137 @@
         <!-- 前半デバフ -->
         <div class="section-title">【前半】早デバフ</div>
 
-        <div class="card" id="card-earlyWater">
-            <div class="info-area">
-                <div class="label-row"><span class="icon">💧</span>早水</div>
-                <div class="result-text" id="res-earlyWater">---</div>
+        <div class="grid-container">
+            <div class="card" id="card-earlyWater">
+                <div class="info-area">
+                    <div class="label-row"><span class="icon">💧</span>早水</div>
+                    <div class="result-text" id="res-earlyWater">---</div>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn btn-true" onclick="setDecision('earlyWater', 'true')">真</button>
+                    <button class="action-btn btn-false" onclick="setDecision('earlyWater', 'false')">偽</button>
+                </div>
             </div>
-            <div class="btn-group">
-                <button class="action-btn btn-true" onclick="setDecision('earlyWater', 'true')">真</button>
-                <button class="action-btn btn-false" onclick="setDecision('earlyWater', 'false')">偽</button>
-            </div>
-        </div>
 
-        <div class="card" id="card-earlyLightning">
-            <div class="info-area">
-                <div class="label-row"><span class="icon">⚡</span>早雷</div>
-                <div class="result-text" id="res-earlyLightning">---</div>
+            <div class="card" id="card-earlyLightning">
+                <div class="info-area">
+                    <div class="label-row"><span class="icon">⚡</span>早雷</div>
+                    <div class="result-text" id="res-earlyLightning">---</div>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn btn-true" onclick="setDecision('earlyLightning', 'true')">真</button>
+                    <button class="action-btn btn-false" onclick="setDecision('earlyLightning', 'false')">偽</button>
+                </div>
             </div>
-            <div class="btn-group">
-                <button class="action-btn btn-true" onclick="setDecision('earlyLightning', 'true')">真</button>
-                <button class="action-btn btn-false" onclick="setDecision('earlyLightning', 'false')">偽</button>
-            </div>
-        </div>
 
-        <div class="card" id="card-earlyEye">
-            <div class="info-area">
-                <div class="label-row"><span class="icon">👁️</span>早視線</div>
-                <div class="result-text" id="res-earlyEye">---</div>
+            <div class="card" id="card-earlyEye">
+                <div class="info-area">
+                    <div class="label-row"><span class="icon">👁️</span>早視線</div>
+                    <div class="result-text" id="res-earlyEye">---</div>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn btn-true" onclick="setDecision('earlyEye', 'true')">真</button>
+                    <button class="action-btn btn-false" onclick="setDecision('earlyEye', 'false')">偽</button>
+                </div>
             </div>
-            <div class="btn-group">
-                <button class="action-btn btn-true" onclick="setDecision('earlyEye', 'true')">真</button>
-                <button class="action-btn btn-false" onclick="setDecision('earlyEye', 'false')">偽</button>
-            </div>
-        </div>
 
-        <div class="card" id="card-fire">
-            <div class="info-area">
-                <div class="label-row"><span class="icon">🔥</span>火（ファイガ）</div>
-                <div class="result-text" id="res-fire">---</div>
-            </div>
-            <div class="btn-group">
-                <button class="action-btn btn-true" onclick="setDecision('fire', 'true')">真</button>
-                <button class="action-btn btn-false" onclick="setDecision('fire', 'false')">偽</button>
+            <div class="card" id="card-fire">
+                <div class="info-area">
+                    <div class="label-row"><span class="icon">🔥</span>ほのお（カオス）</div>
+                    <div class="result-text" id="res-fire">---</div>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn btn-true" onclick="setDecision('fire', 'true')">真</button>
+                    <button class="action-btn btn-false" onclick="setDecision('fire', 'false')">偽</button>
+                </div>
             </div>
         </div>
 
         <!-- 後半デバフ -->
-        <div class="section-title">【後半】晩デバフ</div>
+        <div class="section-title">【後半】遅デバフ</div>
 
-        <div class="card" id="card-lateWater">
-            <div class="info-area">
-                <div class="label-row"><span class="icon">💧</span>晩水</div>
-                <div class="result-text" id="res-lateWater">---</div>
+        <div class="grid-container">
+            <div class="card" id="card-lateWater">
+                <div class="info-area">
+                    <div class="label-row"><span class="icon">💧</span>遅水</div>
+                    <div class="result-text" id="res-lateWater">---</div>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn btn-true" onclick="setDecision('lateWater', 'true')">真</button>
+                    <button class="action-btn btn-false" onclick="setDecision('lateWater', 'false')">偽</button>
+                </div>
             </div>
-            <div class="btn-group">
-                <button class="action-btn btn-true" onclick="setDecision('lateWater', 'true')">真</button>
-                <button class="action-btn btn-false" onclick="setDecision('lateWater', 'false')">偽</button>
-            </div>
-        </div>
 
-        <div class="card" id="card-lateLightning">
-            <div class="info-area">
-                <div class="label-row"><span class="icon">⚡</span>晩雷</div>
-                <div class="result-text" id="res-lateLightning">---</div>
+            <div class="card" id="card-lateLightning">
+                <div class="info-area">
+                    <div class="label-row"><span class="icon">⚡</span>遅雷</div>
+                    <div class="result-text" id="res-lateLightning">---</div>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn btn-true" onclick="setDecision('lateLightning', 'true')">真</button>
+                    <button class="action-btn btn-false" onclick="setDecision('lateLightning', 'false')">偽</button>
+                </div>
             </div>
-            <div class="btn-group">
-                <button class="action-btn btn-true" onclick="setDecision('lateLightning', 'true')">真</button>
-                <button class="action-btn btn-false" onclick="setDecision('lateLightning', 'false')">偽</button>
-            </div>
-        </div>
 
-        <div class="card" id="card-lateEye">
-            <div class="info-area">
-                <div class="label-row"><span class="icon">👁️</span>晩視線</div>
-                <div class="result-text" id="res-lateEye">---</div>
+            <div class="card" id="card-lateEye">
+                <div class="info-area">
+                    <div class="label-row"><span class="icon">👁️</span>遅視線</div>
+                    <div class="result-text" id="res-lateEye">---</div>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn btn-true" onclick="setDecision('lateEye', 'true')">真</button>
+                    <button class="action-btn btn-false" onclick="setDecision('lateEye', 'false')">偽</button>
+                </div>
             </div>
-            <div class="btn-group">
-                <button class="action-btn btn-true" onclick="setDecision('lateEye', 'true')">真</button>
-                <button class="action-btn btn-false" onclick="setDecision('lateEye', 'false')">偽</button>
-            </div>
-        </div>
 
-        <div class="card" id="card-water">
-            <div class="info-area">
-                <div class="label-row"><span class="icon">❄️</span>水（ブリザガ）</div>
-                <div class="result-text" id="res-water">---</div>
-            </div>
-            <div class="btn-group">
-                <button class="action-btn btn-true" onclick="setDecision('water', 'true')">真</button>
-                <button class="action-btn btn-false" onclick="setDecision('water', 'false')">偽</button>
+            <div class="card" id="card-water">
+                <div class="info-area">
+                    <div class="label-row"><span class="icon">🌊</span>つなみ（カオス）</div>
+                    <div class="result-text" id="res-water">---</div>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn btn-true" onclick="setDecision('water', 'true')">真</button>
+                    <button class="action-btn btn-false" onclick="setDecision('water', 'false')">偽</button>
+                </div>
             </div>
         </div>
 
         <!-- 安置・個人要素 -->
         <div class="section-title">安置 ＆ 個人用</div>
 
-        <div class="card" id="card-lineLightning">
-            <div class="info-area">
-                <div class="label-row"><span class="icon">⚡</span>雷直線（縦横）</div>
-                <div class="result-text" id="res-lineLightning">---</div>
+        <div class="grid-container">
+            <div class="card" id="card-lineLightning">
+                <div class="info-area">
+                    <div class="label-row"><span class="icon">⚡</span>雷床（斜め）</div>
+                    <div class="result-text" id="res-lineLightning">---</div>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn btn-true" onclick="setDecision('lineLightning', 'true')">真</button>
+                    <button class="action-btn btn-false" onclick="setDecision('lineLightning', 'false')">偽</button>
+                </div>
             </div>
-            <div class="btn-group">
-                <button class="action-btn btn-true" onclick="setDecision('lineLightning', 'true')">真</button>
-                <button class="action-btn btn-false" onclick="setDecision('lineLightning', 'false')">偽</button>
-            </div>
-        </div>
 
-        <div class="card" id="card-iceFan">
-            <div class="info-area">
-                <div class="label-row"><span class="icon">❄️</span>氷扇形（斜め）</div>
-                <div class="result-text" id="res-iceFan">---</div>
+            <div class="card" id="card-iceFan">
+                <div class="info-area">
+                    <div class="label-row"><span class="icon">❄️</span>氷床（扇）</div>
+                    <div class="result-text" id="res-iceFan">---</div>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn btn-true" onclick="setDecision('iceFan', 'true')">真</button>
+                    <button class="action-btn btn-false" onclick="setDecision('iceFan', 'false')">偽</button>
+                </div>
             </div>
-            <div class="btn-group">
-                <button class="action-btn btn-true" onclick="setDecision('iceFan', 'true')">真</button>
-                <button class="action-btn btn-false" onclick="setDecision('iceFan', 'false')">偽</button>
-            </div>
-        </div>
 
-        <!-- 加速度爆弾（完全非共有・個人ローカル保持エリア） -->
-        <div class="card card-local" id="card-bomb">
-            <div class="info-area">
-                <div class="label-row"><span class="icon">⏳</span>加速度爆弾 <span class="badge">個人用</span></div>
-                <div class="result-text" id="res-bomb">---</div>
-            </div>
-            <div class="btn-group">
-                <button class="action-btn btn-true" id="local-bomb-true" onclick="setLocalBomb('true')">真</button>
-                <button class="action-btn btn-false" id="local-bomb-false" onclick="setLocalBomb('false')">偽</button>
+            <!-- 加速度爆弾（完全非共有・個人ローカル保持エリア） -->
+            <div class="card card-local" id="card-bomb">
+                <div class="info-area">
+                    <div class="label-row"><span class="icon">⏳</span>加速度爆弾 <span class="badge">個人用</span></div>
+                    <div class="result-text" id="res-bomb">---</div>
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn btn-true" id="local-bomb-true" onclick="setLocalBomb('true')">真</button>
+                    <button class="action-btn btn-false" id="local-bomb-false" onclick="setLocalBomb('false')">偽</button>
+                </div>
             </div>
         </div>
     </div>
