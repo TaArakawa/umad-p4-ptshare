@@ -18,7 +18,7 @@
         <header class="solver-header">
             <div class="header-left">
                 <a href="index.html" class="back-link">← メインカンペ</a>
-                <a href="solver.html" class="back-link" style="margin-left: 8px;">← v1判定ツール</a>
+                <a href="solver.html" class="back-link" style="margin-left: 8px;">v1判定ツール ➔</a>
                 <h1>個別判定 v2</h1>
             </div>
             <div class="header-right">
@@ -37,16 +37,19 @@
             <section class="card solver-card" id="card-gc1">
                 <div class="card-header">
                     <h2>1回目 (Grand Cross)</h2>
+                    <div class="truth-toggle-group">
+                        <button class="truth-btn" id="gc1-true" data-value="true">真</button>
+                        <button class="truth-btn" id="gc1-false" data-value="false">偽</button>
+                    </div>
                 </div>
                 
                 <table class="solver-table">
                     <thead>
                         <tr>
-                            <th class="col-debuff">デバフ</th>
-                            <th class="col-timing">タイミング</th>
-                            <th class="col-truth">真偽</th>
-                            <th class="col-effect">「真」</th>
-                            <th class="col-effect">「偽」</th>
+                            <th>デバフ (クリックで選択)</th>
+                            <th class="truth-header-btn" id="gc1-hdr-true" data-value="true">「真」のとき</th>
+                            <th class="truth-header-btn" id="gc1-hdr-false" data-value="false">「偽」のとき</th>
+                            <th class="timing-header-col">タイミング</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,20 +59,14 @@
                                 <img src="img/water.jpg" alt="水" class="debuff-icon">
                                 <span>水<span class="en-text"> (Water)</span></span>
                             </td>
+                            <td class="effect-cell true-effect" id="1-water-true">頭割</td>
+                            <td class="effect-cell false-effect" id="1-water-false">散開</td>
                             <td class="timing-cell">
                                 <div class="timing-toggle-group">
                                     <button class="timing-btn" id="gc1-water-early" data-timing="early">早</button>
                                     <button class="timing-btn" id="gc1-water-late" data-timing="late">遅</button>
                                 </div>
                             </td>
-                            <td class="truth-cell">
-                                <div class="truth-toggle-group">
-                                    <button class="truth-btn" id="gc1-water-true" data-value="true">真</button>
-                                    <button class="truth-btn" id="gc1-water-false" data-value="false">偽</button>
-                                </div>
-                            </td>
-                            <td class="effect-cell true-effect" id="1-water-true">頭割</td>
-                            <td class="effect-cell false-effect" id="1-water-false">散開</td>
                         </tr>
                         <!-- 雷 -->
                         <tr class="debuff-row" id="row-1-lightning" data-debuff="lightning">
@@ -77,20 +74,14 @@
                                 <img src="img/lightning.jpg" alt="雷" class="debuff-icon">
                                 <span>雷<span class="en-text"> (Lightning)</span></span>
                             </td>
+                            <td class="effect-cell true-effect" id="1-lightning-true">散開</td>
+                            <td class="effect-cell false-effect" id="1-lightning-false">頭割</td>
                             <td class="timing-cell">
                                 <div class="timing-toggle-group">
                                     <button class="timing-btn" id="gc1-lightning-early" data-timing="early">早</button>
                                     <button class="timing-btn" id="gc1-lightning-late" data-timing="late">遅</button>
                                 </div>
                             </td>
-                            <td class="truth-cell">
-                                <div class="truth-toggle-group">
-                                    <button class="truth-btn" id="gc1-lightning-true" data-value="true">真</button>
-                                    <button class="truth-btn" id="gc1-lightning-false" data-value="false">偽</button>
-                                </div>
-                            </td>
-                            <td class="effect-cell true-effect" id="1-lightning-true">散開</td>
-                            <td class="effect-cell false-effect" id="1-lightning-false">頭割</td>
                         </tr>
                         <!-- 視線 -->
                         <tr class="debuff-row" id="row-1-sight" data-debuff="sight">
@@ -98,15 +89,9 @@
                                 <img src="img/sight.jpg" alt="視線" class="debuff-icon">
                                 <span>視線<span class="en-text"> (Sight)</span></span>
                             </td>
-                            <td class="timing-cell empty-cell"></td>
-                            <td class="truth-cell">
-                                <div class="truth-toggle-group">
-                                    <button class="truth-btn" id="gc1-sight-true" data-value="true">真</button>
-                                    <button class="truth-btn" id="gc1-sight-false" data-value="false">偽</button>
-                                </div>
-                            </td>
                             <td class="effect-cell true-effect" id="1-sight-true">早見ない</td>
                             <td class="effect-cell false-effect" id="1-sight-false">早見る</td>
+                            <td class="timing-cell empty-cell"></td>
                         </tr>
                         <!-- 加速度 -->
                         <tr class="debuff-row" id="row-1-bomb" data-debuff="bomb">
@@ -114,15 +99,9 @@
                                 <img src="img/bomb.jpg" alt="加速度" class="debuff-icon">
                                 <span>加速度<span class="en-text"> (Bomb)</span></span>
                             </td>
-                            <td class="timing-cell empty-cell"></td>
-                            <td class="truth-cell">
-                                <div class="truth-toggle-group">
-                                    <button class="truth-btn" id="gc1-bomb-true" data-value="true">真</button>
-                                    <button class="truth-btn" id="gc1-bomb-false" data-value="false">偽</button>
-                                </div>
-                            </td>
                             <td class="effect-cell true-effect" id="1-bomb-true">止まる</td>
                             <td class="effect-cell false-effect" id="1-bomb-false">動く</td>
+                            <td class="timing-cell empty-cell"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -132,16 +111,19 @@
             <section class="card solver-card" id="card-gc2">
                 <div class="card-header">
                     <h2>2回目 (Grand Cross)</h2>
+                    <div class="truth-toggle-group">
+                        <button class="truth-btn" id="gc2-true" data-value="true">真</button>
+                        <button class="truth-btn" id="gc2-false" data-value="false">偽</button>
+                    </div>
                 </div>
                 
                 <table class="solver-table">
                     <thead>
                         <tr>
-                            <th class="col-debuff">デバフ</th>
-                            <th class="col-timing">タイミング</th>
-                            <th class="col-truth">真偽</th>
-                            <th class="col-effect">「真」</th>
-                            <th class="col-effect">「偽」</th>
+                            <th>デバフ (クリックで選択)</th>
+                            <th class="truth-header-btn" id="gc2-hdr-true" data-value="true">「真」のとき</th>
+                            <th class="truth-header-btn" id="gc2-hdr-false" data-value="false">「偽」のとき</th>
+                            <th class="timing-header-col">タイミング</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -151,20 +133,14 @@
                                 <img src="img/water.jpg" alt="水" class="debuff-icon">
                                 <span>水<span class="en-text"> (Water)</span></span>
                             </td>
+                            <td class="effect-cell true-effect" id="2-water-true">頭割</td>
+                            <td class="effect-cell false-effect" id="2-water-false">散開</td>
                             <td class="timing-cell">
                                 <div class="timing-toggle-group">
                                     <button class="timing-btn" id="gc2-water-early" data-timing="early">早</button>
                                     <button class="timing-btn" id="gc2-water-late" data-timing="late">遅</button>
                                 </div>
                             </td>
-                            <td class="truth-cell">
-                                <div class="truth-toggle-group">
-                                    <button class="truth-btn" id="gc2-water-true" data-value="true">真</button>
-                                    <button class="truth-btn" id="gc2-water-false" data-value="false">偽</button>
-                                </div>
-                            </td>
-                            <td class="effect-cell true-effect" id="2-water-true">頭割</td>
-                            <td class="effect-cell false-effect" id="2-water-false">散開</td>
                         </tr>
                         <!-- 雷 -->
                         <tr class="debuff-row" id="row-2-lightning" data-debuff="lightning">
@@ -172,20 +148,14 @@
                                 <img src="img/lightning.jpg" alt="雷" class="debuff-icon">
                                 <span>雷<span class="en-text"> (Lightning)</span></span>
                             </td>
+                            <td class="effect-cell true-effect" id="2-lightning-true">散開</td>
+                            <td class="effect-cell false-effect" id="2-lightning-false">頭割</td>
                             <td class="timing-cell">
                                 <div class="timing-toggle-group">
                                     <button class="timing-btn" id="gc2-lightning-early" data-timing="early">早</button>
                                     <button class="timing-btn" id="gc2-lightning-late" data-timing="late">遅</button>
                                 </div>
                             </td>
-                            <td class="truth-cell">
-                                <div class="truth-toggle-group">
-                                    <button class="truth-btn" id="gc2-lightning-true" data-value="true">真</button>
-                                    <button class="truth-btn" id="gc2-lightning-false" data-value="false">偽</button>
-                                </div>
-                            </td>
-                            <td class="effect-cell true-effect" id="2-lightning-true">散開</td>
-                            <td class="effect-cell false-effect" id="2-lightning-false">頭割</td>
                         </tr>
                         <!-- 視線 -->
                         <tr class="debuff-row" id="row-2-sight" data-debuff="sight">
@@ -193,15 +163,9 @@
                                 <img src="img/sight.jpg" alt="視線" class="debuff-icon">
                                 <span>視線<span class="en-text"> (Sight)</span></span>
                             </td>
-                            <td class="timing-cell empty-cell"></td>
-                            <td class="truth-cell">
-                                <div class="truth-toggle-group">
-                                    <button class="truth-btn" id="gc2-sight-true" data-value="true">真</button>
-                                    <button class="truth-btn" id="gc2-sight-false" data-value="false">偽</button>
-                                </div>
-                            </td>
                             <td class="effect-cell true-effect" id="2-sight-true">遅見ない</td>
                             <td class="effect-cell false-effect" id="2-sight-false">遅見る</td>
+                            <td class="timing-cell empty-cell"></td>
                         </tr>
                         <!-- 加速度 -->
                         <tr class="debuff-row" id="row-2-bomb" data-debuff="bomb">
@@ -209,15 +173,9 @@
                                 <img src="img/bomb.jpg" alt="加速度" class="debuff-icon">
                                 <span>加速度<span class="en-text"> (Bomb)</span></span>
                             </td>
-                            <td class="timing-cell empty-cell"></td>
-                            <td class="truth-cell">
-                                <div class="truth-toggle-group">
-                                    <button class="truth-btn" id="gc2-bomb-true" data-value="true">真</button>
-                                    <button class="truth-btn" id="gc2-bomb-false" data-value="false">偽</button>
-                                </div>
-                            </td>
                             <td class="effect-cell true-effect" id="2-bomb-true">止まる</td>
                             <td class="effect-cell false-effect" id="2-bomb-false">動く</td>
+                            <td class="timing-cell empty-cell"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -227,15 +185,18 @@
             <section class="card solver-card card-half" id="card-fire">
                 <div class="card-header">
                     <h2>ほのお</h2>
+                    <div class="truth-toggle-group">
+                        <button class="truth-btn" id="fire-true" data-value="true">真</button>
+                        <button class="truth-btn" id="fire-false" data-value="false">偽</button>
+                    </div>
                 </div>
                 
                 <table class="solver-table">
                     <thead>
                         <tr>
-                            <th class="col-debuff">ギミック</th>
-                            <th class="col-truth">真偽</th>
-                            <th class="col-effect">「真」</th>
-                            <th class="col-effect">「偽」</th>
+                            <th>ギミック</th>
+                            <th class="truth-header-btn" id="fire-hdr-true" data-value="true">「真」のとき</th>
+                            <th class="truth-header-btn" id="fire-hdr-false" data-value="false">「偽」のとき</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -243,12 +204,6 @@
                             <td class="debuff-cell default-active">
                                 <img src="img/fire.jpg" alt="ほのお" class="debuff-icon">
                                 <span>ほのお</span>
-                            </td>
-                            <td class="truth-cell">
-                                <div class="truth-toggle-group">
-                                    <button class="truth-btn" id="fire-true" data-value="true">真</button>
-                                    <button class="truth-btn" id="fire-false" data-value="false">偽</button>
-                                </div>
                             </td>
                             <td class="effect-cell true-effect" id="fire-resolver-true">離れる</td>
                             <td class="effect-cell false-effect" id="fire-resolver-false">そのまま</td>
@@ -261,15 +216,18 @@
             <section class="card solver-card card-half" id="card-tsunami">
                 <div class="card-header">
                     <h2>つなみ</h2>
+                    <div class="truth-toggle-group">
+                        <button class="truth-btn" id="tsunami-true" data-value="true">真</button>
+                        <button class="truth-btn" id="tsunami-false" data-value="false">偽</button>
+                    </div>
                 </div>
                 
                 <table class="solver-table">
                     <thead>
                         <tr>
-                            <th class="col-debuff">ギミック</th>
-                            <th class="col-truth">真偽</th>
-                            <th class="col-effect">「真」</th>
-                            <th class="col-effect">「偽」</th>
+                            <th>ギミック</th>
+                            <th class="truth-header-btn" id="tsunami-hdr-true" data-value="true">「真」のとき</th>
+                            <th class="truth-header-btn" id="tsunami-hdr-false" data-value="false">「偽」のとき</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -277,12 +235,6 @@
                             <td class="debuff-cell default-active">
                                 <img src="img/tsunami.jpg" alt="つなみ" class="debuff-icon">
                                 <span>つなみ</span>
-                            </td>
-                            <td class="truth-cell">
-                                <div class="truth-toggle-group">
-                                    <button class="truth-btn" id="tsunami-true" data-value="true">真</button>
-                                    <button class="truth-btn" id="tsunami-false" data-value="false">偽</button>
-                                </div>
                             </td>
                             <td class="effect-cell true-effect" id="tsunami-resolver-true">そのまま</td>
                             <td class="effect-cell false-effect" id="tsunami-resolver-false">離れる</td>
@@ -295,15 +247,18 @@
             <section class="card solver-card card-half" id="card-lineLightning">
                 <div class="card-header">
                     <h2>雷床</h2>
+                    <div class="truth-toggle-group">
+                        <button class="truth-btn" id="lineLightning-true" data-value="true">真</button>
+                        <button class="truth-btn" id="lineLightning-false" data-value="false">偽</button>
+                    </div>
                 </div>
                 
                 <table class="solver-table">
                     <thead>
                         <tr>
-                            <th class="col-debuff">ギミック</th>
-                            <th class="col-truth">真偽</th>
-                            <th class="col-effect">「真」</th>
-                            <th class="col-effect">「偽」</th>
+                            <th>ギミック</th>
+                            <th class="truth-header-btn" id="lineLightning-hdr-true" data-value="true">「真」のとき</th>
+                            <th class="truth-header-btn" id="lineLightning-hdr-false" data-value="false">「偽」のとき</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -312,12 +267,7 @@
                                 <span class="debuff-icon-emoji">⚡</span>
                                 <span>雷床</span>
                             </td>
-                            <td class="truth-cell">
-                                <div class="truth-toggle-group">
-                                    <button class="truth-btn" id="lineLightning-true" data-value="true">真</button>
-                                    <button class="truth-btn" id="lineLightning-false" data-value="false">偽</button>
-                                </div>
-                            </td>
+                            <td class="truth-cell" style="display: none;"></td> <!-- ダミー列用（テーブルを合わせる） -->
                             <td class="effect-cell true-effect" id="lineLightning-resolver-true">踏まない</td>
                             <td class="effect-cell false-effect" id="lineLightning-resolver-false">踏む</td>
                         </tr>
@@ -329,15 +279,18 @@
             <section class="card solver-card card-half" id="card-iceFan">
                 <div class="card-header">
                     <h2>氷床</h2>
+                    <div class="truth-toggle-group">
+                        <button class="truth-btn" id="iceFan-true" data-value="true">真</button>
+                        <button class="truth-btn" id="iceFan-false" data-value="false">偽</button>
+                    </div>
                 </div>
                 
                 <table class="solver-table">
                     <thead>
                         <tr>
-                            <th class="col-debuff">ギミック</th>
-                            <th class="col-truth">真偽</th>
-                            <th class="col-effect">「真」</th>
-                            <th class="col-effect">「偽」</th>
+                            <th>ギミック</th>
+                            <th class="truth-header-btn" id="iceFan-hdr-true" data-value="true">「真」のとき</th>
+                            <th class="truth-header-btn" id="iceFan-hdr-false" data-value="false">「偽」のとき</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -346,12 +299,7 @@
                                 <span class="debuff-icon-emoji">❄️</span>
                                 <span>氷床</span>
                             </td>
-                            <td class="truth-cell">
-                                <div class="truth-toggle-group">
-                                    <button class="truth-btn" id="iceFan-true" data-value="true">真</button>
-                                    <button class="truth-btn" id="iceFan-false" data-value="false">偽</button>
-                                </div>
-                            </td>
+                            <td class="truth-cell" style="display: none;"></td> <!-- ダミー列用（テーブルを合わせる） -->
                             <td class="effect-cell true-effect" id="iceFan-resolver-true">踏まない</td>
                             <td class="effect-cell false-effect" id="iceFan-resolver-false">踏む</td>
                         </tr>

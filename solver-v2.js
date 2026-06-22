@@ -21,20 +21,12 @@ let currentState = {};
 
 // ボスの同期する状態 (Firebase管理)
 let bossState = {
+    gc1_truth: 'none',            // 'true' | 'false' | 'none'
+    gc2_truth: 'none',            // 'true' | 'false' | 'none'
     gc1_water_timing: 'none',     // 'early' | 'late' | 'none'
-    gc1_water_truth: 'none',      // 'true' | 'false' | 'none'
     gc1_lightning_timing: 'none',  // 'early' | 'late' | 'none'
-    gc1_lightning_truth: 'none',   // 'true' | 'false' | 'none'
-    gc1_sight_truth: 'none',       // 'true' | 'false' | 'none'
-    gc1_bomb_truth: 'none',        // 'true' | 'false' | 'none'
-
     gc2_water_timing: 'none',     // 'early' | 'late' | 'none'
-    gc2_water_truth: 'none',      // 'true' | 'false' | 'none'
     gc2_lightning_timing: 'none',  // 'early' | 'late' | 'none'
-    gc2_lightning_truth: 'none',   // 'true' | 'false' | 'none'
-    gc2_sight_truth: 'none',       // 'true' | 'false' | 'none'
-    gc2_bomb_truth: 'none',        // 'true' | 'false' | 'none'
-
     fire_truth: 'none',           // 'true' | 'false' | 'none'
     tsunami_truth: 'none',        // 'true' | 'false' | 'none'
     lineLightning_truth: 'none',  // 'true' | 'false' | 'none'
@@ -129,112 +121,103 @@ function renderUI() {
         row1Bomb.classList.add('inactive');
     }
 
-    // --- 2. ボス「早・遅」「真・偽」ボタンのアクティブ表示 ---
-    const keys = [
-        { key: 'gc1_water', id: 'gc1-water' },
-        { key: 'gc1_lightning', id: 'gc1-lightning' },
-        { key: 'gc1_sight', id: 'gc1-sight', noTiming: true },
-        { key: 'gc1_bomb', id: 'gc1-bomb', noTiming: true },
-        { key: 'gc2_water', id: 'gc2-water' },
-        { key: 'gc2_lightning', id: 'gc2-lightning' },
-        { key: 'gc2_sight', id: 'gc2-sight', noTiming: true },
-        { key: 'gc2_bomb', id: 'gc2-bomb', noTiming: true },
-        { key: 'fire', id: 'fire', noTiming: true },
-        { key: 'tsunami', id: 'tsunami', noTiming: true },
-        { key: 'lineLightning', id: 'lineLightning', noTiming: true },
-        { key: 'iceFan', id: 'iceFan', noTiming: true }
-    ];
-
-    keys.forEach(item => {
-        // タイミングボタン
-        if (!item.noTiming) {
-            const btnEarly = document.getElementById(`${item.id}-early`);
-            const btnLate = document.getElementById(`${item.id}-late`);
-            btnEarly.classList.remove('active-early');
-            btnLate.classList.remove('active-late');
-
-            const timingVal = bossState[`${item.key}_timing`];
-            if (timingVal === 'early') {
-                btnEarly.classList.add('active-early');
-            } else if (timingVal === 'late') {
-                btnLate.classList.add('active-late');
-            }
-        }
-
-        // 真偽ボタン
-        const btnTrue = document.getElementById(`${item.id}-true`);
-        const btnFalse = document.getElementById(`${item.id}-false`);
+    // --- 2. ボス「真・偽」トグルボタンのアクティブ表示 ---
+    const keys = ['gc1', 'gc2', 'fire', 'tsunami', 'lineLightning', 'iceFan'];
+    keys.forEach(k => {
+        const btnTrue = document.getElementById(`${k}-true`);
+        const btnFalse = document.getElementById(`${k}-false`);
         btnTrue.classList.remove('active-true');
         btnFalse.classList.remove('active-false');
 
-        const truthVal = bossState[`${item.key}_truth`];
-        if (truthVal === 'true') {
+        // カラムヘッダー (GC1 & GC2 のみ)
+        const hdrTrue = document.getElementById(`${k}-hdr-true`);
+        const hdrFalse = document.getElementById(`${k}-hdr-false`);
+        if (hdrTrue && hdrFalse) {
+            hdrTrue.classList.remove('active-true', 'inactive-header');
+            hdrFalse.classList.remove('active-false', 'inactive-header');
+        }
+
+        const val = bossState[`${k}_truth`];
+        if (val === 'true') {
             btnTrue.classList.add('active-true');
-        } else if (truthVal === 'false') {
+            if (hdrTrue && hdrFalse) {
+                hdrTrue.classList.add('active-true');
+                hdrFalse.classList.add('inactive-header');
+            }
+        } else if (val === 'false') {
             btnFalse.classList.add('active-false');
+            if (hdrTrue && hdrFalse) {
+                hdrFalse.classList.add('active-false');
+                hdrTrue.classList.add('inactive-header');
+            }
         }
     });
 
-    // --- 3. 解決策セルのハイライト計算とクラス適用 ---
+    // --- 3. タイミング（早・遅）ボタンのアクティブ表示 ---
+    const timingKeys = [
+        { key: 'gc1_water', id: 'gc1-water' },
+        { key: 'gc1_lightning', id: 'gc1-lightning' },
+        { key: 'gc2_water', id: 'gc2-water' },
+        { key: 'gc2_lightning', id: 'gc2-lightning' }
+    ];
+    timingKeys.forEach(item => {
+        const btnEarly = document.getElementById(`${item.id}-early`);
+        const btnLate = document.getElementById(`${item.id}-late`);
+        btnEarly.classList.remove('active-early');
+        btnLate.classList.remove('active-late');
+
+        const val = bossState[`${item.key}_timing`];
+        if (val === 'early') {
+            btnEarly.classList.add('active-early');
+        } else if (val === 'late') {
+            btnLate.classList.add('active-late');
+        }
+    });
+
+    // --- 4. 解決策セルのハイライト計算とクラス適用 ---
     
     // 全てのエフェクトセルのハイライトを一括クリア
     document.querySelectorAll('.effect-cell').forEach(el => {
         el.classList.remove('highlight-true', 'highlight-false');
     });
 
-    // GC1 水
-    if (bossState.gc1_water_truth && bossState.gc1_water_truth !== 'none') {
-        const isTrue = bossState.gc1_water_truth === 'true';
+    // 1回目の解決策
+    if (bossState.gc1_truth && bossState.gc1_truth !== 'none') {
+        const isTrue = bossState.gc1_truth === 'true';
+        // 水
         if (localState.gc1_water_lightning === 'water') {
             document.getElementById(isTrue ? '1-water-true' : '1-water-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
-    }
-    // GC1 雷
-    if (bossState.gc1_lightning_truth && bossState.gc1_lightning_truth !== 'none') {
-        const isTrue = bossState.gc1_lightning_truth === 'true';
+        // 雷
         if (localState.gc1_water_lightning === 'lightning') {
             document.getElementById(isTrue ? '1-lightning-true' : '1-lightning-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
-    }
-    // GC1 視線
-    if (bossState.gc1_sight_truth && bossState.gc1_sight_truth !== 'none') {
-        const isTrue = bossState.gc1_sight_truth === 'true';
+        // 視線
         if (localState.gc1_sight) {
             document.getElementById(isTrue ? '1-sight-true' : '1-sight-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
-    }
-    // GC1 加速度
-    if (bossState.gc1_bomb_truth && bossState.gc1_bomb_truth !== 'none') {
-        const isTrue = bossState.gc1_bomb_truth === 'true';
+        // 加速度
         if (localState.gc1_bomb) {
             document.getElementById(isTrue ? '1-bomb-true' : '1-bomb-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
     }
 
-    // GC2 水
-    if (bossState.gc2_water_truth && bossState.gc2_water_truth !== 'none') {
-        const isTrue = bossState.gc2_water_truth === 'true';
+    // 2回目の解決策
+    if (bossState.gc2_truth && bossState.gc2_truth !== 'none') {
+        const isTrue = bossState.gc2_truth === 'true';
+        // 水
         if (localState.gc2_water_lightning === 'water') {
             document.getElementById(isTrue ? '2-water-true' : '2-water-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
-    }
-    // GC2 雷
-    if (bossState.gc2_lightning_truth && bossState.gc2_lightning_truth !== 'none') {
-        const isTrue = bossState.gc2_lightning_truth === 'true';
+        // 雷
         if (localState.gc2_water_lightning === 'lightning') {
             document.getElementById(isTrue ? '2-lightning-true' : '2-lightning-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
-    }
-    // GC2 視線
-    if (bossState.gc2_sight_truth && bossState.gc2_sight_truth !== 'none') {
-        const isTrue = bossState.gc2_sight_truth === 'true';
+        // 視線
         if (localState.gc2_sight) {
             document.getElementById(isTrue ? '2-sight-true' : '2-sight-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
-    }
-    // GC2 加速度
-    if (bossState.gc2_bomb_truth && bossState.gc2_bomb_truth !== 'none') {
-        const isTrue = bossState.gc2_bomb_truth === 'true';
+        // 加速度
         if (localState.gc2_bomb) {
             document.getElementById(isTrue ? '2-bomb-true' : '2-bomb-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
@@ -276,23 +259,12 @@ onValue(dbRef, (snapshot) => {
     bossState.gc2_water_timing = data.gc2WaterTiming || 'none';
     bossState.gc2_lightning_timing = data.gc2LightningTiming || 'none';
     
-    // Truthの復元 (早遅タイミングに基づいてマッピングから逆算)
-    bossState.gc1_water_truth = (bossState.gc1_water_timing === 'early') ? (data.earlyWater || 'none') : 
-                                 (bossState.gc1_water_timing === 'late') ? (data.lateWater || 'none') : 'none';
-                                 
-    bossState.gc1_lightning_truth = (bossState.gc1_lightning_timing === 'early') ? (data.earlyLightning || 'none') : 
-                                     (bossState.gc1_lightning_timing === 'late') ? (data.lateLightning || 'none') : 'none';
-                                     
-    bossState.gc2_water_truth = (bossState.gc2_water_timing === 'early') ? (data.earlyWater || 'none') : 
-                                 (bossState.gc2_water_timing === 'late') ? (data.lateWater || 'none') : 'none';
-                                 
-    bossState.gc2_lightning_truth = (bossState.gc2_lightning_timing === 'early') ? (data.earlyLightning || 'none') : 
-                                     (bossState.gc2_lightning_timing === 'late') ? (data.lateLightning || 'none') : 'none';
-                                     
-    bossState.gc1_sight_truth = data.earlyEye || 'none';
-    bossState.gc2_sight_truth = data.lateEye || 'none';
-    bossState.gc1_bomb_truth = data.bomb || 'none';
-    bossState.gc2_bomb_truth = data.bomb || 'none';
+    // Truthの復元 (既存キー earlyWater などから復元)
+    bossState.gc1_truth = (data.earlyWater === 'true' || data.earlyWater === 'false') ? data.earlyWater : 
+                           (data.earlyEye === 'true' || data.earlyEye === 'false') ? data.earlyEye : 'none';
+                           
+    bossState.gc2_truth = (data.lateWater === 'true' || data.lateWater === 'false') ? data.lateWater : 
+                           (data.lateEye === 'true' || data.lateEye === 'false') ? data.lateEye : 'none';
     
     bossState.fire_truth = data.fire || 'none';
     bossState.tsunami_truth = data.water || 'none';
@@ -308,32 +280,32 @@ function updateFirebaseState() {
     let earlyWater = 'none';
     let lateWater = 'none';
     
-    if (bossState.gc1_water_timing === 'early' && bossState.gc1_water_truth !== 'none') {
-        earlyWater = bossState.gc1_water_truth;
-    } else if (bossState.gc2_water_timing === 'early' && bossState.gc2_water_truth !== 'none') {
-        earlyWater = bossState.gc2_water_truth;
+    if (bossState.gc1_water_timing === 'early' && bossState.gc1_truth !== 'none') {
+        earlyWater = bossState.gc1_truth;
+    } else if (bossState.gc2_water_timing === 'early' && bossState.gc2_truth !== 'none') {
+        earlyWater = bossState.gc2_truth;
     }
     
-    if (bossState.gc1_water_timing === 'late' && bossState.gc1_water_truth !== 'none') {
-        lateWater = bossState.gc1_water_truth;
-    } else if (bossState.gc2_water_timing === 'late' && bossState.gc2_water_truth !== 'none') {
-        lateWater = bossState.gc2_water_truth;
+    if (bossState.gc1_water_timing === 'late' && bossState.gc1_truth !== 'none') {
+        lateWater = bossState.gc1_truth;
+    } else if (bossState.gc2_water_timing === 'late' && bossState.gc2_truth !== 'none') {
+        lateWater = bossState.gc2_truth;
     }
     
     // 雷 (Lightning) のマッピング
     let earlyLightning = 'none';
     let lateLightning = 'none';
     
-    if (bossState.gc1_lightning_timing === 'early' && bossState.gc1_lightning_truth !== 'none') {
-        earlyLightning = bossState.gc1_lightning_truth;
-    } else if (bossState.gc2_lightning_timing === 'early' && bossState.gc2_lightning_truth !== 'none') {
-        earlyLightning = bossState.gc2_lightning_truth;
+    if (bossState.gc1_lightning_timing === 'early' && bossState.gc1_truth !== 'none') {
+        earlyLightning = bossState.gc1_truth;
+    } else if (bossState.gc2_lightning_timing === 'early' && bossState.gc2_truth !== 'none') {
+        earlyLightning = bossState.gc2_truth;
     }
     
-    if (bossState.gc1_lightning_timing === 'late' && bossState.gc1_lightning_truth !== 'none') {
-        lateLightning = bossState.gc1_lightning_truth;
-    } else if (bossState.gc2_lightning_timing === 'late' && bossState.gc2_lightning_truth !== 'none') {
-        lateLightning = bossState.gc2_lightning_truth;
+    if (bossState.gc1_lightning_timing === 'late' && bossState.gc1_truth !== 'none') {
+        lateLightning = bossState.gc1_truth;
+    } else if (bossState.gc2_lightning_timing === 'late' && bossState.gc2_truth !== 'none') {
+        lateLightning = bossState.gc2_truth;
     }
     
     // タイムライン互換のキーへ書き込み
@@ -342,10 +314,12 @@ function updateFirebaseState() {
     currentState.earlyLightning = earlyLightning;
     currentState.lateLightning = lateLightning;
     
-    currentState.earlyEye = bossState.gc1_sight_truth || 'none';
-    currentState.lateEye = bossState.gc2_sight_truth || 'none';
-    currentState.bomb = (bossState.gc1_bomb_truth === 'true' || bossState.gc1_bomb_truth === 'false') ? bossState.gc1_bomb_truth :
-                        (bossState.gc2_bomb_truth === 'true' || bossState.gc2_bomb_truth === 'false') ? bossState.gc2_bomb_truth : 'none';
+    currentState.earlyEye = bossState.gc1_truth || 'none';
+    currentState.lateEye = bossState.gc2_truth || 'none';
+    
+    // 加速度は gc1 / gc2 いずれかが真・偽になった場合に bomb にマッピング
+    currentState.bomb = (bossState.gc1_truth === 'true' || bossState.gc1_truth === 'false') ? bossState.gc1_truth :
+                        (bossState.gc2_truth === 'true' || bossState.gc2_truth === 'false') ? bossState.gc2_truth : 'none';
     
     currentState.fire = bossState.fire_truth || 'none';
     currentState.water = bossState.tsunami_truth || 'none';
@@ -361,14 +335,14 @@ function updateFirebaseState() {
     set(dbRef, currentState);
 }
 
-// ボタン入力ハンドラ
+// ボスの真偽トグル更新関数（2回押しても解除されない）
 function setBossTruth(key, value) {
     bossState[`${key}_truth`] = value;
     updateFirebaseState();
 }
 
+// Timingトグル更新関数（2回押すと none に戻す）
 function setBossTiming(key, value) {
-    // トグル動作（同じのを選択したら none に戻す）
     const currentVal = bossState[`${key}_timing`];
     bossState[`${key}_timing`] = (currentVal === value) ? 'none' : value;
     updateFirebaseState();
@@ -378,45 +352,29 @@ function setBossTiming(key, value) {
 
 // 1. 各トグルボタンへのバインド
 const buttons = [
-    // GC1 水
+    // GC1 真偽
+    { id: 'gc1-true', action: () => setBossTruth('gc1', 'true') },
+    { id: 'gc1-false', action: () => setBossTruth('gc1', 'false') },
+
+    // GC2 真偽
+    { id: 'gc2-true', action: () => setBossTruth('gc2', 'true') },
+    { id: 'gc2-false', action: () => setBossTruth('gc2', 'false') },
+
+    // GC1 水タイミング
     { id: 'gc1-water-early', action: () => setBossTiming('gc1_water', 'early') },
     { id: 'gc1-water-late', action: () => setBossTiming('gc1_water', 'late') },
-    { id: 'gc1-water-true', action: () => setBossTruth('gc1_water', 'true') },
-    { id: 'gc1-water-false', action: () => setBossTruth('gc1_water', 'false') },
 
-    // GC1 雷
+    // GC1 雷タイミング
     { id: 'gc1-lightning-early', action: () => setBossTiming('gc1_lightning', 'early') },
     { id: 'gc1-lightning-late', action: () => setBossTiming('gc1_lightning', 'late') },
-    { id: 'gc1-lightning-true', action: () => setBossTruth('gc1_lightning', 'true') },
-    { id: 'gc1-lightning-false', action: () => setBossTruth('gc1_lightning', 'false') },
 
-    // GC1 視線
-    { id: 'gc1-sight-true', action: () => setBossTruth('gc1_sight', 'true') },
-    { id: 'gc1-sight-false', action: () => setBossTruth('gc1_sight', 'false') },
-
-    // GC1 加速度
-    { id: 'gc1-bomb-true', action: () => setBossTruth('gc1_bomb', 'true') },
-    { id: 'gc1-bomb-false', action: () => setBossTruth('gc1_bomb', 'false') },
-
-    // GC2 水
+    // GC2 水タイミング
     { id: 'gc2-water-early', action: () => setBossTiming('gc2_water', 'early') },
     { id: 'gc2-water-late', action: () => setBossTiming('gc2_water', 'late') },
-    { id: 'gc2-water-true', action: () => setBossTruth('gc2_water', 'true') },
-    { id: 'gc2-water-false', action: () => setBossTruth('gc2_water', 'false') },
 
-    // GC2 雷
+    // GC2 雷タイミング
     { id: 'gc2-lightning-early', action: () => setBossTiming('gc2_lightning', 'early') },
     { id: 'gc2-lightning-late', action: () => setBossTiming('gc2_lightning', 'late') },
-    { id: 'gc2-lightning-true', action: () => setBossTruth('gc2_lightning', 'true') },
-    { id: 'gc2-lightning-false', action: () => setBossTruth('gc2_lightning', 'false') },
-
-    // GC2 視線
-    { id: 'gc2-sight-true', action: () => setBossTruth('gc2_sight', 'true') },
-    { id: 'gc2-sight-false', action: () => setBossTruth('gc2_sight', 'false') },
-
-    // GC2 加速度
-    { id: 'gc2-bomb-true', action: () => setBossTruth('gc2_bomb', 'true') },
-    { id: 'gc2-bomb-false', action: () => setBossTruth('gc2_bomb', 'false') },
 
     // ほのお
     { id: 'fire-true', action: () => setBossTruth('fire', 'true') },
@@ -445,25 +403,51 @@ buttons.forEach(item => {
     }
 });
 
-// 2. 解決策セルのクリック（直接クリックでの真偽設定）
-const effectCells = [
-    { id: '1-water-true', key: 'gc1_water', val: 'true' },
-    { id: '1-water-false', key: 'gc1_water', val: 'false' },
-    { id: '1-lightning-true', key: 'gc1_lightning', val: 'true' },
-    { id: '1-lightning-false', key: 'gc1_lightning', val: 'false' },
-    { id: '1-sight-true', key: 'gc1_sight', val: 'true' },
-    { id: '1-sight-false', key: 'gc1_sight', val: 'false' },
-    { id: '1-bomb-true', key: 'gc1_bomb', val: 'true' },
-    { id: '1-bomb-false', key: 'gc1_bomb', val: 'false' },
+// 2. カラムヘッダー（「真」のとき / 「偽」のとき）のクリックによる真偽設定
+const truthHdrIds = [
+    { id: 'gc1-hdr-true', key: 'gc1', val: 'true' },
+    { id: 'gc1-hdr-false', key: 'gc1', val: 'false' },
+    { id: 'gc2-hdr-true', key: 'gc2', val: 'true' },
+    { id: 'gc2-hdr-false', key: 'gc2', val: 'false' },
+    { id: 'fire-hdr-true', key: 'fire', val: 'true' },
+    { id: 'fire-hdr-false', key: 'fire', val: 'false' },
+    { id: 'tsunami-hdr-true', key: 'tsunami', val: 'true' },
+    { id: 'tsunami-hdr-false', key: 'tsunami', val: 'false' },
+    { id: 'lineLightning-hdr-true', key: 'lineLightning', val: 'true' },
+    { id: 'lineLightning-hdr-false', key: 'lineLightning', val: 'false' },
+    { id: 'iceFan-hdr-true', key: 'iceFan', val: 'true' },
+    { id: 'iceFan-hdr-false', key: 'iceFan', val: 'false' }
+];
 
-    { id: '2-water-true', key: 'gc2_water', val: 'true' },
-    { id: '2-water-false', key: 'gc2_water', val: 'false' },
-    { id: '2-lightning-true', key: 'gc2_lightning', val: 'true' },
-    { id: '2-lightning-false', key: 'gc2_lightning', val: 'false' },
-    { id: '2-sight-true', key: 'gc2_sight', val: 'true' },
-    { id: '2-sight-false', key: 'gc2_sight', val: 'false' },
-    { id: '2-bomb-true', key: 'gc2_bomb', val: 'true' },
-    { id: '2-bomb-false', key: 'gc2_bomb', val: 'false' },
+truthHdrIds.forEach(item => {
+    const el = document.getElementById(item.id);
+    if (el) {
+        el.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            setBossTruth(item.key, item.val);
+        });
+    }
+});
+
+// 3. 解決策セルのクリック（直接クリックでの真偽設定）
+const effectCells = [
+    { id: '1-water-true', key: 'gc1', val: 'true' },
+    { id: '1-water-false', key: 'gc1', val: 'false' },
+    { id: '1-lightning-true', key: 'gc1', val: 'true' },
+    { id: '1-lightning-false', key: 'gc1', val: 'false' },
+    { id: '1-sight-true', key: 'gc1', val: 'true' },
+    { id: '1-sight-false', key: 'gc1', val: 'false' },
+    { id: '1-bomb-true', key: 'gc1', val: 'true' },
+    { id: '1-bomb-false', key: 'gc1', val: 'false' },
+
+    { id: '2-water-true', key: 'gc2', val: 'true' },
+    { id: '2-water-false', key: 'gc2', val: 'false' },
+    { id: '2-lightning-true', key: 'gc2', val: 'true' },
+    { id: '2-lightning-false', key: 'gc2', val: 'false' },
+    { id: '2-sight-true', key: 'gc2', val: 'true' },
+    { id: '2-sight-false', key: 'gc2', val: 'false' },
+    { id: '2-bomb-true', key: 'gc2', val: 'true' },
+    { id: '2-bomb-false', key: 'gc2', val: 'false' },
 
     { id: 'fire-resolver-true', key: 'fire', val: 'true' },
     { id: 'fire-resolver-false', key: 'fire', val: 'false' },
@@ -485,9 +469,8 @@ effectCells.forEach(item => {
     }
 });
 
-// 3. プレイヤーのデバフクリック選択 (1回目/2回目)
+// 4. プレイヤーのデバフクリック選択 (1回目/2回目)
 document.getElementById('row-1-water').addEventListener('pointerdown', (e) => {
-    // ボタンのイベントと干渉しないよう、tdのクリックでのみ反応させる (targetがbuttonならスキップ)
     if (e.target.tagName.toLowerCase() === 'button') return;
     e.preventDefault();
     if (localState.gc2_water_lightning) return;
@@ -523,7 +506,6 @@ document.getElementById('row-2-lightning').addEventListener('pointerdown', (e) =
 
 // 視線の行クリック
 document.getElementById('row-1-sight').addEventListener('pointerdown', (e) => {
-    if (e.target.tagName.toLowerCase() === 'button') return;
     e.preventDefault();
     if (localState.gc2_sight) return;
     localState.gc1_sight = !localState.gc1_sight;
@@ -531,7 +513,6 @@ document.getElementById('row-1-sight').addEventListener('pointerdown', (e) => {
     renderUI();
 });
 document.getElementById('row-2-sight').addEventListener('pointerdown', (e) => {
-    if (e.target.tagName.toLowerCase() === 'button') return;
     e.preventDefault();
     if (localState.gc1_sight) return;
     localState.gc2_sight = !localState.gc2_sight;
@@ -541,7 +522,6 @@ document.getElementById('row-2-sight').addEventListener('pointerdown', (e) => {
 
 // 加速度の行クリック
 document.getElementById('row-1-bomb').addEventListener('pointerdown', (e) => {
-    if (e.target.tagName.toLowerCase() === 'button') return;
     e.preventDefault();
     if (localState.gc2_bomb) return;
     localState.gc1_bomb = !localState.gc1_bomb;
@@ -549,7 +529,6 @@ document.getElementById('row-1-bomb').addEventListener('pointerdown', (e) => {
     renderUI();
 });
 document.getElementById('row-2-bomb').addEventListener('pointerdown', (e) => {
-    if (e.target.tagName.toLowerCase() === 'button') return;
     e.preventDefault();
     if (localState.gc1_bomb) return;
     localState.gc2_bomb = !localState.gc2_bomb;
@@ -557,7 +536,7 @@ document.getElementById('row-2-bomb').addEventListener('pointerdown', (e) => {
     renderUI();
 });
 
-// 4. リセットボタン
+// 5. リセットボタン
 document.getElementById('localResetBtn').addEventListener('pointerdown', (e) => {
     e.preventDefault();
     
@@ -574,18 +553,12 @@ document.getElementById('localResetBtn').addEventListener('pointerdown', (e) => 
     
     // 共有の真偽・タイミング状態を一括リセット
     bossState = {
+        gc1_truth: 'none',
+        gc2_truth: 'none',
         gc1_water_timing: 'none',
-        gc1_water_truth: 'none',
         gc1_lightning_timing: 'none',
-        gc1_lightning_truth: 'none',
-        gc1_sight_truth: 'none',
-        gc1_bomb_truth: 'none',
         gc2_water_timing: 'none',
-        gc2_water_truth: 'none',
         gc2_lightning_timing: 'none',
-        gc2_lightning_truth: 'none',
-        gc2_sight_truth: 'none',
-        gc2_bomb_truth: 'none',
         fire_truth: 'none',
         tsunami_truth: 'none',
         lineLightning_truth: 'none',

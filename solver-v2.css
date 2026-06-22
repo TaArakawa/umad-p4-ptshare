@@ -183,8 +183,50 @@ h1 {
     color: #cbd5e1;
 }
 
+/* 真・偽 トグルボタン (カードヘッダー用) */
+.truth-toggle-group {
+    display: flex;
+    background-color: var(--btn-idle);
+    border-radius: 3px;
+    padding: 1px;
+    gap: 1px;
+}
+
+.truth-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 1.5px 5px;
+    font-size: 0.65rem;
+    font-weight: bold;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+}
+
+/* タップ領域拡張用の疑似要素 */
+.truth-btn::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    bottom: -6px;
+    left: -4px;
+    right: -4px;
+}
+
+.truth-btn.active-true {
+    background-color: var(--accent-true);
+    color: #052e16;
+}
+
+.truth-btn.active-false {
+    background-color: var(--accent-false);
+    color: #450a0a;
+}
+
 /* ==========================================================================
-   テーブルスタイル（モバイル版はグリッド化して2段構成に）
+   テーブルスタイル（モバイル版も v1 のテーブル形状を維持）
    ========================================================================== */
 .solver-table {
     width: 100%;
@@ -193,108 +235,117 @@ h1 {
     line-height: 1.0;
 }
 
-/* モバイル版はテーブルヘッダーを非表示にしてスペースを節約 */
-.solver-table thead {
-    display: none;
-}
-
-/* デバフ行の2段構成グリッド化 (水 & 雷) */
-.solver-table tr.debuff-row {
-    display: grid;
-    grid-template-columns: 1.1fr 1.45fr 1.45fr;
-    grid-template-rows: auto auto;
-    gap: 2px;
-    padding: 3.5px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    align-items: center;
-}
-
-/* 視線 & 加速度（タイミングなし）の2段構成グリッド化 */
-.solver-table tr.debuff-row[data-debuff="sight"],
-.solver-table tr.debuff-row[data-debuff="bomb"] {
-    grid-template-columns: 1.1fr 2.9fr;
-}
-
-.solver-table tr.debuff-row td {
-    display: block;
-    width: 100%;
+.solver-table th,
+.solver-table td {
+    padding: 3.5px 1.5px;
     text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-/* セル配置の定義 */
+.solver-table th {
+    font-weight: bold;
+    color: #94a3b8;
+    font-size: 0.64rem;
+    padding-bottom: 2px;
+}
+
+.timing-header-col {
+    font-size: 0.62rem;
+}
+
+/* 真偽カラムヘッダーボタン */
+.truth-header-btn {
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+}
+
+.truth-header-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #f1f5f9;
+}
+
+.truth-header-btn.active-true {
+    background-color: rgba(34, 197, 94, 0.15);
+    border-color: var(--accent-true);
+    color: var(--accent-true) !important;
+}
+
+.truth-header-btn.active-false {
+    background-color: rgba(239, 68, 68, 0.15);
+    border-color: var(--accent-false);
+    color: var(--accent-false) !important;
+}
+
+.truth-header-btn.inactive-header {
+    opacity: 0.35;
+}
+
+/* デバフセル（クリック選択可能） */
 .debuff-cell {
-    grid-column: 1;
-    grid-row: 1 / span 2; /* デバフアイコンは左側に縦に結合 */
-    align-self: center;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-weight: bold;
+    color: #cbd5e1;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 2px 3px;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+    white-space: nowrap;
 }
 
-/* 水・雷のタイミングと真偽 */
+.debuff-cell:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.debuff-icon {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.debuff-icon-emoji {
+    width: 14px;
+    height: 14px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+/* タイミングセルおよびトグルボタン */
 .timing-cell {
-    grid-column: 2;
-    grid-row: 1;
-}
-.truth-cell {
-    grid-column: 3;
-    grid-row: 1;
+    width: 32%;
 }
 
-/* 視線・加速度はタイミングがないため真偽を右側いっぱいに */
-tr[data-debuff="sight"] .truth-cell,
-tr[data-debuff="bomb"] .truth-cell {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-/* 解決策セル (下段) */
-.true-effect {
-    grid-column: 2;
-    grid-row: 2;
-}
-.false-effect {
-    grid-column: 3;
-    grid-row: 2;
-}
-
-/* 視線・加速度の解決策 (下段に2列並べる) */
-tr[data-debuff="sight"] .true-effect,
-tr[data-debuff="bomb"] .true-effect {
-    grid-column: 2;
-    grid-row: 2;
-    width: 50%;
-    float: left;
-}
-tr[data-debuff="sight"] .false-effect,
-tr[data-debuff="bomb"] .false-effect {
-    grid-column: 2;
-    grid-row: 2;
-    width: 50%;
-    float: right;
-}
-
-/* 空欄セルの非表示 */
-.empty-cell {
-    display: none !important;
-}
-
-/* --- ボタン類 --- */
-.timing-toggle-group,
-.truth-toggle-group {
+.timing-toggle-group {
     display: flex;
     background-color: var(--btn-idle);
     border-radius: 3px;
     padding: 1px;
     gap: 1px;
     width: 100%;
+    max-width: 70px;
+    margin: 0 auto;
 }
 
-.timing-btn,
-.truth-btn {
+.timing-btn {
     flex: 1;
     background: none;
     border: none;
     color: #94a3b8;
-    padding: 2.5px 2px;
-    font-size: 0.65rem;
+    padding: 2px 2px;
+    font-size: 0.62rem;
     font-weight: bold;
     border-radius: 2px;
     cursor: pointer;
@@ -304,8 +355,7 @@ tr[data-debuff="bomb"] .false-effect {
 }
 
 /* タップ領域拡張 */
-.timing-btn::after,
-.truth-btn::after {
+.timing-btn::after {
     content: '';
     position: absolute;
     top: -5px;
@@ -314,7 +364,6 @@ tr[data-debuff="bomb"] .false-effect {
     right: -4px;
 }
 
-/* タイミングボタンアクティブ */
 .timing-btn.active-early {
     background-color: #f59e0b; /* オレンジ/黄 */
     color: #451a03;
@@ -322,59 +371,6 @@ tr[data-debuff="bomb"] .false-effect {
 .timing-btn.active-late {
     background-color: #3b82f6; /* 青 */
     color: #172554;
-}
-
-/* 真偽ボタンアクティブ */
-.truth-btn.active-true {
-    background-color: var(--accent-true);
-    color: #052e16;
-}
-.truth-btn.active-false {
-    background-color: var(--accent-false);
-    color: #450a0a;
-}
-
-/* デバフアイコン＆セル */
-.debuff-cell {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2.5px;
-    font-weight: bold;
-    color: #cbd5e1;
-    cursor: pointer;
-    padding: 2px;
-    border: 1px solid transparent;
-    border-radius: 3px;
-}
-
-.debuff-cell:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
-.debuff-cell span {
-    font-size: 0.62rem;
-    white-space: nowrap;
-}
-
-.debuff-icon {
-    width: 15px;
-    height: 15px;
-    border-radius: 2.5px;
-    flex-shrink: 0;
-}
-
-.debuff-icon-emoji {
-    width: 15px;
-    height: 15px;
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 2.5px;
-    flex-shrink: 0;
 }
 
 /* デバフ行のアクティブ・非アクティブ状態 */
@@ -389,7 +385,7 @@ tr[data-debuff="bomb"] .false-effect {
     pointer-events: none;
 }
 
-/* 解決策セル */
+/* 解決策セル（初期状態はグレーアウト、直接クリック可能） */
 .effect-cell {
     font-weight: bold;
     color: #475569;
@@ -397,7 +393,7 @@ tr[data-debuff="bomb"] .false-effect {
     border-radius: 3px;
     transition: all 0.2s ease;
     cursor: pointer;
-    padding: 3px 2px;
+    white-space: nowrap;
 }
 
 .effect-cell:hover {
@@ -405,18 +401,18 @@ tr[data-debuff="bomb"] .false-effect {
     color: #cbd5e1;
 }
 
-/* ハイライト表示 */
+/* ボスの真偽が一致して、さらにデバフがアクティブな場合のハイライト */
 .debuff-row.active .effect-cell.highlight-true {
     background-color: rgba(34, 197, 94, 0.18);
     color: var(--accent-true);
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     box-shadow: inset 0 0 2px rgba(34, 197, 94, 0.1);
 }
 
 .debuff-row.active .effect-cell.highlight-false {
     background-color: rgba(239, 68, 68, 0.18);
     color: var(--accent-false);
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     box-shadow: inset 0 0 2px rgba(239, 68, 68, 0.1);
 }
 
@@ -426,46 +422,9 @@ tr[data-debuff="bomb"] .false-effect {
     font-weight: 900;
 }
 
-/* ほのお、つなみ、雷床、氷床 (card-half 内のテーブル設定) */
-.card-half tr.debuff-row {
-    display: grid;
-    grid-template-columns: 1.1fr 1.6fr 1.3fr;
-    grid-template-rows: auto;
-    padding: 4px 0;
-    align-items: center;
-    border-bottom: none;
-}
-
-.card-half .debuff-cell {
-    grid-column: 1;
-    grid-row: 1;
-    flex-direction: row;
-    gap: 3px;
-    align-self: center;
-}
-
-.card-half .truth-cell {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.card-half .true-effect {
-    grid-column: 3;
-    grid-row: 1;
-    width: 50%;
-    float: left;
-}
-
-.card-half .false-effect {
-    grid-column: 3;
-    grid-row: 1;
-    width: 50%;
-    float: right;
-}
-
 
 /* ==========================================================================
-   PC版 (PCモード) スタイルオーバーライド（大画面用にテーブルレイアウトへ戻す）
+   PC版 (PCモード) スタイルオーバーライド
    ========================================================================== */
 
 body.pc-mode {
@@ -541,38 +500,24 @@ body.pc-mode .card-header h2 {
     font-size: 1.2rem;
 }
 
-/* テーブルスタイルを通常のテーブル行に戻す */
 body.pc-mode .solver-table {
     font-size: 0.95rem;
 }
 
-body.pc-mode .solver-table thead {
-    display: table-header-group;
-}
-
-body.pc-mode .col-debuff { width: 25%; }
-body.pc-mode .col-timing { width: 20%; }
-body.pc-mode .col-truth  { width: 20%; }
-body.pc-mode .col-effect { width: 17.5%; }
-
-body.pc-mode .solver-table tr.debuff-row,
-body.pc-mode .card-half tr.debuff-row {
-    display: table-row;
-    border-bottom: none;
-}
-
+body.pc-mode .solver-table th,
 body.pc-mode .solver-table td {
-    display: table-cell;
-    padding: 10px 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 12px 10px;
+}
+
+body.pc-mode .solver-table th {
+    font-size: 0.85rem;
+    padding-bottom: 10px;
 }
 
 body.pc-mode .debuff-cell {
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 10px;
     font-size: 1.05rem;
     padding: 8px;
+    gap: 8px;
 }
 
 body.pc-mode .debuff-cell span {
@@ -582,7 +527,6 @@ body.pc-mode .debuff-cell span {
 body.pc-mode .debuff-icon {
     width: 32px;
     height: 32px;
-    border-radius: 4px;
 }
 
 body.pc-mode .debuff-icon-emoji {
@@ -592,18 +536,13 @@ body.pc-mode .debuff-icon-emoji {
     border-radius: 4px;
 }
 
-body.pc-mode .timing-toggle-group,
-body.pc-mode .truth-toggle-group {
-    border-radius: 6px;
-    padding: 2px;
-    gap: 2px;
+body.pc-mode .timing-toggle-group {
+    max-width: 120px;
 }
 
-body.pc-mode .timing-btn,
-body.pc-mode .truth-btn {
+body.pc-mode .timing-btn {
     padding: 6px 10px;
     font-size: 0.95rem;
-    border-radius: 4px;
 }
 
 body.pc-mode .effect-cell {
