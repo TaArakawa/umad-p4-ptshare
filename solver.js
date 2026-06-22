@@ -452,6 +452,8 @@ document.getElementById('row-2-bomb').addEventListener('pointerdown', (e) => {
 // 5. ローカルリセットボタン
 document.getElementById('localResetBtn').addEventListener('pointerdown', (e) => {
     e.preventDefault();
+    
+    // 個人デバフのローカル状態をリセット
     localState = {
         gc1_water_lightning: null,
         gc2_water_lightning: null,
@@ -461,6 +463,20 @@ document.getElementById('localResetBtn').addEventListener('pointerdown', (e) => 
         gc2_bomb: false
     };
     saveLocalState();
+    
+    // 共有の真偽状態も一括リセット
+    currentState.earlyWater = 'none';
+    currentState.earlyLightning = 'none';
+    currentState.earlyEye = 'none';
+    currentState.lateWater = 'none';
+    currentState.lateLightning = 'none';
+    currentState.lateEye = 'none';
+    currentState.fire = 'none';
+    currentState.water = 'none';
+    currentState.lineLightning = 'none';
+    currentState.iceFan = 'none';
+    
+    set(dbRef, currentState);
     renderUI();
 });
 
