@@ -260,12 +260,14 @@ onValue(dbRef, (snapshot) => {
     bossState.gc1_timing = data.gc1WaterTiming || 'none';
     bossState.gc2_timing = data.gc2WaterTiming || 'none';
     
-    // Truthの復元 (既存キー earlyWater などから復元)
-    bossState.gc1_truth = (data.earlyWater === 'true' || data.earlyWater === 'false') ? data.earlyWater : 
-                           (data.earlyEye === 'true' || data.earlyEye === 'false') ? data.earlyEye : 'none';
+    // Truthの復元 (明示的なキーがあれば優先し、なければ後方互換で復元)
+    bossState.gc1_truth = data.gc1Truth || 
+                           ((data.earlyWater === 'true' || data.earlyWater === 'false') ? data.earlyWater : 
+                            (data.earlyEye === 'true' || data.earlyEye === 'false') ? data.earlyEye : 'none');
                            
-    bossState.gc2_truth = (data.lateWater === 'true' || data.lateWater === 'false') ? data.lateWater : 
-                           (data.lateEye === 'true' || data.lateEye === 'false') ? data.lateEye : 'none';
+    bossState.gc2_truth = data.gc2Truth || 
+                           ((data.lateWater === 'true' || data.lateWater === 'false') ? data.lateWater : 
+                            (data.lateEye === 'true' || data.lateEye === 'false') ? data.lateEye : 'none');
     
     bossState.fire_truth = data.fire || 'none';
     bossState.tsunami_truth = data.water || 'none';
@@ -335,6 +337,10 @@ function updateFirebaseState() {
     
     currentState.earlyEye = bossState.gc1_truth || 'none';
     currentState.lateEye = bossState.gc2_truth || 'none';
+
+    // 安定した明示的な真偽値キーの保存
+    currentState.gc1Truth = bossState.gc1_truth || 'none';
+    currentState.gc2Truth = bossState.gc2_truth || 'none';
     
     // 加速度は gc1 / gc2 いずれかが真・偽になった場合に bomb にマッピング
     currentState.bomb = (bossState.gc1_truth === 'true' || bossState.gc1_truth === 'false') ? bossState.gc1_truth :

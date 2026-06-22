@@ -235,8 +235,10 @@ onValue(dbRef, (snapshot) => {
     currentState = data;
     
     // メインの真偽状態と同期する
-    bossState.gc1_truth = (data.earlyWater === 'true' || data.earlyWater === 'false') ? data.earlyWater : null;
-    bossState.gc2_truth = (data.lateWater === 'true' || data.lateWater === 'false') ? data.lateWater : null;
+    bossState.gc1_truth = (data.gc1Truth === 'true' || data.gc1Truth === 'false') ? data.gc1Truth :
+                           ((data.earlyWater === 'true' || data.earlyWater === 'false') ? data.earlyWater : null);
+    bossState.gc2_truth = (data.gc2Truth === 'true' || data.gc2Truth === 'false') ? data.gc2Truth :
+                           ((data.lateWater === 'true' || data.lateWater === 'false') ? data.lateWater : null);
     bossState.fire_truth = (data.fire === 'true' || data.fire === 'false') ? data.fire : null;
     bossState.tsunami_truth = (data.water === 'true' || data.water === 'false') ? data.water : null;
     bossState.lineLightning_truth = (data.lineLightning === 'true' || data.lineLightning === 'false') ? data.lineLightning : null;
@@ -251,10 +253,12 @@ function setBossTruth(key, value) {
     const newVal = value;
 
     if (key === 'gc1') {
+        currentState.gc1Truth = newVal;
         currentState.earlyWater = newVal;
         currentState.earlyLightning = newVal;
         currentState.earlyEye = newVal;
     } else if (key === 'gc2') {
+        currentState.gc2Truth = newVal;
         currentState.lateWater = newVal;
         currentState.lateLightning = newVal;
         currentState.lateEye = newVal;
@@ -465,6 +469,8 @@ document.getElementById('localResetBtn').addEventListener('pointerdown', (e) => 
     saveLocalState();
     
     // 共有の真偽状態も一括リセット
+    currentState.gc1Truth = 'none';
+    currentState.gc2Truth = 'none';
     currentState.earlyWater = 'none';
     currentState.earlyLightning = 'none';
     currentState.earlyEye = 'none';

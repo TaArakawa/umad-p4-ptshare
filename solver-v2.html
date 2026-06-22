@@ -17,8 +17,11 @@
         <!-- ヘッダーエリア -->
         <header class="solver-header">
             <div class="header-left">
-                <a href="index.html" class="back-link">← メインカンペ</a>
-                <a href="solver.html" class="back-link" style="margin-left: 8px;">v1判定ツール ➔</a>
+                <select class="page-select" onchange="location.href=this.value">
+                    <option value="index.html">メインカンペ</option>
+                    <option value="solver.html">個別判定 v1</option>
+                    <option value="solver-v2.html" selected>個別判定 v2</option>
+                </select>
                 <h1>個別判定 v2</h1>
             </div>
             <div class="header-right">
