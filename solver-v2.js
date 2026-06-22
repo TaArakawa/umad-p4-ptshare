@@ -33,6 +33,9 @@ let bossState = {
     iceFan_truth: 'none'          // 'true' | 'false' | 'none'
 };
 
+// 最後に編集したGC (1 または 2、相互推論時の競合回避に使用)
+let lastEditedGC = null;
+
 // プレイヤー個人のデバフ選択状態 (ローカル管理)
 let localState = {
     gc1_water_lightning: null, // "water" / "lightning" / null
@@ -274,6 +277,7 @@ onValue(dbRef, (snapshot) => {
     bossState.tsunami_truth = data.water || 'none';
     bossState.lineLightning_truth = data.lineLightning || 'none';
     bossState.iceFan_truth = data.iceFan || 'none';
+    lastEditedGC = data.lastEditedGC || null;
     
     deduceState();
     renderUI();
@@ -281,231 +285,120 @@ onValue(dbRef, (snapshot) => {
 
 // 自動推論ロジック (1回目と2回目で早の頭割り、遅の頭割り、早の散開、遅の散開が重複せず分配される特性を利用)
 function deduceState() {
-    let changed = true;
-    let iterations = 0;
-    
-    while (changed && iterations < 10) {
-        changed = false;
+    // 1回目 (GC1) からの推論を実行可能か判定
+    const canDeduceFromGC1 = bossState.gc1_truth !== 'none' && 
+                             bossState.gc1_water_timing !== 'none' && 
+                             bossState.gc1_lightning_timing !== 'none';
+                             
+    // 2回目 (GC2) からの推論を実行可能か判定
+    const canDeduceFromGC2 = bossState.gc2_truth !== 'none' && 
+                             bossState.gc2_water_timing !== 'none' && 
+                             bossState.gc2_lightning_timing !== 'none';
 
-        // 各GCでのロール（ES: 早頭割, LS: 遅頭割, EP: 早散開, LP: 遅散開）の特定
-        let r1_water = null;
-        if (bossState.gc1_truth !== 'none' && bossState.gc1_water_timing !== 'none') {
-            if (bossState.gc1_truth === 'true') {
-                r1_water = bossState.gc1_water_timing === 'early' ? 'ES' : 'LS';
-            } else {
-                r1_water = bossState.gc1_water_timing === 'early' ? 'EP' : 'LP';
-            }
-        }
+    // 優先順位の決定 (直近で編集された方の入力を優先ソースとし、競合状態を避けて相手側を上書き)
+    let primaryGC = null;
+    if (lastEditedGC === 1) {
+        if (canDeduceFromGC1) primaryGC = 1;
+        else if (canDeduceFromGC2) primaryGC = 2;
+    } else if (lastEditedGC === 2) {
+        if (canDeduceFromGC2) primaryGC = 2;
+        else if (canDeduceFromGC1) primaryGC = 1;
+    } else {
+        if (canDeduceFromGC1) primaryGC = 1;
+        else if (canDeduceFromGC2) primaryGC = 2;
+    }
 
-        let r1_lightning = null;
-        if (bossState.gc1_truth !== 'none' && bossState.gc1_lightning_timing !== 'none') {
-            if (bossState.gc1_truth === 'true') {
-                r1_lightning = bossState.gc1_lightning_timing === 'early' ? 'EP' : 'LP';
-            } else {
-                r1_lightning = bossState.gc1_lightning_timing === 'early' ? 'ES' : 'LS';
-            }
-        }
-
-        let r2_water = null;
-        if (bossState.gc2_truth !== 'none' && bossState.gc2_water_timing !== 'none') {
+    if (primaryGC === 1) {
+        // GC1 -> GC2
+        const r1_water = bossState.gc1_truth === 'true' 
+            ? (bossState.gc1_water_timing === 'early' ? 'ES' : 'LS')
+            : (bossState.gc1_water_timing === 'early' ? 'EP' : 'LP');
+            
+        const r1_lightning = bossState.gc1_truth === 'true'
+            ? (bossState.gc1_lightning_timing === 'early' ? 'EP' : 'LP')
+            : (bossState.gc1_lightning_timing === 'early' ? 'ES' : 'LS');
+            
+        const roles1 = [r1_water, r1_lightning];
+        const all = ['ES', 'LS', 'EP', 'LP'];
+        const roles2 = all.filter(r => !roles1.includes(r));
+        
+        if (bossState.gc2_truth !== 'none') {
             if (bossState.gc2_truth === 'true') {
-                r2_water = bossState.gc2_water_timing === 'early' ? 'ES' : 'LS';
+                bossState.gc2_water_timing = roles2.includes('ES') ? 'early' : 'late';
+                bossState.gc2_lightning_timing = roles2.includes('EP') ? 'early' : 'late';
             } else {
-                r2_water = bossState.gc2_water_timing === 'early' ? 'EP' : 'LP';
+                bossState.gc2_water_timing = roles2.includes('EP') ? 'early' : 'late';
+                bossState.gc2_lightning_timing = roles2.includes('ES') ? 'early' : 'late';
             }
         }
-
-        let r2_lightning = null;
-        if (bossState.gc2_truth !== 'none' && bossState.gc2_lightning_timing !== 'none') {
-            if (bossState.gc2_truth === 'true') {
-                r2_lightning = bossState.gc2_lightning_timing === 'early' ? 'EP' : 'LP';
+    } 
+    else if (primaryGC === 2) {
+        // GC2 -> GC1
+        const r2_water = bossState.gc2_truth === 'true' 
+            ? (bossState.gc2_water_timing === 'early' ? 'ES' : 'LS')
+            : (bossState.gc2_water_timing === 'early' ? 'EP' : 'LP');
+            
+        const r2_lightning = bossState.gc2_truth === 'true'
+            ? (bossState.gc2_lightning_timing === 'early' ? 'EP' : 'LP')
+            : (bossState.gc2_lightning_timing === 'early' ? 'ES' : 'LS');
+            
+        const roles2 = [r2_water, r2_lightning];
+        const all = ['ES', 'LS', 'EP', 'LP'];
+        const roles1 = all.filter(r => !roles2.includes(r));
+        
+        if (bossState.gc1_truth !== 'none') {
+            if (bossState.gc1_truth === 'true') {
+                bossState.gc1_water_timing = roles1.includes('ES') ? 'early' : 'late';
+                bossState.gc1_lightning_timing = roles1.includes('EP') ? 'early' : 'late';
             } else {
-                r2_lightning = bossState.gc2_lightning_timing === 'early' ? 'ES' : 'LS';
+                bossState.gc1_water_timing = roles1.includes('EP') ? 'early' : 'late';
+                bossState.gc1_lightning_timing = roles1.includes('ES') ? 'early' : 'late';
             }
         }
+    }
 
-        // 判明しているロールのセットを作成
-        let roles1 = new Set();
-        if (r1_water) roles1.add(r1_water);
-        if (r1_lightning) roles1.add(r1_lightning);
-
-        let roles2 = new Set();
-        if (r2_water) roles2.add(r2_water);
-        if (r2_lightning) roles2.add(r2_lightning);
-
-        // 重複チェック: もし同じロールが両方のGCに現れていたら、矛盾しているので推論は行わない
-        let hasConflict = false;
-        for (let r of roles1) {
-            if (roles2.has(r)) hasConflict = true;
-        }
-
-        if (!hasConflict) {
-            // 1回目 (GC1) が2つのロールを確定させている場合、2回目 (GC2) のロールは残りの2つ
-            if (roles1.size === 2 && roles2.size < 2) {
-                let all = ['ES', 'LS', 'EP', 'LP'];
-                let diff = all.filter(r => !roles1.has(r));
-                let oldSize = roles2.size;
-                diff.forEach(r => roles2.add(r));
-                if (roles2.size > oldSize) {
-                    changed = true;
-                }
-            }
-
-            // 2回目 (GC2) が2つのロールを確定させている場合、1回目 (GC1) のロールは残りの2つ
-            if (roles2.size === 2 && roles1.size < 2) {
-                let all = ['ES', 'LS', 'EP', 'LP'];
-                let diff = all.filter(r => !roles2.has(r));
-                let oldSize = roles1.size;
-                diff.forEach(r => roles1.add(r));
-                if (roles1.size > oldSize) {
-                    changed = true;
-                }
-            }
-
-            // --- 1回目 (GC1) の値の逆算 ---
-            if (roles1.size === 2) {
-                // 水のタイミング推論
-                if (bossState.gc1_truth !== 'none' && bossState.gc1_water_timing === 'none') {
-                    let targetRole = null;
-                    if (r1_lightning) {
-                        targetRole = [...roles1].find(r => r !== r1_lightning);
-                    } else {
-                        let stackRoles = [...roles1].filter(r => r === 'ES' || r === 'LS');
-                        let spreadRoles = [...roles1].filter(r => r === 'EP' || r === 'LP');
-                        if (bossState.gc1_truth === 'true' && stackRoles.length === 1) {
-                            targetRole = stackRoles[0];
-                        } else if (bossState.gc1_truth === 'false' && spreadRoles.length === 1) {
-                            targetRole = spreadRoles[0];
-                        }
-                    }
-
-                    if (targetRole) {
-                        if (bossState.gc1_truth === 'true') {
-                            bossState.gc1_water_timing = targetRole === 'ES' ? 'early' : 'late';
-                        } else {
-                            bossState.gc1_water_timing = targetRole === 'EP' ? 'early' : 'late';
-                        }
-                        changed = true;
-                    }
-                }
-
-                // 雷のタイミング推論
-                if (bossState.gc1_truth !== 'none' && bossState.gc1_lightning_timing === 'none') {
-                    let targetRole = null;
-                    if (r1_water) {
-                        targetRole = [...roles1].find(r => r !== r1_water);
-                    } else {
-                        let stackRoles = [...roles1].filter(r => r === 'ES' || r === 'LS');
-                        let spreadRoles = [...roles1].filter(r => r === 'EP' || r === 'LP');
-                        if (bossState.gc1_truth === 'true' && spreadRoles.length === 1) {
-                            targetRole = spreadRoles[0];
-                        } else if (bossState.gc1_truth === 'false' && stackRoles.length === 1) {
-                            targetRole = stackRoles[0];
-                        }
-                    }
-
-                    if (targetRole) {
-                        if (bossState.gc1_truth === 'true') {
-                            bossState.gc1_lightning_timing = targetRole === 'EP' ? 'early' : 'late';
-                        } else {
-                            bossState.gc1_lightning_timing = targetRole === 'ES' ? 'early' : 'late';
-                        }
-                        changed = true;
-                    }
-                }
-
-                // 真偽の推論
-                if (bossState.gc1_truth === 'none' && bossState.gc1_water_timing !== 'none' && bossState.gc1_lightning_timing !== 'none') {
-                    let w_role_true = bossState.gc1_water_timing === 'early' ? 'ES' : 'LS';
-                    let l_role_true = bossState.gc1_lightning_timing === 'early' ? 'EP' : 'LP';
-                    
-                    if (roles1.has(w_role_true) && roles1.has(l_role_true)) {
-                        bossState.gc1_truth = 'true';
-                        changed = true;
-                    } else {
-                        let w_role_false = bossState.gc1_water_timing === 'early' ? 'EP' : 'LP';
-                        let l_role_false = bossState.gc1_lightning_timing === 'early' ? 'ES' : 'LS';
-                        if (roles1.has(w_role_false) && roles1.has(l_role_false)) {
-                            bossState.gc1_truth = 'false';
-                            changed = true;
-                        }
-                    }
-                }
-            }
-
-            // --- 2回目 (GC2) の値の逆算 ---
-            if (roles2.size === 2) {
-                // 水のタイミング推論
-                if (bossState.gc2_truth !== 'none' && bossState.gc2_water_timing === 'none') {
-                    let targetRole = null;
-                    if (r2_lightning) {
-                        targetRole = [...roles2].find(r => r !== r2_lightning);
-                    } else {
-                        let stackRoles = [...roles2].filter(r => r === 'ES' || r === 'LS');
-                        let spreadRoles = [...roles2].filter(r => r === 'EP' || r === 'LP');
-                        if (bossState.gc2_truth === 'true' && stackRoles.length === 1) {
-                            targetRole = stackRoles[0];
-                        } else if (bossState.gc2_truth === 'false' && spreadRoles.length === 1) {
-                            targetRole = spreadRoles[0];
-                        }
-                    }
-
-                    if (targetRole) {
-                        if (bossState.gc2_truth === 'true') {
-                            bossState.gc2_water_timing = targetRole === 'ES' ? 'early' : 'late';
-                        } else {
-                            bossState.gc2_water_timing = targetRole === 'EP' ? 'early' : 'late';
-                        }
-                        changed = true;
-                    }
-                }
-
-                // 雷のタイミング推論
-                if (bossState.gc2_truth !== 'none' && bossState.gc2_lightning_timing === 'none') {
-                    let targetRole = null;
-                    if (r2_water) {
-                        targetRole = [...roles2].find(r => r !== r2_water);
-                    } else {
-                        let stackRoles = [...roles2].filter(r => r === 'ES' || r === 'LS');
-                        let spreadRoles = [...roles2].filter(r => r === 'EP' || r === 'LP');
-                        if (bossState.gc2_truth === 'true' && spreadRoles.length === 1) {
-                            targetRole = spreadRoles[0];
-                        } else if (bossState.gc2_truth === 'false' && stackRoles.length === 1) {
-                            targetRole = stackRoles[0];
-                        }
-                    }
-
-                    if (targetRole) {
-                        if (bossState.gc2_truth === 'true') {
-                            bossState.gc2_lightning_timing = targetRole === 'EP' ? 'early' : 'late';
-                        } else {
-                            bossState.gc2_lightning_timing = targetRole === 'ES' ? 'early' : 'late';
-                        }
-                        changed = true;
-                    }
-                }
-
-                // 真偽の推論
-                if (bossState.gc2_truth === 'none' && bossState.gc2_water_timing !== 'none' && bossState.gc2_lightning_timing !== 'none') {
-                    let w_role_true = bossState.gc2_water_timing === 'early' ? 'ES' : 'LS';
-                    let l_role_true = bossState.gc2_lightning_timing === 'early' ? 'EP' : 'LP';
-                    
-                    if (roles2.has(w_role_true) && roles2.has(l_role_true)) {
-                        bossState.gc2_truth = 'true';
-                        changed = true;
-                    } else {
-                        let w_role_false = bossState.gc2_water_timing === 'early' ? 'EP' : 'LP';
-                        let l_role_false = bossState.gc2_lightning_timing === 'early' ? 'ES' : 'LS';
-                        if (roles2.has(w_role_false) && roles2.has(l_role_false)) {
-                            bossState.gc2_truth = 'false';
-                            changed = true;
-                        }
-                    }
-                }
+    // どちらのGCも2つ確定していないが、4つのタイミングすべてが入力済みのときの真偽値推論
+    if (bossState.gc1_water_timing !== 'none' && bossState.gc1_lightning_timing !== 'none' &&
+        bossState.gc2_water_timing !== 'none' && bossState.gc2_lightning_timing !== 'none') {
+        
+        if (bossState.gc1_truth === 'none' && bossState.gc2_truth !== 'none') {
+            const r2_water = bossState.gc2_truth === 'true' 
+                ? (bossState.gc2_water_timing === 'early' ? 'ES' : 'LS')
+                : (bossState.gc2_water_timing === 'early' ? 'EP' : 'LP');
+            const r2_lightning = bossState.gc2_truth === 'true'
+                ? (bossState.gc2_lightning_timing === 'early' ? 'EP' : 'LP')
+                : (bossState.gc2_lightning_timing === 'early' ? 'ES' : 'LS');
+            const roles2 = [r2_water, r2_lightning];
+            const all = ['ES', 'LS', 'EP', 'LP'];
+            const roles1 = all.filter(r => !roles2.includes(r));
+            
+            const w_role_true = bossState.gc1_water_timing === 'early' ? 'ES' : 'LS';
+            const l_role_true = bossState.gc1_lightning_timing === 'early' ? 'EP' : 'LP';
+            if (roles1.includes(w_role_true) && roles1.includes(l_role_true)) {
+                bossState.gc1_truth = 'true';
+            } else {
+                bossState.gc1_truth = 'false';
             }
         }
-
-        iterations++;
+        else if (bossState.gc2_truth === 'none' && bossState.gc1_truth !== 'none') {
+            const r1_water = bossState.gc1_truth === 'true' 
+                ? (bossState.gc1_water_timing === 'early' ? 'ES' : 'LS')
+                : (bossState.gc1_water_timing === 'early' ? 'EP' : 'LP');
+            const r1_lightning = bossState.gc1_truth === 'true'
+                ? (bossState.gc1_lightning_timing === 'early' ? 'EP' : 'LP')
+                : (bossState.gc1_lightning_timing === 'early' ? 'ES' : 'LS');
+            const roles1 = [r1_water, r1_lightning];
+            const all = ['ES', 'LS', 'EP', 'LP'];
+            const roles2 = all.filter(r => !roles1.includes(r));
+            
+            const w_role_true = bossState.gc2_water_timing === 'early' ? 'ES' : 'LS';
+            const l_role_true = bossState.gc2_lightning_timing === 'early' ? 'EP' : 'LP';
+            if (roles2.includes(w_role_true) && roles2.includes(l_role_true)) {
+                bossState.gc2_truth = 'true';
+            } else {
+                bossState.gc2_truth = 'false';
+            }
+        }
     }
 }
 
@@ -572,12 +465,16 @@ function updateFirebaseState() {
     currentState.gc2WaterTiming = bossState.gc2_water_timing || 'none';
     currentState.gc2LightningTiming = bossState.gc2_lightning_timing || 'none';
     
+    currentState.lastEditedGC = lastEditedGC || null;
+    
     set(dbRef, currentState);
 }
 
 // ボスの真偽トグル更新関数（2回押しても解除されない）
 function setBossTruth(key, value) {
     bossState[`${key}_truth`] = value;
+    if (key === 'gc1') lastEditedGC = 1;
+    if (key === 'gc2') lastEditedGC = 2;
     updateFirebaseState();
 }
 
@@ -592,8 +489,11 @@ function setBossTiming(key, value) {
         bossState.gc1_lightning_timing = 'none';
         bossState.gc2_water_timing = 'none';
         bossState.gc2_lightning_timing = 'none';
+        lastEditedGC = null;
     } else {
         bossState[`${key}_timing`] = newVal;
+        if (key.startsWith('gc1')) lastEditedGC = 1;
+        if (key.startsWith('gc2')) lastEditedGC = 2;
     }
 
     updateFirebaseState();
@@ -815,6 +715,7 @@ document.getElementById('localResetBtn').addEventListener('pointerdown', (e) => 
         lineLightning_truth: 'none',
         iceFan_truth: 'none'
     };
+    lastEditedGC = null;
     updateFirebaseState();
 });
 
