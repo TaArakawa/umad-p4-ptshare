@@ -48,6 +48,13 @@ body.pc-mode {
     flex-shrink: 1;
 }
 
+/* solver-v2.css は body の flex中央寄せに頼って .container を中央に
+   配置していたが、hub.html では body の justify-content を解除した
+   ため、ここで明示的に中央寄せする（.container 自体は変更しない）。 */
+#view-p4 .container {
+    margin: 0 auto;
+}
+
 /* フェーズタブ：PC版のみ表示（画面最上部に固定）。
    スマホ版は画面を広く使うため、タブを出さずP4のみを表示する
    （表示の強制切り替えは nav.js の applyPhaseDisplay が行う）。 */
