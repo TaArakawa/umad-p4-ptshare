@@ -187,11 +187,11 @@ body.pc-mode .page-select {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 5px;
-    padding: 4px 6px;
+    padding: 6px 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
     justify-content: flex-start;
 }
 
@@ -213,7 +213,7 @@ body.pc-mode .page-select {
 }
 
 .card-header h2 {
-    font-size: 0.72rem;
+    font-size: 0.8rem;
     color: #cbd5e1;
 }
 
@@ -230,8 +230,8 @@ body.pc-mode .page-select {
     background: none;
     border: none;
     color: #94a3b8;
-    padding: 1.5px 5px;
-    font-size: 0.65rem;
+    padding: 2.5px 6px;
+    font-size: 0.72rem;
     font-weight: bold;
     border-radius: 2px;
     cursor: pointer;
@@ -263,14 +263,14 @@ body.pc-mode .page-select {
 .solver-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.66rem;
-    line-height: 1.0;
+    font-size: 0.78rem;
+    line-height: 1.1;
     flex-grow: 1; /* Stretch table height to fill card space */
 }
 
 .solver-table th,
 .solver-table td {
-    padding: 4.5px 1.5px;
+    padding: 8px 1.5px;
     text-align: center;
     vertical-align: middle;
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
@@ -278,9 +278,9 @@ body.pc-mode .page-select {
 
 .solver-table th {
     font-weight: bold;
-    color: #94a3b8;
-    font-size: 0.64rem;
-    padding-bottom: 2px;
+    color: #e2e8f0;
+    font-size: 0.82rem;
+    padding-bottom: 6px;
 }
 
 /* 真偽カラムヘッダーボタン */
@@ -316,13 +316,13 @@ body.pc-mode .page-select {
 .debuff-cell {
     display: flex;
     align-items: center;
-    gap: 3px;
+    gap: 4px;
     font-weight: bold;
     color: #cbd5e1;
     text-align: left;
     cursor: pointer;
     border-radius: 3px;
-    padding: 2px 3px;
+    padding: 4px 5px;
     transition: all 0.15s ease;
     border: 1px solid transparent;
     white-space: nowrap;
@@ -333,16 +333,16 @@ body.pc-mode .page-select {
 }
 
 .debuff-icon {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     border-radius: 2px;
     flex-shrink: 0;
 }
 
 .debuff-icon-emoji {
-    width: 14px;
-    height: 14px;
-    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    font-size: 11px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -384,14 +384,14 @@ body.pc-mode .page-select {
 .debuff-row.active .effect-cell.highlight-true {
     background-color: rgba(34, 197, 94, 0.18);
     color: var(--accent-true);
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     box-shadow: inset 0 0 2px rgba(34, 197, 94, 0.1);
 }
 
 .debuff-row.active .effect-cell.highlight-false {
     background-color: rgba(239, 68, 68, 0.18);
     color: var(--accent-false);
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     box-shadow: inset 0 0 2px rgba(239, 68, 68, 0.1);
 }
 
