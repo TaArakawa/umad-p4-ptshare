@@ -24,7 +24,9 @@ let bossState = {
     gc1_truth: null,   // "true" / "false" / null
     gc2_truth: null,   // "true" / "false" / null
     fire_truth: null,  // "true" / "false" / null
-    tsunami_truth: null // "true" / "false" / null
+    tsunami_truth: null, // "true" / "false" / null
+    lineLightning_truth: null, // "true" / "false" / null
+    iceFan_truth: null // "true" / "false" / null
 };
 
 // プレイヤー個人のデバフ選択状態 (ローカル管理)
@@ -122,7 +124,7 @@ function renderUI() {
     }
 
     // --- 2. ボス「真・偽」ボタンのアクティブ表示 & テーブルヘッダーハイライト ---
-    const keys = ['gc1', 'gc2', 'fire', 'tsunami'];
+    const keys = ['gc1', 'gc2', 'fire', 'tsunami', 'lineLightning', 'iceFan'];
     keys.forEach(k => {
         const btnTrue = document.getElementById(`${k}-true`);
         const btnFalse = document.getElementById(`${k}-false`);
@@ -213,6 +215,18 @@ function renderUI() {
         const isTrue = bossState.tsunami_truth === 'true';
         document.getElementById(isTrue ? 'tsunami-resolver-true' : 'tsunami-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
     }
+
+    // 雷床
+    if (bossState.lineLightning_truth) {
+        const isTrue = bossState.lineLightning_truth === 'true';
+        document.getElementById(isTrue ? 'lineLightning-resolver-true' : 'lineLightning-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+    }
+
+    // 氷床
+    if (bossState.iceFan_truth) {
+        const isTrue = bossState.iceFan_truth === 'true';
+        document.getElementById(isTrue ? 'iceFan-resolver-true' : 'iceFan-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+    }
 }
 
 // --- Firebase同期設定 ---
@@ -225,6 +239,8 @@ onValue(dbRef, (snapshot) => {
     bossState.gc2_truth = (data.lateWater === 'true' || data.lateWater === 'false') ? data.lateWater : null;
     bossState.fire_truth = (data.fire === 'true' || data.fire === 'false') ? data.fire : null;
     bossState.tsunami_truth = (data.water === 'true' || data.water === 'false') ? data.water : null;
+    bossState.lineLightning_truth = (data.lineLightning === 'true' || data.lineLightning === 'false') ? data.lineLightning : null;
+    bossState.iceFan_truth = (data.iceFan === 'true' || data.iceFan === 'false') ? data.iceFan : null;
     
     renderUI();
 });
@@ -246,6 +262,10 @@ function setBossTruth(key, value) {
         currentState.fire = newVal;
     } else if (key === 'tsunami') {
         currentState.water = newVal;
+    } else if (key === 'lineLightning') {
+        currentState.lineLightning = newVal;
+    } else if (key === 'iceFan') {
+        currentState.iceFan = newVal;
     }
 
     set(dbRef, currentState);
@@ -262,7 +282,11 @@ const truthBtnIds = [
     { id: 'fire-true', key: 'fire', val: 'true' },
     { id: 'fire-false', key: 'fire', val: 'false' },
     { id: 'tsunami-true', key: 'tsunami', val: 'true' },
-    { id: 'tsunami-false', key: 'tsunami', val: 'false' }
+    { id: 'tsunami-false', key: 'tsunami', val: 'false' },
+    { id: 'lineLightning-true', key: 'lineLightning', val: 'true' },
+    { id: 'lineLightning-false', key: 'lineLightning', val: 'false' },
+    { id: 'iceFan-true', key: 'iceFan', val: 'true' },
+    { id: 'iceFan-false', key: 'iceFan', val: 'false' }
 ];
 
 truthBtnIds.forEach(item => {
@@ -281,7 +305,11 @@ const truthHdrIds = [
     { id: 'fire-hdr-true', key: 'fire', val: 'true' },
     { id: 'fire-hdr-false', key: 'fire', val: 'false' },
     { id: 'tsunami-hdr-true', key: 'tsunami', val: 'true' },
-    { id: 'tsunami-hdr-false', key: 'tsunami', val: 'false' }
+    { id: 'tsunami-hdr-false', key: 'tsunami', val: 'false' },
+    { id: 'lineLightning-hdr-true', key: 'lineLightning', val: 'true' },
+    { id: 'lineLightning-hdr-false', key: 'lineLightning', val: 'false' },
+    { id: 'iceFan-hdr-true', key: 'iceFan', val: 'true' },
+    { id: 'iceFan-hdr-false', key: 'iceFan', val: 'false' }
 ];
 
 truthHdrIds.forEach(item => {
@@ -336,6 +364,24 @@ document.getElementById('tsunami-resolver-true').addEventListener('pointerdown',
 document.getElementById('tsunami-resolver-false').addEventListener('pointerdown', (e) => {
     e.preventDefault();
     setBossTruth('tsunami', 'false');
+});
+
+// 雷床 ＆ 氷床 の解決策クリック
+document.getElementById('lineLightning-resolver-true').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    setBossTruth('lineLightning', 'true');
+});
+document.getElementById('lineLightning-resolver-false').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    setBossTruth('lineLightning', 'false');
+});
+document.getElementById('iceFan-resolver-true').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    setBossTruth('iceFan', 'true');
+});
+document.getElementById('iceFan-resolver-false').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    setBossTruth('iceFan', 'false');
 });
 
 // 4. プレイヤーのデバフクリック選択 (1回目/2回目)

@@ -204,6 +204,68 @@
                 </table>
             </section>
 
+            <!-- 雷床 (Line Lightning) -->
+            <section class="card solver-card card-half" id="card-lineLightning">
+                <div class="card-header">
+                    <h2>雷床</h2>
+                    <div class="truth-toggle-group">
+                        <button class="truth-btn" id="lineLightning-true" data-value="true">真</button>
+                        <button class="truth-btn" id="lineLightning-false" data-value="false">偽</button>
+                    </div>
+                </div>
+                
+                <table class="solver-table">
+                    <thead>
+                        <tr>
+                            <th>ギミック</th>
+                            <th class="truth-header-btn" id="lineLightning-hdr-true" data-value="true">「真」のとき</th>
+                            <th class="truth-header-btn" id="lineLightning-hdr-false" data-value="false">「偽」のとき</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="debuff-row active">
+                            <td class="debuff-cell default-active">
+                                <span class="debuff-icon-emoji">⚡</span>
+                                <span>雷床</span>
+                            </td>
+                            <td class="effect-cell true-effect" id="lineLightning-resolver-true">踏まない</td>
+                            <td class="effect-cell false-effect" id="lineLightning-resolver-false">踏む</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 氷床 (Ice Fan) -->
+            <section class="card solver-card card-half" id="card-iceFan">
+                <div class="card-header">
+                    <h2>氷床</h2>
+                    <div class="truth-toggle-group">
+                        <button class="truth-btn" id="iceFan-true" data-value="true">真</button>
+                        <button class="truth-btn" id="iceFan-false" data-value="false">偽</button>
+                    </div>
+                </div>
+                
+                <table class="solver-table">
+                    <thead>
+                        <tr>
+                            <th>ギミック</th>
+                            <th class="truth-header-btn" id="iceFan-hdr-true" data-value="true">「真」のとき</th>
+                            <th class="truth-header-btn" id="iceFan-hdr-false" data-value="false">「偽」のとき</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="debuff-row active">
+                            <td class="debuff-cell default-active">
+                                <span class="debuff-icon-emoji">❄️</span>
+                                <span>氷床</span>
+                            </td>
+                            <td class="effect-cell true-effect" id="iceFan-resolver-true">踏まない</td>
+                            <td class="effect-cell false-effect" id="iceFan-resolver-false">踏む</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
         </main>
     </div>
 
