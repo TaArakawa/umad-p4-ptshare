@@ -183,7 +183,13 @@ h1 {
     color: #cbd5e1;
 }
 
-/* 真・偽 トグルボタン (カードヘッダー用) */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 真・偽 トグルボタン */
 .truth-toggle-group {
     display: flex;
     background-color: var(--btn-idle);
@@ -205,7 +211,6 @@ h1 {
     position: relative;
 }
 
-/* タップ領域拡張用の疑似要素 */
 .truth-btn::after {
     content: '';
     position: absolute;
@@ -225,8 +230,49 @@ h1 {
     color: #450a0a;
 }
 
+/* タイミングトグルボタン (カードヘッダー用) */
+.timing-toggle-group {
+    display: flex;
+    background-color: var(--btn-idle);
+    border-radius: 3px;
+    padding: 1px;
+    gap: 1px;
+}
+
+.timing-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 1.5px 5px;
+    font-size: 0.65rem;
+    font-weight: bold;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+}
+
+.timing-btn::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    bottom: -6px;
+    left: -4px;
+    right: -4px;
+}
+
+.timing-btn.active-early {
+    background-color: #f59e0b; /* オレンジ */
+    color: #451a03;
+}
+
+.timing-btn.active-late {
+    background-color: #3b82f6; /* 青 */
+    color: #172554;
+}
+
 /* ==========================================================================
-   テーブルスタイル（モバイル版も v1 のテーブル形状を維持）
+   テーブルスタイル（v1 のテーブル形状を維持）
    ========================================================================== */
 .solver-table {
     width: 100%;
@@ -248,10 +294,6 @@ h1 {
     color: #94a3b8;
     font-size: 0.64rem;
     padding-bottom: 2px;
-}
-
-.timing-header-col {
-    font-size: 0.62rem;
 }
 
 /* 真偽カラムヘッダーボタン */
@@ -321,56 +363,6 @@ h1 {
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 2px;
     flex-shrink: 0;
-}
-
-/* タイミングセルおよびトグルボタン */
-.timing-cell {
-    width: 32%;
-}
-
-.timing-toggle-group {
-    display: flex;
-    background-color: var(--btn-idle);
-    border-radius: 3px;
-    padding: 1px;
-    gap: 1px;
-    width: 100%;
-    max-width: 70px;
-    margin: 0 auto;
-}
-
-.timing-btn {
-    flex: 1;
-    background: none;
-    border: none;
-    color: #94a3b8;
-    padding: 2px 2px;
-    font-size: 0.62rem;
-    font-weight: bold;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: all 0.1s ease;
-    text-align: center;
-    position: relative;
-}
-
-/* タップ領域拡張 */
-.timing-btn::after {
-    content: '';
-    position: absolute;
-    top: -5px;
-    bottom: -5px;
-    left: -4px;
-    right: -4px;
-}
-
-.timing-btn.active-early {
-    background-color: #f59e0b; /* オレンジ/黄 */
-    color: #451a03;
-}
-.timing-btn.active-late {
-    background-color: #3b82f6; /* 青 */
-    color: #172554;
 }
 
 /* デバフ行のアクティブ・非アクティブ状態 */

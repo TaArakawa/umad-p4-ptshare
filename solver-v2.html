@@ -37,9 +37,17 @@
             <section class="card solver-card" id="card-gc1">
                 <div class="card-header">
                     <h2>1回目 (Grand Cross)</h2>
-                    <div class="truth-toggle-group">
-                        <button class="truth-btn" id="gc1-true" data-value="true">真</button>
-                        <button class="truth-btn" id="gc1-false" data-value="false">偽</button>
+                    <div class="header-controls">
+                        <!-- 真偽トグル -->
+                        <div class="truth-toggle-group">
+                            <button class="truth-btn" id="gc1-true" data-value="true">真</button>
+                            <button class="truth-btn" id="gc1-false" data-value="false">偽</button>
+                        </div>
+                        <!-- タイミングトグル -->
+                        <div class="timing-toggle-group">
+                            <button class="timing-btn" id="gc1-early" data-timing="early">早</button>
+                            <button class="timing-btn" id="gc1-late" data-timing="late">遅</button>
+                        </div>
                     </div>
                 </div>
                 
@@ -49,7 +57,6 @@
                             <th>デバフ (クリックで選択)</th>
                             <th class="truth-header-btn" id="gc1-hdr-true" data-value="true">「真」のとき</th>
                             <th class="truth-header-btn" id="gc1-hdr-false" data-value="false">「偽」のとき</th>
-                            <th class="timing-header-col">タイミング</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,12 +68,6 @@
                             </td>
                             <td class="effect-cell true-effect" id="1-water-true">頭割</td>
                             <td class="effect-cell false-effect" id="1-water-false">散開</td>
-                            <td class="timing-cell">
-                                <div class="timing-toggle-group">
-                                    <button class="timing-btn" id="gc1-water-early" data-timing="early">早</button>
-                                    <button class="timing-btn" id="gc1-water-late" data-timing="late">遅</button>
-                                </div>
-                            </td>
                         </tr>
                         <!-- 雷 -->
                         <tr class="debuff-row" id="row-1-lightning" data-debuff="lightning">
@@ -76,12 +77,6 @@
                             </td>
                             <td class="effect-cell true-effect" id="1-lightning-true">散開</td>
                             <td class="effect-cell false-effect" id="1-lightning-false">頭割</td>
-                            <td class="timing-cell">
-                                <div class="timing-toggle-group">
-                                    <button class="timing-btn" id="gc1-lightning-early" data-timing="early">早</button>
-                                    <button class="timing-btn" id="gc1-lightning-late" data-timing="late">遅</button>
-                                </div>
-                            </td>
                         </tr>
                         <!-- 視線 -->
                         <tr class="debuff-row" id="row-1-sight" data-debuff="sight">
@@ -91,7 +86,6 @@
                             </td>
                             <td class="effect-cell true-effect" id="1-sight-true">早見ない</td>
                             <td class="effect-cell false-effect" id="1-sight-false">早見る</td>
-                            <td class="timing-cell empty-cell"></td>
                         </tr>
                         <!-- 加速度 -->
                         <tr class="debuff-row" id="row-1-bomb" data-debuff="bomb">
@@ -101,7 +95,6 @@
                             </td>
                             <td class="effect-cell true-effect" id="1-bomb-true">止まる</td>
                             <td class="effect-cell false-effect" id="1-bomb-false">動く</td>
-                            <td class="timing-cell empty-cell"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -111,9 +104,17 @@
             <section class="card solver-card" id="card-gc2">
                 <div class="card-header">
                     <h2>2回目 (Grand Cross)</h2>
-                    <div class="truth-toggle-group">
-                        <button class="truth-btn" id="gc2-true" data-value="true">真</button>
-                        <button class="truth-btn" id="gc2-false" data-value="false">偽</button>
+                    <div class="header-controls">
+                        <!-- 真偽トグル -->
+                        <div class="truth-toggle-group">
+                            <button class="truth-btn" id="gc2-true" data-value="true">真</button>
+                            <button class="truth-btn" id="gc2-false" data-value="false">偽</button>
+                        </div>
+                        <!-- タイミングトグル -->
+                        <div class="timing-toggle-group">
+                            <button class="timing-btn" id="gc2-early" data-timing="early">早</button>
+                            <button class="timing-btn" id="gc2-late" data-timing="late">遅</button>
+                        </div>
                     </div>
                 </div>
                 
@@ -123,7 +124,6 @@
                             <th>デバフ (クリックで選択)</th>
                             <th class="truth-header-btn" id="gc2-hdr-true" data-value="true">「真」のとき</th>
                             <th class="truth-header-btn" id="gc2-hdr-false" data-value="false">「偽」のとき</th>
-                            <th class="timing-header-col">タイミング</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -135,12 +135,6 @@
                             </td>
                             <td class="effect-cell true-effect" id="2-water-true">頭割</td>
                             <td class="effect-cell false-effect" id="2-water-false">散開</td>
-                            <td class="timing-cell">
-                                <div class="timing-toggle-group">
-                                    <button class="timing-btn" id="gc2-water-early" data-timing="early">早</button>
-                                    <button class="timing-btn" id="gc2-water-late" data-timing="late">遅</button>
-                                </div>
-                            </td>
                         </tr>
                         <!-- 雷 -->
                         <tr class="debuff-row" id="row-2-lightning" data-debuff="lightning">
@@ -150,12 +144,6 @@
                             </td>
                             <td class="effect-cell true-effect" id="2-lightning-true">散開</td>
                             <td class="effect-cell false-effect" id="2-lightning-false">頭割</td>
-                            <td class="timing-cell">
-                                <div class="timing-toggle-group">
-                                    <button class="timing-btn" id="gc2-lightning-early" data-timing="early">早</button>
-                                    <button class="timing-btn" id="gc2-lightning-late" data-timing="late">遅</button>
-                                </div>
-                            </td>
                         </tr>
                         <!-- 視線 -->
                         <tr class="debuff-row" id="row-2-sight" data-debuff="sight">
@@ -165,7 +153,6 @@
                             </td>
                             <td class="effect-cell true-effect" id="2-sight-true">遅見ない</td>
                             <td class="effect-cell false-effect" id="2-sight-false">遅見る</td>
-                            <td class="timing-cell empty-cell"></td>
                         </tr>
                         <!-- 加速度 -->
                         <tr class="debuff-row" id="row-2-bomb" data-debuff="bomb">
@@ -175,7 +162,6 @@
                             </td>
                             <td class="effect-cell true-effect" id="2-bomb-true">止まる</td>
                             <td class="effect-cell false-effect" id="2-bomb-false">動く</td>
-                            <td class="timing-cell empty-cell"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -267,7 +253,6 @@
                                 <span class="debuff-icon-emoji">⚡</span>
                                 <span>雷床</span>
                             </td>
-                            <td class="truth-cell" style="display: none;"></td> <!-- ダミー列用（テーブルを合わせる） -->
                             <td class="effect-cell true-effect" id="lineLightning-resolver-true">踏まない</td>
                             <td class="effect-cell false-effect" id="lineLightning-resolver-false">踏む</td>
                         </tr>
@@ -299,7 +284,6 @@
                                 <span class="debuff-icon-emoji">❄️</span>
                                 <span>氷床</span>
                             </td>
-                            <td class="truth-cell" style="display: none;"></td> <!-- ダミー列用（テーブルを合わせる） -->
                             <td class="effect-cell true-effect" id="iceFan-resolver-true">踏まない</td>
                             <td class="effect-cell false-effect" id="iceFan-resolver-false">踏む</td>
                         </tr>
