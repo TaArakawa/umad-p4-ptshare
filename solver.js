@@ -231,9 +231,8 @@ onValue(dbRef, (snapshot) => {
 
 // Firebaseのボスの真偽状態を更新する関数
 function setBossTruth(key, value) {
-    // すでに同じ値がセットされている場合は、クリックで解除（未選択に戻す = none）
-    const currentVal = bossState[`${key}_truth`];
-    const newVal = (currentVal === value) ? 'none' : value;
+    // 2回押しても解除されないよう、クリックされた値をそのままセットする
+    const newVal = value;
 
     if (key === 'gc1') {
         currentState.earlyWater = newVal;
