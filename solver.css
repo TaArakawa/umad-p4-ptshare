@@ -32,7 +32,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    padding: 3px;
+    padding: 4px;
     height: 100dvh;
     overflow: hidden;
     display: flex;
@@ -46,7 +46,7 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 2.5px;
+    gap: 3.5px;
     overflow: hidden;
 }
 
@@ -57,29 +57,30 @@ body {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: 2px;
-    gap: 3px;
+    padding-bottom: 3px;
+    gap: 4px;
     flex-shrink: 0;
 }
 
 .header-left {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 }
 
 .header-right {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 }
 
 .back-link {
     color: var(--sky-blue);
     text-decoration: none;
     font-weight: bold;
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     transition: color 0.15s ease;
+    padding: 4px 0;
 }
 
 .back-link:hover {
@@ -87,7 +88,7 @@ body {
 }
 
 h1 {
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     color: #a7f3d0;
     white-space: nowrap;
 }
@@ -96,19 +97,19 @@ h1 {
 .toggle-group {
     display: flex;
     background-color: var(--btn-idle);
-    border-radius: 3px;
-    padding: 1px;
-    gap: 1px;
+    border-radius: 4px;
+    padding: 1.5px;
+    gap: 1.5px;
 }
 
 .toggle-btn {
     background: none;
     border: none;
     color: #94a3b8;
-    padding: 1.5px 3.5px;
-    font-size: 0.58rem;
+    padding: 2.5px 5px;
+    font-size: 0.62rem;
     font-weight: bold;
-    border-radius: 2px;
+    border-radius: 2.5px;
     cursor: pointer;
     transition: all 0.1s ease;
     display: flex;
@@ -126,10 +127,10 @@ h1 {
     background-color: #b91c1c;
     color: white;
     border: none;
-    padding: 1.5px 4px;
-    border-radius: 2px;
+    padding: 3px 6px;
+    border-radius: 3px;
     font-weight: bold;
-    font-size: 0.62rem;
+    font-size: 0.68rem;
     cursor: pointer;
     transition: background-color 0.15s ease;
 }
@@ -142,7 +143,7 @@ h1 {
 .solver-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2.5px;
+    gap: 3.5px;
     width: 100%;
     flex-grow: 1;
     overflow: hidden;
@@ -151,12 +152,12 @@ h1 {
 .card {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 4px;
-    padding: 2px 4px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    border-radius: 5px;
+    padding: 3px 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
-    gap: 1.5px;
+    gap: 2.5px;
     justify-content: flex-start;
 }
 
@@ -174,11 +175,11 @@ h1 {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    padding-bottom: 1px;
+    padding-bottom: 2px;
 }
 
 .card-header h2 {
-    font-size: 0.65rem;
+    font-size: 0.72rem;
     color: #cbd5e1;
 }
 
@@ -186,21 +187,32 @@ h1 {
 .truth-toggle-group {
     display: flex;
     background-color: var(--btn-idle);
-    border-radius: 2px;
-    padding: 0.5px;
-    gap: 0.5px;
+    border-radius: 3px;
+    padding: 1px;
+    gap: 1px;
 }
 
 .truth-btn {
     background: none;
     border: none;
     color: #94a3b8;
-    padding: 0.5px 2px;
-    font-size: 0.6rem;
+    padding: 1.5px 5px;
+    font-size: 0.65rem;
     font-weight: bold;
-    border-radius: 1px;
+    border-radius: 2px;
     cursor: pointer;
     transition: all 0.15s ease;
+    position: relative;
+}
+
+/* タップ領域拡張用の疑似要素 */
+.truth-btn::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    bottom: -6px;
+    left: -4px;
+    right: -4px;
 }
 
 .truth-btn.active-true {
@@ -217,13 +229,13 @@ h1 {
 .solver-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.62rem;
+    font-size: 0.66rem;
     line-height: 1.0;
 }
 
 .solver-table th,
 .solver-table td {
-    padding: 1.2px 1px;
+    padding: 3.5px 1.5px;
     text-align: center;
     vertical-align: middle;
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
@@ -232,14 +244,14 @@ h1 {
 .solver-table th {
     font-weight: bold;
     color: #94a3b8;
-    font-size: 0.6rem;
-    padding-bottom: 1px;
+    font-size: 0.64rem;
+    padding-bottom: 2px;
 }
 
 /* 真偽カラムヘッダーボタン */
 .truth-header-btn {
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 3px;
     transition: all 0.15s ease;
     border: 1px solid transparent;
 }
@@ -269,13 +281,13 @@ h1 {
 .debuff-cell {
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 3px;
     font-weight: bold;
     color: #cbd5e1;
     text-align: left;
     cursor: pointer;
-    border-radius: 2px;
-    padding: 0.5px 1.5px;
+    border-radius: 3px;
+    padding: 2px 3px;
     transition: all 0.15s ease;
     border: 1px solid transparent;
     white-space: nowrap;
@@ -286,16 +298,16 @@ h1 {
 }
 
 .debuff-icon {
-    width: 13px;
-    height: 13px;
+    width: 14px;
+    height: 14px;
     border-radius: 2px;
     flex-shrink: 0;
 }
 
 .debuff-icon-emoji {
-    width: 13px;
-    height: 13px;
-    font-size: 9px;
+    width: 14px;
+    height: 14px;
+    font-size: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -322,7 +334,7 @@ h1 {
     font-weight: bold;
     color: #475569;
     background-color: rgba(255, 255, 255, 0.01);
-    border-radius: 2px;
+    border-radius: 3px;
     transition: all 0.2s ease;
     cursor: pointer;
     white-space: nowrap;
@@ -337,14 +349,14 @@ h1 {
 .debuff-row.active .effect-cell.highlight-true {
     background-color: rgba(34, 197, 94, 0.18);
     color: var(--accent-true);
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     box-shadow: inset 0 0 2px rgba(34, 197, 94, 0.1);
 }
 
 .debuff-row.active .effect-cell.highlight-false {
     background-color: rgba(239, 68, 68, 0.18);
     color: var(--accent-false);
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     box-shadow: inset 0 0 2px rgba(239, 68, 68, 0.1);
 }
 
