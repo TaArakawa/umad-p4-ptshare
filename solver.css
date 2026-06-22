@@ -43,10 +43,11 @@ body {
 .container {
     width: 100%;
     max-width: 480px;
-    height: 100%;
+    height: max-content; /* Shrinks vertically to fit cards */
+    max-height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
     overflow: hidden;
 }
 

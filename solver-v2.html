@@ -46,11 +46,6 @@
                             <button class="truth-btn" id="gc1-true" data-value="true">真</button>
                             <button class="truth-btn" id="gc1-false" data-value="false">偽</button>
                         </div>
-                        <!-- タイミングトグル -->
-                        <div class="timing-toggle-group">
-                            <button class="timing-btn" id="gc1-early" data-timing="early">早</button>
-                            <button class="timing-btn" id="gc1-late" data-timing="late">遅</button>
-                        </div>
                     </div>
                 </div>
                 
@@ -66,8 +61,14 @@
                         <!-- 水 -->
                         <tr class="debuff-row" id="row-1-water" data-debuff="water">
                             <td class="debuff-cell">
-                                <img src="img/water.jpg" alt="水" class="debuff-icon">
-                                <span>水<span class="en-text"> (Water)</span></span>
+                                <div class="debuff-info">
+                                    <img src="img/water.jpg" alt="水" class="debuff-icon">
+                                    <span>水<span class="en-text"> (Water)</span></span>
+                                </div>
+                                <div class="timing-toggle-group">
+                                    <button class="timing-btn" id="gc1-water-early" data-timing="early">早</button>
+                                    <button class="timing-btn" id="gc1-water-late" data-timing="late">遅</button>
+                                </div>
                             </td>
                             <td class="effect-cell true-effect" id="1-water-true">頭割</td>
                             <td class="effect-cell false-effect" id="1-water-false">散開</td>
@@ -75,8 +76,14 @@
                         <!-- 雷 -->
                         <tr class="debuff-row" id="row-1-lightning" data-debuff="lightning">
                             <td class="debuff-cell">
-                                <img src="img/lightning.jpg" alt="雷" class="debuff-icon">
-                                <span>雷<span class="en-text"> (Lightning)</span></span>
+                                <div class="debuff-info">
+                                    <img src="img/lightning.jpg" alt="雷" class="debuff-icon">
+                                    <span>雷<span class="en-text"> (Lightning)</span></span>
+                                </div>
+                                <div class="timing-toggle-group">
+                                    <button class="timing-btn" id="gc1-lightning-early" data-timing="early">早</button>
+                                    <button class="timing-btn" id="gc1-lightning-late" data-timing="late">遅</button>
+                                </div>
                             </td>
                             <td class="effect-cell true-effect" id="1-lightning-true">散開</td>
                             <td class="effect-cell false-effect" id="1-lightning-false">頭割</td>
@@ -113,11 +120,6 @@
                             <button class="truth-btn" id="gc2-true" data-value="true">真</button>
                             <button class="truth-btn" id="gc2-false" data-value="false">偽</button>
                         </div>
-                        <!-- タイミングトグル -->
-                        <div class="timing-toggle-group">
-                            <button class="timing-btn" id="gc2-early" data-timing="early">早</button>
-                            <button class="timing-btn" id="gc2-late" data-timing="late">遅</button>
-                        </div>
                     </div>
                 </div>
                 
@@ -133,8 +135,14 @@
                         <!-- 水 -->
                         <tr class="debuff-row" id="row-2-water" data-debuff="water">
                             <td class="debuff-cell">
-                                <img src="img/water.jpg" alt="水" class="debuff-icon">
-                                <span>水<span class="en-text"> (Water)</span></span>
+                                <div class="debuff-info">
+                                    <img src="img/water.jpg" alt="水" class="debuff-icon">
+                                    <span>水<span class="en-text"> (Water)</span></span>
+                                </div>
+                                <div class="timing-toggle-group">
+                                    <button class="timing-btn" id="gc2-water-early" data-timing="early">早</button>
+                                    <button class="timing-btn" id="gc2-water-late" data-timing="late">遅</button>
+                                </div>
                             </td>
                             <td class="effect-cell true-effect" id="2-water-true">頭割</td>
                             <td class="effect-cell false-effect" id="2-water-false">散開</td>
@@ -142,8 +150,14 @@
                         <!-- 雷 -->
                         <tr class="debuff-row" id="row-2-lightning" data-debuff="lightning">
                             <td class="debuff-cell">
-                                <img src="img/lightning.jpg" alt="雷" class="debuff-icon">
-                                <span>雷<span class="en-text"> (Lightning)</span></span>
+                                <div class="debuff-info">
+                                    <img src="img/lightning.jpg" alt="雷" class="debuff-icon">
+                                    <span>雷<span class="en-text"> (Lightning)</span></span>
+                                </div>
+                                <div class="timing-toggle-group">
+                                    <button class="timing-btn" id="gc2-lightning-early" data-timing="early">早</button>
+                                    <button class="timing-btn" id="gc2-lightning-late" data-timing="late">遅</button>
+                                </div>
                             </td>
                             <td class="effect-cell true-effect" id="2-lightning-true">散開</td>
                             <td class="effect-cell false-effect" id="2-lightning-false">頭割</td>

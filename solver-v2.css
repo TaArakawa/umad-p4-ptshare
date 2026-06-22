@@ -43,10 +43,11 @@ body {
 .container {
     width: 100%;
     max-width: 480px;
-    height: 100%;
+    height: max-content; /* Shrinks vertically to fit cards */
+    max-height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
     overflow: hidden;
 }
 
@@ -263,11 +264,11 @@ body.pc-mode .page-select {
     color: #450a0a;
 }
 
-/* タイミングトグルボタン (カードヘッダー用) */
+/* タイミングトグルボタン (テーブル内インライン用) */
 .timing-toggle-group {
     display: flex;
     background-color: var(--btn-idle);
-    border-radius: 3px;
+    border-radius: 3.5px;
     padding: 1px;
     gap: 1px;
 }
@@ -276,10 +277,10 @@ body.pc-mode .page-select {
     background: none;
     border: none;
     color: #94a3b8;
-    padding: 1.5px 5px;
-    font-size: 0.65rem;
+    padding: 1.5px 4.5px;
+    font-size: 0.62rem;
     font-weight: bold;
-    border-radius: 2px;
+    border-radius: 2.5px;
     cursor: pointer;
     transition: all 0.15s ease;
     position: relative;
@@ -288,10 +289,10 @@ body.pc-mode .page-select {
 .timing-btn::after {
     content: '';
     position: absolute;
-    top: -6px;
-    bottom: -6px;
-    left: -4px;
-    right: -4px;
+    top: -5px;
+    bottom: -5px;
+    left: -3px;
+    right: -3px;
 }
 
 .timing-btn.active-early {
@@ -312,7 +313,6 @@ body.pc-mode .page-select {
     border-collapse: collapse;
     font-size: 0.66rem;
     line-height: 1.0;
-    flex-grow: 1; /* Stretch table height to fill card space */
 }
 
 .solver-table th,
@@ -363,16 +363,22 @@ body.pc-mode .page-select {
 .debuff-cell {
     display: flex;
     align-items: center;
-    gap: 3px;
+    justify-content: space-between; /* Push name to left, timing group to right */
+    gap: 4px;
     font-weight: bold;
     color: #cbd5e1;
-    text-align: left;
     cursor: pointer;
     border-radius: 3px;
-    padding: 2px 3px;
+    padding: 2px 3.5px;
     transition: all 0.15s ease;
     border: 1px solid transparent;
     white-space: nowrap;
+}
+
+.debuff-info {
+    display: flex;
+    align-items: center;
+    gap: 3px;
 }
 
 .debuff-cell:hover {
