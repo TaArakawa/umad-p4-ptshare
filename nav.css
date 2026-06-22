@@ -1,0 +1,39 @@
+.phase-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #1b1b22;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.phase-tab {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #cfd2dc;
+    background: #2a2a35;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.phase-tab.active {
+    color: #ffffff;
+    background: #3b6fe0;
+    border-color: #3b6fe0;
+}
+
+.phase-view {
+    width: 100%;
+}
+
+.phase-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
