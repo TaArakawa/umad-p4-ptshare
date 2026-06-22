@@ -283,6 +283,25 @@ body.pc-mode .page-select {
     padding-bottom: 6px;
 }
 
+/* 半分幅のカード（ほのお・つなみ等）のスマホ表示調整：改行を防ぎ1行に収める */
+.card-half .solver-table {
+    font-size: 0.72rem;
+}
+
+.card-half .solver-table th,
+.card-half .solver-table td {
+    padding: 8px 1px;
+    white-space: nowrap;
+}
+
+.card-half .solver-table th {
+    font-size: 0.7rem;
+}
+
+.card-half .solver-table td span {
+    white-space: nowrap;
+}
+
 /* 真偽カラムヘッダーボタン */
 .truth-header-btn {
     cursor: pointer;

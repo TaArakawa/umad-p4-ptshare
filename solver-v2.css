@@ -277,8 +277,8 @@ body.pc-mode .page-select {
     background: none;
     border: none;
     color: #94a3b8;
-    padding: 2.5px 10px;
-    font-size: 0.68rem;
+    padding: 3px 12px;
+    font-size: 0.72rem;
     font-weight: bold;
     border-radius: 2.5px;
     cursor: pointer;
@@ -328,6 +328,25 @@ body.pc-mode .page-select {
     color: #e2e8f0;
     font-size: 0.82rem;
     padding-bottom: 6px;
+}
+
+/* 半分幅のカード（ほのお・つなみ等）のスマホ表示調整：改行を防ぎ1行に収める */
+.card-half .solver-table {
+    font-size: 0.72rem;
+}
+
+.card-half .solver-table th,
+.card-half .solver-table td {
+    padding: 8px 1px;
+    white-space: nowrap;
+}
+
+.card-half .solver-table th {
+    font-size: 0.7rem;
+}
+
+.card-half .solver-table td span {
+    white-space: nowrap;
 }
 
 /* 真偽カラムヘッダーボタン */
@@ -573,8 +592,8 @@ body.pc-mode .timing-toggle-group {
 }
 
 body.pc-mode .timing-btn {
-    padding: 6px 10px;
-    font-size: 0.95rem;
+    padding: 8px 16px;
+    font-size: 1.05rem;
 }
 
 body.pc-mode .effect-cell {
