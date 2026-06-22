@@ -236,7 +236,7 @@ body.pc-mode .page-select {
     background: none;
     border: none;
     color: #94a3b8;
-    padding: 2.5px 6px;
+    padding: 2.5px 12px;
     font-size: 0.72rem;
     font-weight: bold;
     border-radius: 2px;
@@ -277,7 +277,7 @@ body.pc-mode .page-select {
     background: none;
     border: none;
     color: #94a3b8;
-    padding: 2.5px 6px;
+    padding: 2.5px 10px;
     font-size: 0.68rem;
     font-weight: bold;
     border-radius: 2.5px;
