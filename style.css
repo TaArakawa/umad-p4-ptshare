@@ -251,6 +251,23 @@ h1 {
     white-space: nowrap;
 }
 
+.nav-solver-btn {
+    background-color: #0369a1;
+    color: white;
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    display: inline-block;
+    transition: background-color 0.15s ease;
+}
+
+.nav-solver-btn:hover {
+    background-color: #0284c7;
+}
+
 .section-title {
     font-size: 0.8rem;
     color: #94a3b8;
@@ -434,6 +451,12 @@ body.hud-mode .toggle-btn {
 }
 
 body.hud-mode .reset-btn {
+    font-size: 1.0rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+body.hud-mode .nav-solver-btn {
     font-size: 1.0rem;
     padding: 6px 12px;
     border-radius: 6px;

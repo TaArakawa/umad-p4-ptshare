@@ -1,0 +1,294 @@
+:root {
+    --bg-color: #121214;
+    --card-bg: #1e1e24;
+    --text-color: #e2e8f0;
+    --accent-true: #22c55e;
+    --accent-false: #ef4444;
+    --btn-idle: #334155;
+    --border-color: #2d3748;
+    --sky-blue: #38bdf8;
+    --sky-blue-dark: #0369a1;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    padding: 15px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* ヘッダー */
+.solver-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+}
+
+.back-link {
+    color: var(--sky-blue);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: color 0.15s ease;
+}
+
+.back-link:hover {
+    color: #0ea5e9;
+}
+
+h1 {
+    font-size: 1.25rem;
+    color: #a7f3d0;
+}
+
+.reset-btn {
+    background-color: #b91c1c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.reset-btn:hover {
+    background-color: #991b1b;
+}
+
+/* メイングリッド */
+.solver-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: all 0.2s ease;
+}
+
+.card-half {
+    grid-column: span 1;
+}
+
+/* カードヘッダー */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 8px;
+}
+
+.card-header h2 {
+    font-size: 1.05rem;
+    color: #e2e8f0;
+}
+
+.title-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 真・偽 トグルボタン */
+.truth-toggle-group {
+    display: flex;
+    background-color: var(--btn-idle);
+    border-radius: 6px;
+    padding: 2px;
+    gap: 2px;
+}
+
+.truth-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 4px 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.truth-btn.active-true {
+    background-color: var(--accent-true);
+    color: #052e16;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+}
+
+.truth-btn.active-false {
+    background-color: var(--accent-false);
+    color: #450a0a;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+
+/* テーブルスタイル */
+.solver-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.solver-table th,
+.solver-table td {
+    padding: 10px 8px;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.solver-table th {
+    font-weight: bold;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    padding-bottom: 12px;
+}
+
+/* デバフセル（クリック選択可能） */
+.debuff-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    color: #cbd5e1;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 6px;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+}
+
+.debuff-cell:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.debuff-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+}
+
+/* デバフ行のアクティブ・非アクティブ状態 */
+.debuff-row.active .debuff-cell {
+    background-color: rgba(56, 189, 248, 0.15);
+    border-color: var(--sky-blue);
+    color: var(--sky-blue);
+}
+
+.debuff-row.inactive {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+/* 解決策セル（初期状態はグレーアウト） */
+.effect-cell {
+    font-weight: bold;
+    color: #475569;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+/* ボスの真偽が一致して、さらにデバフがアクティブな場合のハイライト */
+.debuff-row.active .effect-cell.highlight-true {
+    background-color: rgba(34, 197, 94, 0.18);
+    color: var(--accent-true);
+    font-size: 0.95rem;
+    box-shadow: inset 0 0 6px rgba(34, 197, 94, 0.1);
+}
+
+.debuff-row.active .effect-cell.highlight-false {
+    background-color: rgba(239, 68, 68, 0.18);
+    color: var(--accent-false);
+    font-size: 0.95rem;
+    box-shadow: inset 0 0 6px rgba(239, 68, 68, 0.1);
+}
+
+/* 視線デバフが選択された場合の両側ボールド表示用 */
+.debuff-row.active.sight-selected .effect-cell {
+    text-shadow: 0 0 1px currentColor;
+    font-weight: 900;
+}
+
+/* ほのお ＆ つなみ の簡易リゾルバー */
+.simple-resolver {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.resolver-box {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #475569;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.resolver-box.highlight-true {
+    background-color: rgba(34, 197, 94, 0.18);
+    color: var(--accent-true);
+    border-color: rgba(34, 197, 94, 0.3);
+    font-size: 1.05rem;
+}
+
+.resolver-box.highlight-false {
+    background-color: rgba(239, 68, 68, 0.18);
+    color: var(--accent-false);
+    border-color: rgba(239, 68, 68, 0.3);
+    font-size: 1.05rem;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .solver-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-half {
+        grid-column: span 1;
+    }
+}
