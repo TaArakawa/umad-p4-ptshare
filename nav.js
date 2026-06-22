@@ -34,8 +34,12 @@ function applyFit(areaEl) {
     const availH = areaEl.clientHeight;
     if (availW <= 0 || availH <= 0) return;
 
-    const naturalW = inner.offsetWidth;
-    const naturalH = inner.offsetHeight;
+    // scrollWidth/Height は CSS transform の影響を受けず、かつ
+    // overflow:visible で外にあふれている内容（P4のグリッドが
+    // 横に収まらない場合など）も含めた「本当のサイズ」を返すため、
+    // offsetWidth/Height より正確に測れる。
+    const naturalW = inner.scrollWidth;
+    const naturalH = inner.scrollHeight;
     if (naturalW <= 0 || naturalH <= 0) return;
 
     let scale = 1;
@@ -43,8 +47,9 @@ function applyFit(areaEl) {
         // P1の図・P3の表は余白を持て余さないよう、画面に収まる範囲で拡大もする。
         scale = Math.min(availW / naturalW, availH / naturalH);
     } else {
-        // P4ソルバーは元のレスポンシブデザインの見た目を保つため縮小のみ。
-        scale = Math.min(1, availH / naturalH);
+        // P4ソルバーは元のレスポンシブデザインの見た目を保つため拡大はしないが、
+        // 横にあふれる場合（スクロール前提だったPCレイアウト）も縮小して収める。
+        scale = Math.min(1, availW / naturalW, availH / naturalH);
     }
     inner.style.transform = `scale(${scale})`;
 }
