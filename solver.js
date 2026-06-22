@@ -238,10 +238,30 @@ function triggerPulse(element) {
     element.classList.add('pulse-update');
 }
 
+let lastResetTime = localStorage.getItem('kfk_last_reset_time') || '0';
+
 // --- Firebase同期設定 ---
 onValue(dbRef, (snapshot) => {
     const data = snapshot.val() || {};
     currentState = data;
+
+    // Firebaseのリセット指示を検知してローカルデバフをリセット
+    const firebaseResetTime = data.resetTime || 0;
+    if (firebaseResetTime && String(firebaseResetTime) !== lastResetTime) {
+        lastResetTime = String(firebaseResetTime);
+        localStorage.setItem('kfk_last_reset_time', lastResetTime);
+        
+        // 個人デバフのローカル状態をリセット
+        localState = {
+            gc1_water_lightning: null,
+            gc2_water_lightning: null,
+            gc1_sight: false,
+            gc2_sight: false,
+            gc1_bomb: false,
+            gc2_bomb: false
+        };
+        saveLocalState();
+    }
     
     // 比較用に前回の状態を一時保存
     const prevTruths = {
@@ -524,6 +544,14 @@ document.getElementById('localResetBtn').addEventListener('pointerdown', (e) => 
     currentState.water = 'none';
     currentState.lineLightning = 'none';
     currentState.iceFan = 'none';
+    
+    // タイミング情報もリセット
+    currentState.gc1WaterTiming = 'none';
+    currentState.gc1LightningTiming = 'none';
+    currentState.gc2WaterTiming = 'none';
+    currentState.gc2LightningTiming = 'none';
+    currentState.lastEditedGC = null;
+    currentState.resetTime = Date.now();
     
     set(dbRef, currentState);
     renderUI();

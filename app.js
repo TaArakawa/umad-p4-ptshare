@@ -561,6 +561,7 @@ document.getElementById('resetBtn').addEventListener('click', () => {
     resetData.gc2WaterTiming = "none";
     resetData.gc2LightningTiming = "none";
     resetData.lastEditedGC = null;
+    resetData.resetTime = Date.now();
 
     set(dbRef, resetData);
 
