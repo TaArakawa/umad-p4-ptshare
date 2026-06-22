@@ -32,7 +32,7 @@ body {
 
 .container {
     width: 100%;
-    max-width: 1000px;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -41,10 +41,54 @@ body {
 /* ヘッダー */
 .solver-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 12px;
+    gap: 12px;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.header-right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+/* UI Mode Switcher */
+.toggle-group {
+    display: flex;
+    background-color: var(--btn-idle);
+    border-radius: 6px;
+    padding: 2px;
+    gap: 2px;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.toggle-btn.active {
+    background-color: var(--sky-blue);
+    color: var(--sky-blue-dark);
 }
 
 .back-link {
@@ -80,10 +124,10 @@ h1 {
     background-color: #991b1b;
 }
 
-/* メイングリッド */
+/* メイングリッド (デフォルトはモバイル用シングルカラム) */
 .solver-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 15px;
 }
 
@@ -91,7 +135,7 @@ h1 {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 15px;
+    padding: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
@@ -178,6 +222,35 @@ h1 {
     padding-bottom: 12px;
 }
 
+/* 真偽カラムヘッダーボタン */
+.truth-header-btn {
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+}
+
+.truth-header-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #f1f5f9;
+}
+
+.truth-header-btn.active-true {
+    background-color: rgba(34, 197, 94, 0.15);
+    border-color: var(--accent-true);
+    color: var(--accent-true) !important;
+}
+
+.truth-header-btn.active-false {
+    background-color: rgba(239, 68, 68, 0.15);
+    border-color: var(--accent-false);
+    color: var(--accent-false) !important;
+}
+
+.truth-header-btn.inactive-header {
+    opacity: 0.35;
+}
+
 /* デバフセル（クリック選択可能） */
 .debuff-cell {
     display: flex;
@@ -215,13 +288,19 @@ h1 {
     pointer-events: none;
 }
 
-/* 解決策セル（初期状態はグレーアウト） */
+/* 解決策セル（初期状態はグレーアウト、直接クリック可能） */
 .effect-cell {
     font-weight: bold;
     color: #475569;
     background-color: rgba(255, 255, 255, 0.02);
     border-radius: 6px;
     transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.effect-cell:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #cbd5e1;
 }
 
 /* ボスの真偽が一致して、さらにデバフがアクティブな場合のハイライト */
@@ -262,6 +341,12 @@ h1 {
     background-color: rgba(255, 255, 255, 0.02);
     border: 1px solid transparent;
     transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.resolver-box:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #cbd5e1;
 }
 
 .resolver-box.highlight-true {
@@ -292,3 +377,95 @@ h1 {
         grid-column: span 1;
     }
 }
+
+/* PC Mode Styles */
+body.pc-mode .container {
+    max-width: 1200px;
+}
+
+body.pc-mode .solver-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+body.pc-mode .header-left {
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
+
+body.pc-mode .header-right {
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+body.pc-mode .solver-grid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* Make elements larger in PC Mode */
+body.pc-mode .card {
+    padding: 24px;
+    border-radius: 16px;
+}
+
+body.pc-mode .card-header h2 {
+    font-size: 1.25rem;
+}
+
+body.pc-mode .debuff-cell {
+    font-size: 1.15rem;
+    padding: 10px;
+}
+
+body.pc-mode .debuff-icon {
+    width: 38px;
+    height: 38px;
+}
+
+body.pc-mode .solver-table th {
+    font-size: 0.95rem;
+}
+
+body.pc-mode .solver-table th,
+body.pc-mode .solver-table td {
+    padding: 14px 10px;
+}
+
+body.pc-mode .effect-cell {
+    font-size: 1.1rem;
+    padding: 12px;
+}
+
+body.pc-mode .debuff-row.active .effect-cell.highlight-true,
+body.pc-mode .debuff-row.active .effect-cell.highlight-false {
+    font-size: 1.2rem;
+}
+
+body.pc-mode .resolver-box {
+    padding: 22px;
+    font-size: 1.25rem;
+    border-radius: 12px;
+}
+
+body.pc-mode .resolver-box.highlight-true,
+body.pc-mode .resolver-box.highlight-false {
+    font-size: 1.4rem;
+}
+
+body.pc-mode .truth-btn {
+    font-size: 1.0rem;
+    padding: 6px 16px;
+}
+
+body.pc-mode .toggle-btn {
+    font-size: 0.95rem;
+    padding: 6px 12px;
+}
+
+body.pc-mode .reset-btn {
+    font-size: 0.95rem;
+    padding: 8px 16px;
+}
+

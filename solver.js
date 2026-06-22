@@ -118,7 +118,7 @@ function renderUI() {
         row1Bomb.classList.add('inactive');
     }
 
-    // --- 2. ボス「真・偽」ボタンのアクティブ表示 ---
+    // --- 2. ボス「真・偽」ボタンのアクティブ表示 & テーブルヘッダーハイライト ---
     const keys = ['gc1', 'gc2', 'fire', 'tsunami'];
     keys.forEach(k => {
         const btnTrue = document.getElementById(`${k}-true`);
@@ -126,11 +126,27 @@ function renderUI() {
         btnTrue.classList.remove('active-true');
         btnFalse.classList.remove('active-false');
 
+        // カラムヘッダー (GC1 & GC2 のみ)
+        const hdrTrue = document.getElementById(`${k}-hdr-true`);
+        const hdrFalse = document.getElementById(`${k}-hdr-false`);
+        if (hdrTrue && hdrFalse) {
+            hdrTrue.classList.remove('active-true', 'inactive-header');
+            hdrFalse.classList.remove('active-false', 'inactive-header');
+        }
+
         const val = bossState[`${k}_truth`];
         if (val === 'true') {
             btnTrue.classList.add('active-true');
+            if (hdrTrue && hdrFalse) {
+                hdrTrue.classList.add('active-true');
+                hdrFalse.classList.add('inactive-header');
+            }
         } else if (val === 'false') {
             btnFalse.classList.add('active-false');
+            if (hdrTrue && hdrFalse) {
+                hdrFalse.classList.add('active-false');
+                hdrTrue.classList.add('inactive-header');
+            }
         }
     });
 
@@ -237,7 +253,69 @@ truthBtnIds.forEach(item => {
     });
 });
 
-// 2. プレイヤーのデバフクリック選択 (1回目/2回目)
+// 2. カラムヘッダー（「真」のとき / 「偽」のとき）のクリックによる真偽設定
+const truthHdrIds = [
+    { id: 'gc1-hdr-true', key: 'gc1', val: 'true' },
+    { id: 'gc1-hdr-false', key: 'gc1', val: 'false' },
+    { id: 'gc2-hdr-true', key: 'gc2', val: 'true' },
+    { id: 'gc2-hdr-false', key: 'gc2', val: 'false' }
+];
+
+truthHdrIds.forEach(item => {
+    document.getElementById(item.id).addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        setBossTruth(item.key, item.val);
+    });
+});
+
+// 3. 解決策セル（「真」カラム / 「偽」カラム）のクリックによる真偽設定
+// 1回目：解決策セルクリック
+document.querySelectorAll('#card-gc1 .true-effect').forEach(el => {
+    el.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        setBossTruth('gc1', 'true');
+    });
+});
+document.querySelectorAll('#card-gc1 .false-effect').forEach(el => {
+    el.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        setBossTruth('gc1', 'false');
+    });
+});
+
+// 2回目：解決策セルクリック
+document.querySelectorAll('#card-gc2 .true-effect').forEach(el => {
+    el.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        setBossTruth('gc2', 'true');
+    });
+});
+document.querySelectorAll('#card-gc2 .false-effect').forEach(el => {
+    el.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        setBossTruth('gc2', 'false');
+    });
+});
+
+// ほのお ＆ つなみ の解決策（リゾルバーボックス）クリック
+document.getElementById('fire-resolver-true').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    setBossTruth('fire', 'true');
+});
+document.getElementById('fire-resolver-false').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    setBossTruth('fire', 'false');
+});
+document.getElementById('tsunami-resolver-true').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    setBossTruth('tsunami', 'true');
+});
+document.getElementById('tsunami-resolver-false').addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    setBossTruth('tsunami', 'false');
+});
+
+// 4. プレイヤーのデバフクリック選択 (1回目/2回目)
 // 水の行クリック
 document.getElementById('row-1-water').addEventListener('pointerdown', (e) => {
     e.preventDefault();
@@ -302,7 +380,7 @@ document.getElementById('row-2-bomb').addEventListener('pointerdown', (e) => {
     renderUI();
 });
 
-// 3. ローカルリセットボタン
+// 5. ローカルリセットボタン
 document.getElementById('localResetBtn').addEventListener('pointerdown', (e) => {
     e.preventDefault();
     localState = {
@@ -320,3 +398,25 @@ document.getElementById('localResetBtn').addEventListener('pointerdown', (e) => 
 // 読み込み初期化
 loadLocalState();
 renderUI();
+
+// UIモード切り替え処理
+window.setMode = function (mode) {
+    const btnMobile = document.getElementById('btn-mode-mobile');
+    const btnPc = document.getElementById('btn-mode-pc');
+
+    if (mode === 'pc') {
+        document.body.classList.add('pc-mode');
+        btnMobile.classList.remove('active');
+        btnPc.classList.add('active');
+        localStorage.setItem('kfk_solver_ui_mode', 'pc');
+    } else {
+        document.body.classList.remove('pc-mode');
+        btnMobile.classList.add('active');
+        btnPc.classList.remove('active');
+        localStorage.setItem('kfk_solver_ui_mode', 'mobile');
+    }
+};
+
+// ページ読み込み時に保存されたモードを復元
+const savedMode = localStorage.getItem('kfk_solver_ui_mode') || 'mobile';
+setMode(savedMode);
