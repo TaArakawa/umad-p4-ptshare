@@ -142,39 +142,66 @@
                 </table>
             </section>
 
-            <!-- ほのお ＆ つなみ -->
+            <!-- ほのお (Fire) -->
             <section class="card solver-card card-half" id="card-fire">
                 <div class="card-header">
-                    <div class="title-with-icon">
-                        <img src="img/fire.jpg" alt="ほのお" class="debuff-icon">
-                        <h2>ほのお (Fire)</h2>
-                    </div>
+                    <h2>ほのお (Fire)</h2>
                     <div class="truth-toggle-group">
                         <button class="truth-btn" id="fire-true" data-value="true">真</button>
                         <button class="truth-btn" id="fire-false" data-value="false">偽</button>
                     </div>
                 </div>
-                <div class="simple-resolver">
-                    <div class="resolver-box true-effect" id="fire-resolver-true">離れる</div>
-                    <div class="resolver-box false-effect" id="fire-resolver-false">そのまま</div>
-                </div>
+                
+                <table class="solver-table">
+                    <thead>
+                        <tr>
+                            <th>ギミック</th>
+                            <th class="truth-header-btn" id="fire-hdr-true" data-value="true">「真」のとき</th>
+                            <th class="truth-header-btn" id="fire-hdr-false" data-value="false">「偽」のとき</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="debuff-row active">
+                            <td class="debuff-cell default-active">
+                                <img src="img/fire.jpg" alt="ほのお" class="debuff-icon">
+                                <span>ほのお</span>
+                            </td>
+                            <td class="effect-cell true-effect" id="fire-resolver-true">離れる</td>
+                            <td class="effect-cell false-effect" id="fire-resolver-false">そのまま</td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
 
+            <!-- つなみ (Tsunami) -->
             <section class="card solver-card card-half" id="card-tsunami">
                 <div class="card-header">
-                    <div class="title-with-icon">
-                        <img src="img/tsunami.jpg" alt="つなみ" class="debuff-icon">
-                        <h2>つなみ (Tsunami)</h2>
-                    </div>
+                    <h2>つなみ (Tsunami)</h2>
                     <div class="truth-toggle-group">
                         <button class="truth-btn" id="tsunami-true" data-value="true">真</button>
                         <button class="truth-btn" id="tsunami-false" data-value="false">偽</button>
                     </div>
                 </div>
-                <div class="simple-resolver">
-                    <div class="resolver-box true-effect" id="tsunami-resolver-true">そのまま</div>
-                    <div class="resolver-box false-effect" id="tsunami-resolver-false">離れる</div>
-                </div>
+                
+                <table class="solver-table">
+                    <thead>
+                        <tr>
+                            <th>ギミック</th>
+                            <th class="truth-header-btn" id="tsunami-hdr-true" data-value="true">「真」のとき</th>
+                            <th class="truth-header-btn" id="tsunami-hdr-false" data-value="false">「偽」のとき</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="debuff-row active">
+                            <td class="debuff-cell default-active">
+                                <img src="img/tsunami.jpg" alt="つなみ" class="debuff-icon">
+                                <span>つなみ</span>
+                            </td>
+                            <td class="effect-cell true-effect" id="tsunami-resolver-true">そのまま</td>
+                            <td class="effect-cell false-effect" id="tsunami-resolver-false">離れる</td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
 
         </main>

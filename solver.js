@@ -14,7 +14,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const dbRef = ref(db, 'kfk_p4_solver_state');
+const dbRef = ref(db, 'kfk_p4_state');
+
+// サーバー全体の共通状態を保持するオブジェクト
+let currentState = {};
 
 // ボスの同期する状態 (Firebase管理)
 let bossState = {
@@ -215,21 +218,38 @@ function renderUI() {
 // --- Firebase同期設定 ---
 onValue(dbRef, (snapshot) => {
     const data = snapshot.val() || {};
-    bossState.gc1_truth = data.gc1_truth || null;
-    bossState.gc2_truth = data.gc2_truth || null;
-    bossState.fire_truth = data.fire_truth || null;
-    bossState.tsunami_truth = data.tsunami_truth || null;
+    currentState = data;
+    
+    // メインの真偽状態と同期する
+    bossState.gc1_truth = (data.earlyWater === 'true' || data.earlyWater === 'false') ? data.earlyWater : null;
+    bossState.gc2_truth = (data.lateWater === 'true' || data.lateWater === 'false') ? data.lateWater : null;
+    bossState.fire_truth = (data.fire === 'true' || data.fire === 'false') ? data.fire : null;
+    bossState.tsunami_truth = (data.water === 'true' || data.water === 'false') ? data.water : null;
+    
     renderUI();
 });
 
 // Firebaseのボスの真偽状態を更新する関数
 function setBossTruth(key, value) {
-    // すでに同じ値がセットされている場合は、クリックで解除（未選択に戻す）
+    // すでに同じ値がセットされている場合は、クリックで解除（未選択に戻す = none）
     const currentVal = bossState[`${key}_truth`];
-    const newVal = (currentVal === value) ? null : value;
+    const newVal = (currentVal === value) ? 'none' : value;
 
-    bossState[`${key}_truth`] = newVal;
-    set(dbRef, bossState);
+    if (key === 'gc1') {
+        currentState.earlyWater = newVal;
+        currentState.earlyLightning = newVal;
+        currentState.earlyEye = newVal;
+    } else if (key === 'gc2') {
+        currentState.lateWater = newVal;
+        currentState.lateLightning = newVal;
+        currentState.lateEye = newVal;
+    } else if (key === 'fire') {
+        currentState.fire = newVal;
+    } else if (key === 'tsunami') {
+        currentState.water = newVal;
+    }
+
+    set(dbRef, currentState);
 }
 
 // --- イベントリスナーの設定 ---
@@ -258,7 +278,11 @@ const truthHdrIds = [
     { id: 'gc1-hdr-true', key: 'gc1', val: 'true' },
     { id: 'gc1-hdr-false', key: 'gc1', val: 'false' },
     { id: 'gc2-hdr-true', key: 'gc2', val: 'true' },
-    { id: 'gc2-hdr-false', key: 'gc2', val: 'false' }
+    { id: 'gc2-hdr-false', key: 'gc2', val: 'false' },
+    { id: 'fire-hdr-true', key: 'fire', val: 'true' },
+    { id: 'fire-hdr-false', key: 'fire', val: 'false' },
+    { id: 'tsunami-hdr-true', key: 'tsunami', val: 'true' },
+    { id: 'tsunami-hdr-false', key: 'tsunami', val: 'false' }
 ];
 
 truthHdrIds.forEach(item => {
