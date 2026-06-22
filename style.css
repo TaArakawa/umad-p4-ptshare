@@ -756,3 +756,18 @@ body.hud-mode .timeline-list {
 body.hud-mode #tl-step7 {
     grid-column: span 2;
 }
+
+/* リアルタイム同期時のパルス（発光）エフェクト */
+@keyframes pulse-highlight {
+    0% {
+        box-shadow: 0 0 16px rgba(56, 189, 248, 0.7);
+        border-color: var(--sky-blue);
+    }
+    100% {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+}
+.pulse-update {
+    animation: pulse-highlight 0.8s ease-out;
+}
+

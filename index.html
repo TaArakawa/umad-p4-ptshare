@@ -11,7 +11,8 @@
 <body>
     <script>
         // FOUC（レイアウトのガタつき）を防ぐため、レンダリング前にモードを適用
-        if (localStorage.getItem('kfk_ui_mode') === 'hud') {
+        const savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_ui_mode') || 'mobile';
+        if (savedMode === 'pc' || savedMode === 'hud') {
             document.body.classList.add('hud-mode');
         }
     </script>

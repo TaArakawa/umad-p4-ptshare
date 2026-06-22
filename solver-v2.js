@@ -253,10 +253,29 @@ function renderUI() {
     }
 }
 
+let isInitialLoad = true;
+
+function triggerPulse(element) {
+    if (!element) return;
+    element.classList.remove('pulse-update');
+    void element.offsetWidth; // 強制再描画
+    element.classList.add('pulse-update');
+}
+
 // --- Firebase同期受信処理 ---
 onValue(dbRef, (snapshot) => {
     const data = snapshot.val() || {};
     currentState = data;
+    
+    // 比較用に前回の状態を一時保存
+    const prevTruths = {
+        gc1: bossState.gc1_truth,
+        gc2: bossState.gc2_truth,
+        fire: bossState.fire_truth,
+        tsunami: bossState.tsunami_truth,
+        lineLightning: bossState.lineLightning_truth,
+        iceFan: bossState.iceFan_truth
+    };
     
     // Timingの復元
     bossState.gc1_water_timing = data.gc1WaterTiming || 'none';
@@ -280,6 +299,31 @@ onValue(dbRef, (snapshot) => {
     lastEditedGC = data.lastEditedGC ? parseInt(data.lastEditedGC, 10) : null;
     
     deduceState();
+
+    // 各カードの値に変更があったかチェックしてパルスを実行（初回読み込み時は除外）
+    const currentTruths = {
+        gc1: bossState.gc1_truth,
+        gc2: bossState.gc2_truth,
+        fire: bossState.fire_truth,
+        tsunami: bossState.tsunami_truth,
+        lineLightning: bossState.lineLightning_truth,
+        iceFan: bossState.iceFan_truth
+    };
+
+    if (!isInitialLoad) {
+        Object.keys(currentTruths).forEach(key => {
+            const oldValue = prevTruths[key];
+            const newValue = currentTruths[key];
+            if (oldValue !== newValue) {
+                const card = document.getElementById(`card-${key}`);
+                if (card) {
+                    triggerPulse(card);
+                }
+            }
+        });
+    }
+    
+    isInitialLoad = false;
     renderUI();
 });
 
@@ -731,18 +775,25 @@ window.setMode = function (mode) {
     const btnMobile = document.getElementById('btn-mode-mobile');
     const btnPc = document.getElementById('btn-mode-pc');
 
-    if (mode === 'pc') {
+    if (mode === 'pc' || mode === 'hud') {
         document.body.classList.add('pc-mode');
         btnMobile.classList.remove('active');
         btnPc.classList.add('active');
-        localStorage.setItem('kfk_solver_ui_mode', 'pc');
+        localStorage.setItem('kfk_shared_ui_mode', 'pc');
     } else {
         document.body.classList.remove('pc-mode');
         btnMobile.classList.add('active');
         btnPc.classList.remove('active');
-        localStorage.setItem('kfk_solver_ui_mode', 'mobile');
+        localStorage.setItem('kfk_shared_ui_mode', 'mobile');
     }
 };
 
-const savedMode = localStorage.getItem('kfk_solver_ui_mode') || 'mobile';
+const savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_solver_ui_mode') || 'mobile';
 setMode(savedMode);
+
+// 別タブ間でのリアルタイム切り替え同期
+window.addEventListener('storage', (e) => {
+    if (e.key === 'kfk_shared_ui_mode') {
+        setMode(e.newValue || 'mobile');
+    }
+});

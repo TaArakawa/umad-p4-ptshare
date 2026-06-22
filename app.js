@@ -359,6 +359,15 @@ function updateFirebaseState() {
     set(dbRef, currentState);
 }
 
+let lastState = {};
+
+function triggerPulse(element) {
+    if (!element) return;
+    element.classList.remove('pulse-update');
+    void element.offsetWidth; // 強制再描画
+    element.classList.add('pulse-update');
+}
+
 // サーバーデータのリアルタイム監視・同期
 onValue(dbRef, (snapshot) => {
     const data = snapshot.val() || {};
@@ -393,6 +402,13 @@ onValue(dbRef, (snapshot) => {
         const card = document.getElementById(`card-${key}`);
         const resText = document.getElementById(`res-${key}`);
         if (!card) return;
+
+        // 値に変更があった場合にパルスを走らせる（初回読み込み時は除外）
+        const oldValue = lastState[key];
+        if (oldValue !== undefined && oldValue !== value) {
+            triggerPulse(card);
+        }
+
         const btnTrue = card.querySelector('.btn-true');
         const btnFalse = card.querySelector('.btn-false');
 
@@ -413,6 +429,9 @@ onValue(dbRef, (snapshot) => {
             resText.innerText = "---";
         }
     });
+
+    // 次回比較用に保存
+    lastState = { ...currentState };
 
     // タイムラインを更新
     updateTimeline();
@@ -586,22 +605,29 @@ window.setMode = function (mode) {
     const btnMobile = document.getElementById('btn-mode-mobile');
     const btnHud = document.getElementById('btn-mode-hud');
 
-    if (mode === 'hud') {
+    if (mode === 'hud' || mode === 'pc') {
         document.body.classList.add('hud-mode');
         btnMobile.classList.remove('active');
         btnHud.classList.add('active');
-        localStorage.setItem('kfk_ui_mode', 'hud');
+        localStorage.setItem('kfk_shared_ui_mode', 'pc');
     } else {
         document.body.classList.remove('hud-mode');
         btnMobile.classList.add('active');
         btnHud.classList.remove('active');
-        localStorage.setItem('kfk_ui_mode', 'mobile');
+        localStorage.setItem('kfk_shared_ui_mode', 'mobile');
     }
 };
 
 // ページ読み込み時に保存されたモードを復元
-const savedMode = localStorage.getItem('kfk_ui_mode') || 'mobile';
+const savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_ui_mode') || 'mobile';
 setMode(savedMode);
+
+// 別タブ間でのリアルタイム切り替え同期
+window.addEventListener('storage', (e) => {
+    if (e.key === 'kfk_shared_ui_mode') {
+        setMode(e.newValue || 'mobile');
+    }
+});
 
 // 初期表示用タイムライン描画
 updateTimeline();
