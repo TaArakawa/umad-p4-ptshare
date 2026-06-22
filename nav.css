@@ -1,39 +1,252 @@
+/*
+ * solver-v2.css の body { display:flex; align-items:center; justify-content:center; }
+ * は元々 .container を1つだけ中央寄せする想定。
+ * hub.html では body の直下を .hub-root 1つだけに保ち、
+ * その内側でフェーズタブ＋各ビューを縦積みする。
+ */
+body {
+    display: block;
+    align-items: unset;
+    justify-content: unset;
+    overflow: hidden;
+    height: 100dvh;
+}
+
+body.pc-mode {
+    display: block;
+    overflow: hidden;
+    height: 100dvh;
+}
+
+.hub-root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* P4ヘッダー：狭い画面でリセットボタン等のテキストが2行に
+   折れないよう、可変要素は安全に縮められる page-select 側に
+   負担を寄せる（solver-v2.css 自体は変更しない）。 */
+#view-p4 .header-right > * {
+    flex-shrink: 0;
+}
+
+#view-p4 .reset-btn,
+#view-p4 .toggle-btn,
+#view-p4 h1 {
+    white-space: nowrap;
+}
+
+#view-p4 .header-left {
+    min-width: 0;
+}
+
+#view-p4 .page-select {
+    min-width: 0;
+    flex-shrink: 1;
+}
+
+/* フェーズタブ：PC版のみ表示（画面最上部に固定）。
+   スマホ版は画面を広く使うため、タブを出さずP4のみを表示する
+   （表示の強制切り替えは nav.js の applyPhaseDisplay が行う）。 */
 .phase-tabs {
+    display: none;
+}
+
+body.pc-mode .phase-tabs {
+    flex: 0 0 auto;
     position: sticky;
     top: 0;
+    left: 0;
     z-index: 1000;
     display: flex;
+    align-items: center;
     gap: 8px;
+    width: 100%;
     padding: 10px 12px;
-    background: #1b1b22;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    background: #15151c;
+    border-bottom: 2px solid #3b6fe0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    box-sizing: border-box;
+}
+
+.phase-tabs-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #8b93a8;
+    white-space: nowrap;
+    margin-right: 2px;
 }
 
 .phase-tab {
     flex: 1;
-    padding: 10px 0;
-    font-size: 1rem;
-    font-weight: 700;
+    padding: 12px 0;
+    font-size: 1.05rem;
+    font-weight: 800;
     color: #cfd2dc;
     background: #2a2a35;
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 8px;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .phase-tab.active {
     color: #ffffff;
     background: #3b6fe0;
-    border-color: #3b6fe0;
+    border-color: #6f9bff;
+    box-shadow: 0 0 0 2px rgba(111, 155, 255, 0.4);
 }
 
+body.pc-mode .phase-tabs {
+    padding: 14px 20px;
+}
+
+body.pc-mode .phase-tabs-label {
+    font-size: 0.95rem;
+}
+
+body.pc-mode .phase-tab {
+    flex: 0 0 auto;
+    min-width: 140px;
+    padding: 12px 28px;
+    font-size: 1.15rem;
+}
+
+/* 各フェーズビュー：タブの下の残り全高を使い、スクロールさせずに収める */
 .phase-view {
+    flex: 1 1 auto;
     width: 100%;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* fit-area: 利用可能な高さぴったりに固定し、内側(.fit-inner)を
+   JS(nav.js)が自然サイズで測定してから scale() で収める。
+   data-fit="both" -> 幅・高さ両方で縮小率を計算（画像・表）
+   data-fit="height" -> 高さのみで縮小率を計算（P4ソルバーは幅は元々レスポンシブ） */
+.fit-area {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.fit-area[data-fit="both"] .fit-inner {
+    display: inline-block;
+}
+
+.fit-area[data-fit="height"] .fit-inner {
+    display: block;
+    width: 100%;
+}
+
+.fit-inner {
+    transform-origin: center center;
+}
+
+/* P1 / P3 共通カード */
+.hub-card {
+    margin: 10px;
+    padding: 10px;
+    background-color: #1e1e24;
+    border: 1px solid #2d3748;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
 }
 
 .phase-image {
     display: block;
-    max-width: 100%;
+    max-width: none;
     height: auto;
-    margin: 0 auto;
+    border-radius: 6px;
+}
+
+/* P3: 決戦散開〜ブラックホール線取り表（カンペアプリv1のテーブルを単独画面用に再利用） */
+.hub-cheat-sheet-card {
+    display: inline-flex;
+}
+
+.hub-cheat-sheet-table {
+    width: auto;
+    border-collapse: collapse;
+    font-size: 1rem;
+    color: #cbd5e1;
+    font-family: inherit;
+}
+
+.hub-cheat-sheet-table th,
+.hub-cheat-sheet-table td {
+    border: 1px solid #2d3748;
+    padding: 8px 14px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.hub-cheat-sheet-table td.row-center {
+    text-align: center;
+    font-weight: bold;
+    color: #cbd5e1;
+}
+
+.hub-cheat-sheet-table td.section-header {
+    background-color: #18181b;
+    color: #94a3b8;
+    font-weight: normal;
+    font-size: 0.92rem;
+    text-align: left;
+    border-top: 1.5px solid #2d3748;
+}
+
+.hub-cheat-sheet-table td.gimmick-highlight {
+    text-align: center;
+    font-weight: 800;
+    color: #a7f3d0;
+    background-color: rgba(16, 185, 129, 0.08);
+    font-size: 1.02rem;
+}
+
+.dbf-icon {
+    height: 36px;
+    width: auto;
+    border-radius: 3px;
+    vertical-align: middle;
+    display: inline-block;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.swap-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 36px;
+}
+
+.swap-label {
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #ef4444;
+    color: #ffffff;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
 }

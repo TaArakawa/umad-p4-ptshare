@@ -21,17 +21,21 @@
         <!-- 入力ページ -->
         <div class="section-page" id="page-inputs">
             <div class="header">
-                <h1>絶ケフカ P4 カンペアプリv1</h1>
-                <div class="toggle-group">
-                    <button class="toggle-btn active" id="btn-mode-mobile" onclick="setMode('mobile')">📱 スマホ</button>
-                    <button class="toggle-btn" id="btn-mode-hud" onclick="setMode('hud')">💻 PC</button>
+                <div class="header-left">
+                    <select class="page-select" onchange="location.href=this.value">
+                        <option value="index.html" selected>カンペアプリv1</option>
+                        <option value="solver.html">カンペアプリv2</option>
+                        <option value="solver-v2.html">カンペアプリv3</option>
+                    </select>
+                    <h1>カンペアプリv1</h1>
                 </div>
-                <select class="page-select" onchange="location.href=this.value">
-                    <option value="index.html" selected>カンペアプリv1</option>
-                    <option value="solver.html">カンペアプリv2</option>
-                    <option value="solver-v2.html">カンペアプリv3</option>
-                </select>
-                <button class="reset-btn" id="resetBtn">一括 RESET</button>
+                <div class="header-right">
+                    <div class="toggle-group">
+                        <button class="toggle-btn active" id="btn-mode-mobile" onclick="setMode('mobile')">📱 スマホ</button>
+                        <button class="toggle-btn" id="btn-mode-hud" onclick="setMode('hud')">💻 PC</button>
+                    </div>
+                    <button class="reset-btn" id="resetBtn">一括 RESET</button>
+                </div>
             </div>
 
             <!-- 前半デバフ -->

@@ -232,6 +232,18 @@ body.hud-mode #page-cheat-sheet {
     width: 100%;
 }
 
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 h1 {
     font-size: 0.95rem;
     margin: 0;
@@ -437,13 +449,21 @@ h1 {
 
 /* HUD Mode Styles */
 
-body.hud-mode h1,
 body.hud-mode .section-title {
     display: none;
 }
 
+body.hud-mode h1 {
+    font-size: 1.25rem;
+}
+
 body.hud-mode .header {
     margin-bottom: 12px;
+    gap: 15px;
+}
+
+body.hud-mode .header-left,
+body.hud-mode .header-right {
     gap: 15px;
 }
 
