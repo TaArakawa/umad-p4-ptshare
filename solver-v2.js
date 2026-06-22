@@ -277,7 +277,7 @@ onValue(dbRef, (snapshot) => {
     bossState.tsunami_truth = data.water || 'none';
     bossState.lineLightning_truth = data.lineLightning || 'none';
     bossState.iceFan_truth = data.iceFan || 'none';
-    lastEditedGC = data.lastEditedGC || null;
+    lastEditedGC = data.lastEditedGC ? parseInt(data.lastEditedGC, 10) : null;
     
     deduceState();
     renderUI();
@@ -296,13 +296,12 @@ function deduceState() {
                              bossState.gc2_lightning_timing !== 'none';
 
     // 優先順位の決定 (直近で編集された方の入力を優先ソースとし、競合状態を避けて相手側を上書き)
+    // 編集中のGCが未完成の場合は他方からの上書きを防ぐため fallback を行わない
     let primaryGC = null;
     if (lastEditedGC === 1) {
         if (canDeduceFromGC1) primaryGC = 1;
-        else if (canDeduceFromGC2) primaryGC = 2;
     } else if (lastEditedGC === 2) {
         if (canDeduceFromGC2) primaryGC = 2;
-        else if (canDeduceFromGC1) primaryGC = 1;
     } else {
         if (canDeduceFromGC1) primaryGC = 1;
         else if (canDeduceFromGC2) primaryGC = 2;
@@ -473,8 +472,9 @@ function updateFirebaseState() {
 // ボスの真偽トグル更新関数（2回押しても解除されない）
 function setBossTruth(key, value) {
     bossState[`${key}_truth`] = value;
-    if (key === 'gc1') lastEditedGC = 1;
-    if (key === 'gc2') lastEditedGC = 2;
+    // 真偽値が変更された場合、そのGC自体のタイミングを再推論するため、他方のGCを優先編集ソースとする
+    if (key === 'gc1') lastEditedGC = 2;
+    if (key === 'gc2') lastEditedGC = 1;
     updateFirebaseState();
 }
 
@@ -483,18 +483,9 @@ function setBossTiming(key, value) {
     const currentVal = bossState[`${key}_timing`];
     const newVal = (currentVal === value) ? 'none' : value;
     
-    if (newVal === 'none') {
-        // タイミングが解除された場合、相互推論による再設定を防ぐためGC1・GC2すべてのタイミングをクリアする
-        bossState.gc1_water_timing = 'none';
-        bossState.gc1_lightning_timing = 'none';
-        bossState.gc2_water_timing = 'none';
-        bossState.gc2_lightning_timing = 'none';
-        lastEditedGC = null;
-    } else {
-        bossState[`${key}_timing`] = newVal;
-        if (key.startsWith('gc1')) lastEditedGC = 1;
-        if (key.startsWith('gc2')) lastEditedGC = 2;
-    }
+    bossState[`${key}_timing`] = newVal;
+    if (key.startsWith('gc1')) lastEditedGC = 1;
+    if (key.startsWith('gc2')) lastEditedGC = 2;
 
     updateFirebaseState();
 }
