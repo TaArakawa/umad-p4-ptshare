@@ -275,11 +275,115 @@ onValue(dbRef, (snapshot) => {
     bossState.lineLightning_truth = data.lineLightning || 'none';
     bossState.iceFan_truth = data.iceFan || 'none';
     
+    deduceState();
     renderUI();
 });
 
+// 自動推論ロジック (GC1 と GC2 の早の頭割りは重複しない特性を利用)
+function deduceState() {
+    let changed = true;
+    let iterations = 0;
+    
+    while (changed && iterations < 10) {
+        changed = false;
+
+        // 1. 水と雷のタイミング連動 (片方が決まればもう片方は逆)
+        // GC1
+        if (bossState.gc1_water_timing !== 'none' && bossState.gc1_lightning_timing === 'none') {
+            bossState.gc1_lightning_timing = bossState.gc1_water_timing === 'early' ? 'late' : 'early';
+            changed = true;
+        } else if (bossState.gc1_lightning_timing !== 'none' && bossState.gc1_water_timing === 'none') {
+            bossState.gc1_water_timing = bossState.gc1_lightning_timing === 'early' ? 'late' : 'early';
+            changed = true;
+        }
+        
+        // GC2
+        if (bossState.gc2_water_timing !== 'none' && bossState.gc2_lightning_timing === 'none') {
+            bossState.gc2_lightning_timing = bossState.gc2_water_timing === 'early' ? 'late' : 'early';
+            changed = true;
+        } else if (bossState.gc2_lightning_timing !== 'none' && bossState.gc2_water_timing === 'none') {
+            bossState.gc2_water_timing = bossState.gc2_lightning_timing === 'early' ? 'late' : 'early';
+            changed = true;
+        }
+
+        // 2. 早の頭割り (Early Stack) フラグの算出
+        // 真のときは水が頭割り(Stack)、偽のときは雷が頭割り(Stack)。
+        // したがって、早の頭割り (Early Stack) が発生するのは:
+        // - 真かつ水が早 (gc1_truth === 'true' && gc1_water_timing === 'early')
+        // - 偽かつ雷が早、つまり偽かつ水が遅 (gc1_truth === 'false' && gc1_water_timing === 'late')
+        let s1 = null;
+        if (bossState.gc1_truth !== 'none' && bossState.gc1_water_timing !== 'none') {
+            s1 = (bossState.gc1_truth === 'true') 
+                ? (bossState.gc1_water_timing === 'early')
+                : (bossState.gc1_water_timing === 'late');
+        }
+
+        let s2 = null;
+        if (bossState.gc2_truth !== 'none' && bossState.gc2_water_timing !== 'none') {
+            s2 = (bossState.gc2_truth === 'true')
+                ? (bossState.gc2_water_timing === 'early')
+                : (bossState.gc2_water_timing === 'late');
+        }
+
+        // 3. GC1 と GC2 で早の頭割りは重複しない (一方が早の頭割りなら、他方は遅の頭割り(早の散開))
+        // すなわち s2 = !s1
+        if (s1 !== null && s2 === null) {
+            s2 = !s1;
+        } else if (s2 !== null && s1 === null) {
+            s1 = !s2;
+        }
+
+        // 4. s1 から GC1 の状態を推論
+        if (s1 !== null) {
+            // 真偽からタイミングを推論
+            if (bossState.gc1_truth !== 'none' && bossState.gc1_water_timing === 'none') {
+                if (bossState.gc1_truth === 'true') {
+                    bossState.gc1_water_timing = s1 ? 'early' : 'late';
+                } else {
+                    bossState.gc1_water_timing = s1 ? 'late' : 'early';
+                }
+                changed = true;
+            }
+            // タイミングから真偽を推論
+            if (bossState.gc1_water_timing !== 'none' && bossState.gc1_truth === 'none') {
+                if (bossState.gc1_water_timing === 'early') {
+                    bossState.gc1_truth = s1 ? 'true' : 'false';
+                } else {
+                    bossState.gc1_truth = s1 ? 'false' : 'true';
+                }
+                changed = true;
+            }
+        }
+
+        // 5. s2 から GC2 の状態を推論
+        if (s2 !== null) {
+            // 真偽からタイミングを推論
+            if (bossState.gc2_truth !== 'none' && bossState.gc2_water_timing === 'none') {
+                if (bossState.gc2_truth === 'true') {
+                    bossState.gc2_water_timing = s2 ? 'early' : 'late';
+                } else {
+                    bossState.gc2_water_timing = s2 ? 'late' : 'early';
+                }
+                changed = true;
+            }
+            // タイミングから真偽を推論
+            if (bossState.gc2_water_timing !== 'none' && bossState.gc2_truth === 'none') {
+                if (bossState.gc2_water_timing === 'early') {
+                    bossState.gc2_truth = s2 ? 'true' : 'false';
+                } else {
+                    bossState.gc2_truth = s2 ? 'false' : 'true';
+                }
+                changed = true;
+            }
+        }
+
+        iterations++;
+    }
+}
+
 // Firebaseのボスの真偽・タイミング状態を計算して保存する関数
 function updateFirebaseState() {
+    deduceState();
     // 水 (Water) のマッピング
     let earlyWater = 'none';
     let lateWater = 'none';
@@ -353,22 +457,31 @@ function setBossTruth(key, value) {
 function setBossTiming(key, value) {
     const currentVal = bossState[`${key}_timing`];
     const newVal = (currentVal === value) ? 'none' : value;
-    bossState[`${key}_timing`] = newVal;
+    
+    if (newVal === 'none') {
+        // タイミングが解除された場合、相互推論による再設定を防ぐためGC1・GC2すべてのタイミングをクリアする
+        bossState.gc1_water_timing = 'none';
+        bossState.gc1_lightning_timing = 'none';
+        bossState.gc2_water_timing = 'none';
+        bossState.gc2_lightning_timing = 'none';
+    } else {
+        bossState[`${key}_timing`] = newVal;
 
-    // 水と雷の連動処理
-    let counterpartKey = null;
-    if (key === 'gc1_water') counterpartKey = 'gc1_lightning';
-    else if (key === 'gc1_lightning') counterpartKey = 'gc1_water';
-    else if (key === 'gc2_water') counterpartKey = 'gc2_lightning';
-    else if (key === 'gc2_lightning') counterpartKey = 'gc2_water';
+        // 水と雷の連動処理
+        let counterpartKey = null;
+        if (key === 'gc1_water') counterpartKey = 'gc1_lightning';
+        else if (key === 'gc1_lightning') counterpartKey = 'gc1_water';
+        else if (key === 'gc2_water') counterpartKey = 'gc2_lightning';
+        else if (key === 'gc2_lightning') counterpartKey = 'gc2_water';
 
-    if (counterpartKey) {
-        if (newVal === 'early') {
-            bossState[`${counterpartKey}_timing`] = 'late';
-        } else if (newVal === 'late') {
-            bossState[`${counterpartKey}_timing`] = 'early';
-        } else {
-            bossState[`${counterpartKey}_timing`] = 'none';
+        if (counterpartKey) {
+            if (newVal === 'early') {
+                bossState[`${counterpartKey}_timing`] = 'late';
+            } else if (newVal === 'late') {
+                bossState[`${counterpartKey}_timing`] = 'early';
+            } else {
+                bossState[`${counterpartKey}_timing`] = 'none';
+            }
         }
     }
 
