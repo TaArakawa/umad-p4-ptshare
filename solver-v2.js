@@ -404,36 +404,56 @@ function deduceState() {
 // Firebaseのボスの真偽・タイミング状態を計算して保存する関数
 function updateFirebaseState() {
     deduceState();
-    // 水 (Water) のマッピング
+    
     let earlyWater = 'none';
     let lateWater = 'none';
-    
-    if (bossState.gc1_water_timing === 'early' && bossState.gc1_truth !== 'none') {
-        earlyWater = bossState.gc1_truth;
-    } else if (bossState.gc2_water_timing === 'early' && bossState.gc2_truth !== 'none') {
-        earlyWater = bossState.gc2_truth;
-    }
-    
-    if (bossState.gc1_water_timing === 'late' && bossState.gc1_truth !== 'none') {
-        lateWater = bossState.gc1_truth;
-    } else if (bossState.gc2_water_timing === 'late' && bossState.gc2_truth !== 'none') {
-        lateWater = bossState.gc2_truth;
-    }
-    
-    // 雷 (Lightning) のマッピング
     let earlyLightning = 'none';
     let lateLightning = 'none';
     
-    if (bossState.gc1_lightning_timing === 'early' && bossState.gc1_truth !== 'none') {
-        earlyLightning = bossState.gc1_truth;
-    } else if (bossState.gc2_lightning_timing === 'early' && bossState.gc2_truth !== 'none') {
-        earlyLightning = bossState.gc2_truth;
+    // GC1 mapping
+    if (bossState.gc1_truth !== 'none') {
+        const isTrue = bossState.gc1_truth === 'true';
+        
+        // Water
+        if (bossState.gc1_water_timing === 'early') {
+            if (isTrue) earlyWater = 'true';
+            else earlyLightning = 'false';
+        } else if (bossState.gc1_water_timing === 'late') {
+            if (isTrue) lateWater = 'true';
+            else lateLightning = 'false';
+        }
+        
+        // Lightning
+        if (bossState.gc1_lightning_timing === 'early') {
+            if (isTrue) earlyLightning = 'true';
+            else earlyWater = 'false';
+        } else if (bossState.gc1_lightning_timing === 'late') {
+            if (isTrue) lateLightning = 'true';
+            else lateWater = 'false';
+        }
     }
     
-    if (bossState.gc1_lightning_timing === 'late' && bossState.gc1_truth !== 'none') {
-        lateLightning = bossState.gc1_truth;
-    } else if (bossState.gc2_lightning_timing === 'late' && bossState.gc2_truth !== 'none') {
-        lateLightning = bossState.gc2_truth;
+    // GC2 mapping
+    if (bossState.gc2_truth !== 'none') {
+        const isTrue = bossState.gc2_truth === 'true';
+        
+        // Water
+        if (bossState.gc2_water_timing === 'early') {
+            if (isTrue) earlyWater = 'true';
+            else earlyLightning = 'false';
+        } else if (bossState.gc2_water_timing === 'late') {
+            if (isTrue) lateWater = 'true';
+            else lateLightning = 'false';
+        }
+        
+        // Lightning
+        if (bossState.gc2_lightning_timing === 'early') {
+            if (isTrue) earlyLightning = 'true';
+            else earlyWater = 'false';
+        } else if (bossState.gc2_lightning_timing === 'late') {
+            if (isTrue) lateLightning = 'true';
+            else lateWater = 'false';
+        }
     }
     
     // タイムライン互換のキーへ書き込み

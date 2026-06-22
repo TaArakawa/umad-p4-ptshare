@@ -146,15 +146,258 @@ function updateTimeline() {
 // 共有データの状態をローカルに保持するオブジェクト
 let currentState = {};
 
+// ボスの同期する状態 (Firebase管理)
+let bossState = {
+    gc1_truth: 'none',            // 'true' | 'false' | 'none'
+    gc2_truth: 'none',            // 'true' | 'false' | 'none'
+    gc1_water_timing: 'none',     // 'early' | 'late' | 'none'
+    gc1_lightning_timing: 'none',  // 'early' | 'late' | 'none'
+    gc2_water_timing: 'none',     // 'early' | 'late' | 'none'
+    gc2_lightning_timing: 'none',  // 'early' | 'late' | 'none'
+    fire_truth: 'none',           // 'true' | 'false' | 'none'
+    tsunami_truth: 'none',        // 'true' | 'false' | 'none'
+    lineLightning_truth: 'none',  // 'true' | 'false' | 'none'
+    iceFan_truth: 'none'          // 'true' | 'false' | 'none'
+};
+
+// 最後に編集したGC (1 または 2)
+let lastEditedGC = null;
+
+// 自動推論ロジック (solver-v2 と同一)
+function deduceState() {
+    const canDeduceFromGC1 = bossState.gc1_truth !== 'none' && 
+                             bossState.gc1_water_timing !== 'none' && 
+                             bossState.gc1_lightning_timing !== 'none';
+                             
+    const canDeduceFromGC2 = bossState.gc2_truth !== 'none' && 
+                             bossState.gc2_water_timing !== 'none' && 
+                             bossState.gc2_lightning_timing !== 'none';
+
+    // 優先順位の決定 (直近で編集された方の入力を優先ソースとし、競合状態を避けて相手側を上書き)
+    // 編集中のGCが未完成の場合は他方からの上書きを防ぐため fallback を行わない
+    let primaryGC = null;
+    if (lastEditedGC === 1) {
+        if (canDeduceFromGC1) primaryGC = 1;
+    } else if (lastEditedGC === 2) {
+        if (canDeduceFromGC2) primaryGC = 2;
+    } else {
+        if (canDeduceFromGC1) primaryGC = 1;
+        else if (canDeduceFromGC2) primaryGC = 2;
+    }
+
+    if (primaryGC === 1) {
+        // GC1 -> GC2
+        const r1_water = bossState.gc1_truth === 'true' 
+            ? (bossState.gc1_water_timing === 'early' ? 'ES' : 'LS')
+            : (bossState.gc1_water_timing === 'early' ? 'EP' : 'LP');
+            
+        const r1_lightning = bossState.gc1_truth === 'true'
+            ? (bossState.gc1_lightning_timing === 'early' ? 'EP' : 'LP')
+            : (bossState.gc1_lightning_timing === 'early' ? 'ES' : 'LS');
+            
+        const roles1 = [r1_water, r1_lightning];
+        const all = ['ES', 'LS', 'EP', 'LP'];
+        const roles2 = all.filter(r => !roles1.includes(r));
+        
+        if (bossState.gc2_truth !== 'none') {
+            if (bossState.gc2_truth === 'true') {
+                bossState.gc2_water_timing = roles2.includes('ES') ? 'early' : 'late';
+                bossState.gc2_lightning_timing = roles2.includes('EP') ? 'early' : 'late';
+            } else {
+                bossState.gc2_water_timing = roles2.includes('EP') ? 'early' : 'late';
+                bossState.gc2_lightning_timing = roles2.includes('ES') ? 'early' : 'late';
+            }
+        }
+    } 
+    else if (primaryGC === 2) {
+        // GC2 -> GC1
+        const r2_water = bossState.gc2_truth === 'true' 
+            ? (bossState.gc2_water_timing === 'early' ? 'ES' : 'LS')
+            : (bossState.gc2_water_timing === 'early' ? 'EP' : 'LP');
+            
+        const r2_lightning = bossState.gc2_truth === 'true'
+            ? (bossState.gc2_lightning_timing === 'early' ? 'EP' : 'LP')
+            : (bossState.gc2_lightning_timing === 'early' ? 'ES' : 'LS');
+            
+        const roles2 = [r2_water, r2_lightning];
+        const all = ['ES', 'LS', 'EP', 'LP'];
+        const roles1 = all.filter(r => !roles2.includes(r));
+        
+        if (bossState.gc1_truth !== 'none') {
+            if (bossState.gc1_truth === 'true') {
+                bossState.gc1_water_timing = roles1.includes('ES') ? 'early' : 'late';
+                bossState.gc1_lightning_timing = roles1.includes('EP') ? 'early' : 'late';
+            } else {
+                bossState.gc1_water_timing = roles1.includes('EP') ? 'early' : 'late';
+                bossState.gc1_lightning_timing = roles1.includes('ES') ? 'early' : 'late';
+            }
+        }
+    }
+
+    // どちらのGCも2つ確定していないが、4つのタイミングすべてが入力済みのときの真偽値推論
+    if (bossState.gc1_water_timing !== 'none' && bossState.gc1_lightning_timing !== 'none' &&
+        bossState.gc2_water_timing !== 'none' && bossState.gc2_lightning_timing !== 'none') {
+        
+        if (bossState.gc1_truth === 'none' && bossState.gc2_truth !== 'none') {
+            const r2_water = bossState.gc2_truth === 'true' 
+                ? (bossState.gc2_water_timing === 'early' ? 'ES' : 'LS')
+                : (bossState.gc2_water_timing === 'early' ? 'EP' : 'LP');
+            const r2_lightning = bossState.gc2_truth === 'true'
+                ? (bossState.gc2_lightning_timing === 'early' ? 'EP' : 'LP')
+                : (bossState.gc2_lightning_timing === 'early' ? 'ES' : 'LS');
+            const roles2 = [r2_water, r2_lightning];
+            const all = ['ES', 'LS', 'EP', 'LP'];
+            const roles1 = all.filter(r => !roles2.includes(r));
+            
+            const w_role_true = bossState.gc1_water_timing === 'early' ? 'ES' : 'LS';
+            const l_role_true = bossState.gc1_lightning_timing === 'early' ? 'EP' : 'LP';
+            if (roles1.includes(w_role_true) && roles1.includes(l_role_true)) {
+                bossState.gc1_truth = 'true';
+            } else {
+                bossState.gc1_truth = 'false';
+            }
+        }
+        else if (bossState.gc2_truth === 'none' && bossState.gc1_truth !== 'none') {
+            const r1_water = bossState.gc1_truth === 'true' 
+                ? (bossState.gc1_water_timing === 'early' ? 'ES' : 'LS')
+                : (bossState.gc1_water_timing === 'early' ? 'EP' : 'LP');
+            const r1_lightning = bossState.gc1_truth === 'true'
+                ? (bossState.gc1_lightning_timing === 'early' ? 'EP' : 'LP')
+                : (bossState.gc1_lightning_timing === 'early' ? 'ES' : 'LS');
+            const roles1 = [r1_water, r1_lightning];
+            const all = ['ES', 'LS', 'EP', 'LP'];
+            const roles2 = all.filter(r => !roles1.includes(r));
+            
+            const w_role_true = bossState.gc2_water_timing === 'early' ? 'ES' : 'LS';
+            const l_role_true = bossState.gc2_lightning_timing === 'early' ? 'EP' : 'LP';
+            if (roles2.includes(w_role_true) && roles2.includes(l_role_true)) {
+                bossState.gc2_truth = 'true';
+            } else {
+                bossState.gc2_truth = 'false';
+            }
+        }
+    }
+}
+
+// Firebaseのボスの真偽・タイミング状態を計算して保存する関数 (solver-v2 と同一)
+function updateFirebaseState() {
+    deduceState();
+    
+    let earlyWater = 'none';
+    let lateWater = 'none';
+    let earlyLightning = 'none';
+    let lateLightning = 'none';
+    
+    // GC1 mapping
+    if (bossState.gc1_truth !== 'none') {
+        const isTrue = bossState.gc1_truth === 'true';
+        
+        // Water
+        if (bossState.gc1_water_timing === 'early') {
+            if (isTrue) earlyWater = 'true';
+            else earlyLightning = 'false';
+        } else if (bossState.gc1_water_timing === 'late') {
+            if (isTrue) lateWater = 'true';
+            else lateLightning = 'false';
+        }
+        
+        // Lightning
+        if (bossState.gc1_lightning_timing === 'early') {
+            if (isTrue) earlyLightning = 'true';
+            else earlyWater = 'false';
+        } else if (bossState.gc1_lightning_timing === 'late') {
+            if (isTrue) lateLightning = 'true';
+            else lateWater = 'false';
+        }
+    }
+    
+    // GC2 mapping
+    if (bossState.gc2_truth !== 'none') {
+        const isTrue = bossState.gc2_truth === 'true';
+        
+        // Water
+        if (bossState.gc2_water_timing === 'early') {
+            if (isTrue) earlyWater = 'true';
+            else earlyLightning = 'false';
+        } else if (bossState.gc2_water_timing === 'late') {
+            if (isTrue) lateWater = 'true';
+            else lateLightning = 'false';
+        }
+        
+        // Lightning
+        if (bossState.gc2_lightning_timing === 'early') {
+            if (isTrue) earlyLightning = 'true';
+            else earlyWater = 'false';
+        } else if (bossState.gc2_lightning_timing === 'late') {
+            if (isTrue) lateLightning = 'true';
+            else lateWater = 'false';
+        }
+    }
+    
+    // タイムライン互換のキーへ書き込み
+    currentState.earlyWater = earlyWater;
+    currentState.lateWater = lateWater;
+    currentState.earlyLightning = earlyLightning;
+    currentState.lateLightning = lateLightning;
+    
+    currentState.earlyEye = bossState.gc1_truth || 'none';
+    currentState.lateEye = bossState.gc2_truth || 'none';
+
+    // 安定した明示的な真偽値キーの保存
+    currentState.gc1Truth = bossState.gc1_truth || 'none';
+    currentState.gc2Truth = bossState.gc2_truth || 'none';
+    
+    // 加速度は gc1 / gc2 いずれかが真・偽になった場合に bomb にマッピング
+    currentState.bomb = (bossState.gc1_truth === 'true' || bossState.gc1_truth === 'false') ? bossState.gc1_truth :
+                        (bossState.gc2_truth === 'true' || bossState.gc2_truth === 'false') ? bossState.gc2_truth : 'none';
+    
+    currentState.fire = bossState.fire_truth || 'none';
+    currentState.water = bossState.tsunami_truth || 'none';
+    currentState.lineLightning = bossState.lineLightning_truth || 'none';
+    currentState.iceFan = bossState.iceFan_truth || 'none';
+    
+    // Timing情報自体も共有するために保存
+    currentState.gc1WaterTiming = bossState.gc1_water_timing || 'none';
+    currentState.gc1LightningTiming = bossState.gc1_lightning_timing || 'none';
+    currentState.gc2WaterTiming = bossState.gc2_water_timing || 'none';
+    currentState.gc2LightningTiming = bossState.gc2_lightning_timing || 'none';
+    
+    currentState.lastEditedGC = lastEditedGC || null;
+    
+    set(dbRef, currentState);
+}
+
 // サーバーデータのリアルタイム監視・同期
 onValue(dbRef, (snapshot) => {
     const data = snapshot.val() || {};
     currentState = data;
 
+    // GC1/GC2 状態の復元
+    bossState.gc1_water_timing = data.gc1WaterTiming || 'none';
+    bossState.gc1_lightning_timing = data.gc1LightningTiming || 'none';
+    bossState.gc2_water_timing = data.gc2WaterTiming || 'none';
+    bossState.gc2_lightning_timing = data.gc2LightningTiming || 'none';
+    
+    bossState.gc1_truth = data.gc1Truth || 
+                           ((data.earlyWater === 'true' || data.earlyWater === 'false') ? data.earlyWater : 
+                            (data.earlyEye === 'true' || data.earlyEye === 'false') ? data.earlyEye : 'none');
+                           
+    bossState.gc2_truth = data.gc2Truth || 
+                           ((data.lateWater === 'true' || data.lateWater === 'false') ? data.lateWater : 
+                            (data.lateEye === 'true' || data.lateEye === 'false') ? data.lateEye : 'none');
+    
+    bossState.fire_truth = data.fire || 'none';
+    bossState.tsunami_truth = data.water || 'none';
+    bossState.lineLightning_truth = data.lineLightning || 'none';
+    bossState.iceFan_truth = data.iceFan || 'none';
+    lastEditedGC = data.lastEditedGC ? parseInt(data.lastEditedGC, 10) : null;
+
+    deduceState();
+
     Object.keys(rules).forEach(key => {
         if (key === 'bomb') return; // 加速度爆弾は同期スキップ
 
-        const value = data[key];
+        const value = currentState[key]; // 推論済みの currentState から値を反映
         const card = document.getElementById(`card-${key}`);
         const resText = document.getElementById(`res-${key}`);
         if (!card) return;
@@ -183,13 +426,95 @@ onValue(dbRef, (snapshot) => {
     updateTimeline();
 });
 
-// 共有ボタンが押されたときの処理
+// 共有ボタンが押されたときの処理 (Timelineの各入力からGC1/GC2状態へマッピング)
 window.setDecision = function (key, status) {
-    // すでに同じ状態なら何もしない（誤連打キープ）
     if (currentState[key] === status) return;
 
-    currentState[key] = status;
-    set(dbRef, currentState);
+    if (key === 'earlyEye') {
+        bossState.gc1_truth = status;
+        lastEditedGC = 2; // 真偽値の変更時は他方を優先編集ソースとして再推論
+    } else if (key === 'lateEye') {
+        bossState.gc2_truth = status;
+        lastEditedGC = 1;
+    } else if (key === 'fire') {
+        bossState.fire_truth = status;
+    } else if (key === 'water') {
+        bossState.tsunami_truth = status;
+    } else if (key === 'lineLightning') {
+        bossState.lineLightning_truth = status;
+    } else if (key === 'iceFan') {
+        bossState.iceFan_truth = status;
+    } else {
+        // 水・雷のタイミング設定のTimeline入力からのマッピング
+        const g1 = bossState.gc1_truth;
+        const g2 = bossState.gc2_truth;
+        if (g1 !== 'none' && g2 !== 'none') {
+            if (key === 'earlyWater') {
+                if (g1 === status) { // GC1
+                    if (g1 === 'true') bossState.gc1_water_timing = 'early';
+                    else bossState.gc1_lightning_timing = 'early';
+                    if (g2 === 'true') bossState.gc2_water_timing = 'late';
+                    else bossState.gc2_lightning_timing = 'late';
+                    lastEditedGC = 1;
+                } else { // GC2
+                    if (g2 === 'true') bossState.gc2_water_timing = 'early';
+                    else bossState.gc2_lightning_timing = 'early';
+                    if (g1 === 'true') bossState.gc1_water_timing = 'late';
+                    else bossState.gc1_lightning_timing = 'late';
+                    lastEditedGC = 2;
+                }
+            } else if (key === 'lateWater') {
+                if (g1 === status) { // GC1
+                    if (g1 === 'true') bossState.gc1_water_timing = 'late';
+                    else bossState.gc1_lightning_timing = 'late';
+                    if (g2 === 'true') bossState.gc2_water_timing = 'early';
+                    else bossState.gc2_lightning_timing = 'early';
+                    lastEditedGC = 1;
+                } else { // GC2
+                    if (g2 === 'true') bossState.gc2_water_timing = 'late';
+                    else bossState.gc2_lightning_timing = 'late';
+                    if (g1 === 'true') bossState.gc1_water_timing = 'early';
+                    else bossState.gc1_lightning_timing = 'early';
+                    lastEditedGC = 2;
+                }
+            } else if (key === 'earlyLightning') {
+                if (g1 === status) { // GC1
+                    if (g1 === 'true') bossState.gc1_lightning_timing = 'early';
+                    else bossState.gc1_water_timing = 'early';
+                    if (g2 === 'true') bossState.gc2_lightning_timing = 'late';
+                    else bossState.gc2_water_timing = 'late';
+                    lastEditedGC = 1;
+                } else { // GC2
+                    if (g2 === 'true') bossState.gc2_lightning_timing = 'early';
+                    else bossState.gc2_water_timing = 'early';
+                    if (g1 === 'true') bossState.gc1_lightning_timing = 'late';
+                    else bossState.gc1_water_timing = 'late';
+                    lastEditedGC = 2;
+                }
+            } else if (key === 'lateLightning') {
+                if (g1 === status) { // GC1
+                    if (g1 === 'true') bossState.gc1_lightning_timing = 'late';
+                    else bossState.gc1_water_timing = 'late';
+                    if (g2 === 'true') bossState.gc2_lightning_timing = 'early';
+                    else bossState.gc2_water_timing = 'early';
+                    lastEditedGC = 1;
+                } else { // GC2
+                    if (g2 === 'true') bossState.gc2_lightning_timing = 'late';
+                    else bossState.gc2_water_timing = 'late';
+                    if (g1 === 'true') bossState.gc1_lightning_timing = 'early';
+                    else bossState.gc1_water_timing = 'early';
+                    lastEditedGC = 2;
+                }
+            }
+        } else {
+            // 真偽値がまだ揃っていない場合は、Timeline互換キーへ直接書き込んでサーバーに送信
+            currentState[key] = status;
+            set(dbRef, currentState);
+            return;
+        }
+    }
+
+    updateFirebaseState();
 };
 
 // 一括リセット処理
@@ -198,6 +523,16 @@ document.getElementById('resetBtn').addEventListener('click', () => {
     Object.keys(rules).forEach(key => {
         if (key !== 'bomb') resetData[key] = "none";
     });
+    
+    // GC1/GC2 状態の明示的なリセット
+    resetData.gc1Truth = "none";
+    resetData.gc2Truth = "none";
+    resetData.gc1WaterTiming = "none";
+    resetData.gc1LightningTiming = "none";
+    resetData.gc2WaterTiming = "none";
+    resetData.gc2LightningTiming = "none";
+    resetData.lastEditedGC = null;
+
     set(dbRef, resetData);
 
     // 個人用の加速度爆弾も同時にリセット
