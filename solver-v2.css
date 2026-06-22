@@ -1,0 +1,622 @@
+:root {
+    --bg-color: #121214;
+    --card-bg: #1e1e24;
+    --text-color: #e2e8f0;
+    --accent-true: #22c55e;
+    --accent-false: #ef4444;
+    --btn-idle: #334155;
+    --border-color: #2d3748;
+    --sky-blue: #38bdf8;
+    --sky-blue-dark: #0369a1;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* 英語テキストはモバイルでは非表示 */
+.en-text {
+    display: none;
+}
+
+/* ==========================================================================
+   モバイルデフォルト：スクロールなしで1画面に完全に収まるスタイル
+   ========================================================================== */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    padding: 4px;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.container {
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5px;
+    overflow: hidden;
+}
+
+/* ヘッダー */
+.solver-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 3px;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.back-link {
+    color: var(--sky-blue);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.68rem;
+    transition: color 0.15s ease;
+    padding: 4px 0;
+}
+
+.back-link:hover {
+    color: #0ea5e9;
+}
+
+h1 {
+    font-size: 0.78rem;
+    color: #a7f3d0;
+    white-space: nowrap;
+}
+
+/* UI Mode Switcher */
+.toggle-group {
+    display: flex;
+    background-color: var(--btn-idle);
+    border-radius: 4px;
+    padding: 1.5px;
+    gap: 1.5px;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 2.5px 5px;
+    font-size: 0.62rem;
+    font-weight: bold;
+    border-radius: 2.5px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.toggle-btn.active {
+    background-color: var(--sky-blue);
+    color: var(--sky-blue-dark);
+}
+
+.reset-btn {
+    background-color: #b91c1c;
+    color: white;
+    border: none;
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 0.68rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.reset-btn:hover {
+    background-color: #991b1b;
+}
+
+/* メイングリッド */
+.solver-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3.5px;
+    width: 100%;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 3px 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 2.5px;
+    justify-content: flex-start;
+}
+
+#card-gc1, #card-gc2 {
+    grid-column: span 2;
+}
+
+.card-half {
+    grid-column: span 1;
+}
+
+/* カードヘッダー */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 2px;
+}
+
+.card-header h2 {
+    font-size: 0.72rem;
+    color: #cbd5e1;
+}
+
+/* ==========================================================================
+   テーブルスタイル（モバイル版はグリッド化して2段構成に）
+   ========================================================================== */
+.solver-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.66rem;
+    line-height: 1.0;
+}
+
+/* モバイル版はテーブルヘッダーを非表示にしてスペースを節約 */
+.solver-table thead {
+    display: none;
+}
+
+/* デバフ行の2段構成グリッド化 (水 & 雷) */
+.solver-table tr.debuff-row {
+    display: grid;
+    grid-template-columns: 1.1fr 1.45fr 1.45fr;
+    grid-template-rows: auto auto;
+    gap: 2px;
+    padding: 3.5px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    align-items: center;
+}
+
+/* 視線 & 加速度（タイミングなし）の2段構成グリッド化 */
+.solver-table tr.debuff-row[data-debuff="sight"],
+.solver-table tr.debuff-row[data-debuff="bomb"] {
+    grid-template-columns: 1.1fr 2.9fr;
+}
+
+.solver-table tr.debuff-row td {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+/* セル配置の定義 */
+.debuff-cell {
+    grid-column: 1;
+    grid-row: 1 / span 2; /* デバフアイコンは左側に縦に結合 */
+    align-self: center;
+}
+
+/* 水・雷のタイミングと真偽 */
+.timing-cell {
+    grid-column: 2;
+    grid-row: 1;
+}
+.truth-cell {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+/* 視線・加速度はタイミングがないため真偽を右側いっぱいに */
+tr[data-debuff="sight"] .truth-cell,
+tr[data-debuff="bomb"] .truth-cell {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+/* 解決策セル (下段) */
+.true-effect {
+    grid-column: 2;
+    grid-row: 2;
+}
+.false-effect {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+/* 視線・加速度の解決策 (下段に2列並べる) */
+tr[data-debuff="sight"] .true-effect,
+tr[data-debuff="bomb"] .true-effect {
+    grid-column: 2;
+    grid-row: 2;
+    width: 50%;
+    float: left;
+}
+tr[data-debuff="sight"] .false-effect,
+tr[data-debuff="bomb"] .false-effect {
+    grid-column: 2;
+    grid-row: 2;
+    width: 50%;
+    float: right;
+}
+
+/* 空欄セルの非表示 */
+.empty-cell {
+    display: none !important;
+}
+
+/* --- ボタン類 --- */
+.timing-toggle-group,
+.truth-toggle-group {
+    display: flex;
+    background-color: var(--btn-idle);
+    border-radius: 3px;
+    padding: 1px;
+    gap: 1px;
+    width: 100%;
+}
+
+.timing-btn,
+.truth-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    padding: 2.5px 2px;
+    font-size: 0.65rem;
+    font-weight: bold;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    text-align: center;
+    position: relative;
+}
+
+/* タップ領域拡張 */
+.timing-btn::after,
+.truth-btn::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    bottom: -5px;
+    left: -4px;
+    right: -4px;
+}
+
+/* タイミングボタンアクティブ */
+.timing-btn.active-early {
+    background-color: #f59e0b; /* オレンジ/黄 */
+    color: #451a03;
+}
+.timing-btn.active-late {
+    background-color: #3b82f6; /* 青 */
+    color: #172554;
+}
+
+/* 真偽ボタンアクティブ */
+.truth-btn.active-true {
+    background-color: var(--accent-true);
+    color: #052e16;
+}
+.truth-btn.active-false {
+    background-color: var(--accent-false);
+    color: #450a0a;
+}
+
+/* デバフアイコン＆セル */
+.debuff-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5px;
+    font-weight: bold;
+    color: #cbd5e1;
+    cursor: pointer;
+    padding: 2px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+}
+
+.debuff-cell:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.debuff-cell span {
+    font-size: 0.62rem;
+    white-space: nowrap;
+}
+
+.debuff-icon {
+    width: 15px;
+    height: 15px;
+    border-radius: 2.5px;
+    flex-shrink: 0;
+}
+
+.debuff-icon-emoji {
+    width: 15px;
+    height: 15px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 2.5px;
+    flex-shrink: 0;
+}
+
+/* デバフ行のアクティブ・非アクティブ状態 */
+.debuff-row.active .debuff-cell {
+    background-color: rgba(56, 189, 248, 0.15);
+    border-color: var(--sky-blue);
+    color: var(--sky-blue);
+}
+
+.debuff-row.inactive {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+/* 解決策セル */
+.effect-cell {
+    font-weight: bold;
+    color: #475569;
+    background-color: rgba(255, 255, 255, 0.01);
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    padding: 3px 2px;
+}
+
+.effect-cell:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #cbd5e1;
+}
+
+/* ハイライト表示 */
+.debuff-row.active .effect-cell.highlight-true {
+    background-color: rgba(34, 197, 94, 0.18);
+    color: var(--accent-true);
+    font-size: 0.72rem;
+    box-shadow: inset 0 0 2px rgba(34, 197, 94, 0.1);
+}
+
+.debuff-row.active .effect-cell.highlight-false {
+    background-color: rgba(239, 68, 68, 0.18);
+    color: var(--accent-false);
+    font-size: 0.72rem;
+    box-shadow: inset 0 0 2px rgba(239, 68, 68, 0.1);
+}
+
+/* 視線デバフが選択された場合の両側ボールド表示用 */
+.debuff-row.active.sight-selected .effect-cell {
+    text-shadow: 0 0 1px currentColor;
+    font-weight: 900;
+}
+
+/* ほのお、つなみ、雷床、氷床 (card-half 内のテーブル設定) */
+.card-half tr.debuff-row {
+    display: grid;
+    grid-template-columns: 1.1fr 1.6fr 1.3fr;
+    grid-template-rows: auto;
+    padding: 4px 0;
+    align-items: center;
+    border-bottom: none;
+}
+
+.card-half .debuff-cell {
+    grid-column: 1;
+    grid-row: 1;
+    flex-direction: row;
+    gap: 3px;
+    align-self: center;
+}
+
+.card-half .truth-cell {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.card-half .true-effect {
+    grid-column: 3;
+    grid-row: 1;
+    width: 50%;
+    float: left;
+}
+
+.card-half .false-effect {
+    grid-column: 3;
+    grid-row: 1;
+    width: 50%;
+    float: right;
+}
+
+
+/* ==========================================================================
+   PC版 (PCモード) スタイルオーバーライド（大画面用にテーブルレイアウトへ戻す）
+   ========================================================================== */
+
+body.pc-mode {
+    padding: 15px;
+    height: 100vh;
+    overflow: auto;
+}
+
+body.pc-mode .container {
+    max-width: 1200px;
+    height: auto;
+    gap: 15px;
+    overflow: visible;
+}
+
+body.pc-mode .solver-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    gap: 10px;
+}
+
+body.pc-mode .header-left {
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
+
+body.pc-mode .header-right {
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+body.pc-mode .back-link {
+    font-size: 0.95rem;
+}
+
+body.pc-mode h1 {
+    font-size: 1.25rem;
+}
+
+body.pc-mode .toggle-btn {
+    font-size: 0.95rem;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+body.pc-mode .reset-btn {
+    font-size: 0.95rem;
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+
+body.pc-mode .solver-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    overflow: visible;
+}
+
+body.pc-mode #card-gc1, 
+body.pc-mode #card-gc2 {
+    grid-column: span 1; /* PC版では左右に並べる */
+}
+
+body.pc-mode .card {
+    padding: 20px;
+    border-radius: 16px;
+    gap: 12px;
+}
+
+body.pc-mode .card-header h2 {
+    font-size: 1.2rem;
+}
+
+/* テーブルスタイルを通常のテーブル行に戻す */
+body.pc-mode .solver-table {
+    font-size: 0.95rem;
+}
+
+body.pc-mode .solver-table thead {
+    display: table-header-group;
+}
+
+body.pc-mode .col-debuff { width: 25%; }
+body.pc-mode .col-timing { width: 20%; }
+body.pc-mode .col-truth  { width: 20%; }
+body.pc-mode .col-effect { width: 17.5%; }
+
+body.pc-mode .solver-table tr.debuff-row,
+body.pc-mode .card-half tr.debuff-row {
+    display: table-row;
+    border-bottom: none;
+}
+
+body.pc-mode .solver-table td {
+    display: table-cell;
+    padding: 10px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+body.pc-mode .debuff-cell {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+    font-size: 1.05rem;
+    padding: 8px;
+}
+
+body.pc-mode .debuff-cell span {
+    font-size: 1.05rem;
+}
+
+body.pc-mode .debuff-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+}
+
+body.pc-mode .debuff-icon-emoji {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+    border-radius: 4px;
+}
+
+body.pc-mode .timing-toggle-group,
+body.pc-mode .truth-toggle-group {
+    border-radius: 6px;
+    padding: 2px;
+    gap: 2px;
+}
+
+body.pc-mode .timing-btn,
+body.pc-mode .truth-btn {
+    padding: 6px 10px;
+    font-size: 0.95rem;
+    border-radius: 4px;
+}
+
+body.pc-mode .effect-cell {
+    font-size: 1.0rem;
+    padding: 10px;
+}
+
+body.pc-mode .debuff-row.active .effect-cell.highlight-true,
+body.pc-mode .debuff-row.active .effect-cell.highlight-false {
+    font-size: 1.15rem;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+}
+
+body.pc-mode .en-text {
+    display: inline;
+}
