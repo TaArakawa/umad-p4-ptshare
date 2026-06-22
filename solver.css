@@ -25,6 +25,14 @@
     display: none;
 }
 
+.sp-text {
+    display: inline;
+}
+
+.pc-text {
+    display: none;
+}
+
 /* ==========================================================================
    モバイルデフォルト：スクロールなしで1画面に完全に収まるスタイル
    ========================================================================== */
@@ -548,5 +556,13 @@ body.pc-mode .debuff-row.active .effect-cell.highlight-false {
 }
 
 body.pc-mode .en-text {
+    display: inline;
+}
+
+body.pc-mode .sp-text {
+    display: none;
+}
+
+body.pc-mode .pc-text {
     display: inline;
 }
