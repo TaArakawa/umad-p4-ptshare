@@ -482,59 +482,59 @@ window.setDecision = function (key, status) {
             const g2 = bossState.gc2_truth;
             if (g1 !== 'none' && g2 !== 'none') {
                 if (k === 'earlyWater') {
-                    if (g1 === status) { // GC1
-                        if (g1 === 'true') bossState.gc1_water_timing = 'early';
-                        else bossState.gc1_lightning_timing = 'early';
+                    if (g1 === status) { // GC1（水・雷の早遅は連動するため両方セット）
+                        bossState.gc1_water_timing = 'early';
+                        bossState.gc1_lightning_timing = 'early';
                         if (g2 === 'true') bossState.gc2_water_timing = 'late';
                         else bossState.gc2_lightning_timing = 'late';
                         lastEditedGC = 1;
                     } else { // GC2
                         if (g2 === 'true') bossState.gc2_water_timing = 'early';
                         else bossState.gc2_lightning_timing = 'early';
-                        if (g1 === 'true') bossState.gc1_water_timing = 'late';
-                        else bossState.gc1_lightning_timing = 'late';
+                        bossState.gc1_water_timing = 'late';
+                        bossState.gc1_lightning_timing = 'late';
                         lastEditedGC = 2;
                     }
                 } else if (k === 'lateWater') {
-                    if (g1 === status) { // GC1
-                        if (g1 === 'true') bossState.gc1_water_timing = 'late';
-                        else bossState.gc1_lightning_timing = 'late';
+                    if (g1 === status) { // GC1（水・雷の早遅は連動するため両方セット）
+                        bossState.gc1_water_timing = 'late';
+                        bossState.gc1_lightning_timing = 'late';
                         if (g2 === 'true') bossState.gc2_water_timing = 'early';
                         else bossState.gc2_lightning_timing = 'early';
                         lastEditedGC = 1;
                     } else { // GC2
                         if (g2 === 'true') bossState.gc2_water_timing = 'late';
                         else bossState.gc2_lightning_timing = 'late';
-                        if (g1 === 'true') bossState.gc1_water_timing = 'early';
-                        else bossState.gc1_lightning_timing = 'early';
+                        bossState.gc1_water_timing = 'early';
+                        bossState.gc1_lightning_timing = 'early';
                         lastEditedGC = 2;
                     }
                 } else if (k === 'earlyLightning') {
-                    if (g1 === status) { // GC1
-                        if (g1 === 'true') bossState.gc1_lightning_timing = 'early';
-                        else bossState.gc1_water_timing = 'early';
+                    if (g1 === status) { // GC1（水・雷の早遅は連動するため両方セット）
+                        bossState.gc1_lightning_timing = 'early';
+                        bossState.gc1_water_timing = 'early';
                         if (g2 === 'true') bossState.gc2_lightning_timing = 'late';
                         else bossState.gc2_water_timing = 'late';
                         lastEditedGC = 1;
                     } else { // GC2
                         if (g2 === 'true') bossState.gc2_lightning_timing = 'early';
                         else bossState.gc2_water_timing = 'early';
-                        if (g1 === 'true') bossState.gc1_lightning_timing = 'late';
-                        else bossState.gc1_water_timing = 'late';
+                        bossState.gc1_lightning_timing = 'late';
+                        bossState.gc1_water_timing = 'late';
                         lastEditedGC = 2;
                     }
                 } else if (k === 'lateLightning') {
-                    if (g1 === status) { // GC1
-                        if (g1 === 'true') bossState.gc1_lightning_timing = 'late';
-                        else bossState.gc1_water_timing = 'late';
+                    if (g1 === status) { // GC1（水・雷の早遅は連動するため両方セット）
+                        bossState.gc1_lightning_timing = 'late';
+                        bossState.gc1_water_timing = 'late';
                         if (g2 === 'true') bossState.gc2_lightning_timing = 'early';
                         else bossState.gc2_water_timing = 'early';
                         lastEditedGC = 1;
                     } else { // GC2
                         if (g2 === 'true') bossState.gc2_lightning_timing = 'late';
                         else bossState.gc2_water_timing = 'late';
-                        if (g1 === 'true') bossState.gc1_lightning_timing = 'early';
-                        else bossState.gc1_water_timing = 'early';
+                        bossState.gc1_lightning_timing = 'early';
+                        bossState.gc1_water_timing = 'early';
                         lastEditedGC = 2;
                     }
                 }

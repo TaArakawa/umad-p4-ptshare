@@ -616,12 +616,21 @@ function setBossTruth(key, value) {
     updateFirebaseState();
 }
 
-// Timingトグル更新関数（2回押すと none に戻す。水と雷は独立して設定可能）
+// Timingトグル更新関数（2回押すと none に戻す）
+// 1回目グランドクロス(GC1)は水と雷の早遅が連動する（早水→早雷、遅水→遅雷）ため、
+// どちらかを押すともう片方も同じ値に揃える。2回目(GC2)は水と雷を独立して設定可能。
 function setBossTiming(key, value) {
     const currentVal = bossState[`${key}_timing`];
     const newVal = (currentVal === value) ? 'none' : value;
-    
+
     bossState[`${key}_timing`] = newVal;
+
+    if (key === 'gc1_water') {
+        bossState.gc1_lightning_timing = newVal;
+    } else if (key === 'gc1_lightning') {
+        bossState.gc1_water_timing = newVal;
+    }
+
     if (key.startsWith('gc1')) lastEditedGC = 1;
     if (key.startsWith('gc2')) lastEditedGC = 2;
 
