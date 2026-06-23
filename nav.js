@@ -20,6 +20,16 @@ const navRef = ref(navDb, 'kfk_nav');
 
 window.setPhase = (phase) => update(navRef, { phase });
 
+// v1/v2 はID構成が異なる別実装で、hub.html (v3) と同一ページに
+// 組み込むとID重複で互いの動作が壊れるため同居できない。
+// そのため別タブで開き、このタブのhub（フェーズタブ）はそのまま残す。
+window.navigatePage = (selectEl) => {
+    const value = selectEl.value;
+    if (value === 'hub.html') return;
+    window.open(value, '_blank');
+    selectEl.value = 'hub.html';
+};
+
 // ---- スクロールなしで各フェーズ画面を画面内に収める ----
 // .fit-area (高さ = タブ分を除いた残り全高) の中の .fit-inner を
 // 自然サイズで測ってから scale() で縮小する。
