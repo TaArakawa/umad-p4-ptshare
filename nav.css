@@ -873,3 +873,195 @@ body.pc-mode .p2-gimmick-layout {
     min-width: 320px;
 }
 
+/* ==========================================================================
+   P2 追加ビジュアル: ペア固定＆ラウンド進行 / トライン候補マップ
+   ========================================================================== */
+
+.p2-card-title {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #a7f3d0;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.p2-pairing-card,
+.p2-trine-card {
+    margin-top: 16px;
+}
+
+.p2-pair-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.p2-pair-group {
+    display: flex;
+    gap: 10px;
+}
+
+.p2-pair-badge {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #e2e8f0;
+    background: #23232f;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    white-space: nowrap;
+}
+
+.p2-pair-badge.role-th {
+    border-color: rgba(56, 189, 248, 0.4);
+}
+
+.p2-pair-badge.role-dps {
+    border-color: rgba(248, 113, 113, 0.4);
+}
+
+.p2-pair-note {
+    font-size: 0.7rem;
+    color: #8b93a8;
+    text-align: center;
+    margin-bottom: 14px;
+}
+
+.p2-round-track {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.p2-round-cell {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.p2-round-cell.team-share {
+    background-color: rgba(217, 119, 6, 0.75); /* 頭割りチーム：オレンジ */
+}
+
+.p2-round-cell.team-other {
+    background-color: rgba(59, 111, 224, 0.6); /* その他チーム：青 */
+}
+
+.p2-round-legend {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    font-size: 0.72rem;
+    color: #cbd5e1;
+}
+
+.p2-legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.p2-legend-dot.dot-share { background-color: rgba(217, 119, 6, 0.85); }
+.p2-legend-dot.dot-other { background-color: rgba(59, 111, 224, 0.7); }
+
+/* トライン候補マップ */
+.p2-trine-layout {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.p2-trine-field {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    border: 2px dashed #475569;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.02);
+    flex: 0 0 auto;
+}
+
+.p2-trine-boss {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.62rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.p2-trine-spot {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+}
+
+.p2-trine-spot.wave-1 { background-color: rgba(220, 38, 38, 0.85); }
+.p2-trine-spot.wave-2 { background-color: rgba(217, 119, 6, 0.85); }
+.p2-trine-spot.wave-3 { background-color: rgba(5, 150, 105, 0.85); }
+
+.p2-trine-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.76rem;
+    color: #cbd5e1;
+    min-width: 200px;
+}
+
+.p2-trine-legend .p2-legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+}
+
+.p2-compass {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 170px;
+    height: 170px;
+    flex: 0 0 auto;
+}
+
+.p2-compass-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.25;
+    font-size: 0.72rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.p2-compass-cell.tank { color: #38bdf8; }
+.p2-compass-cell.healer-dps { color: #f87171; }
+.p2-compass-cell.center { color: #94a3b8; font-size: 0.68rem; font-weight: 700; white-space: normal; }
+
