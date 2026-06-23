@@ -322,6 +322,63 @@ onValue(dbRef, (snapshot) => {
     renderUI();
 });
 
+// v1/v3 とのデータ連携用：真偽＋早遅(タイミング)から派生フィールド
+// (earlyWater/lateWater/earlyLightning/lateLightning/earlyEye/lateEye/bomb) を
+// v1・v3 とまったく同じ ES/LS ロジックで再計算して currentState に書き込む。
+//
+// v2 は早遅を入力できないが、v1/v3 が先に入れた早遅は currentState に保持されている
+// ため、それを使えば v2 で真偽を変えても 3 バージョンで矛盾しない派生値になる。
+// 早遅がまだ無い（'none'）スロットは ES/LS が一致せず派生値も 'none' のままになる
+// ＝「v2 だけでは情報が足りないので未確定」を正しく表現する。
+function recomputeSharedDerivedFields() {
+    const norm = (v, ok) => (ok.indexOf(v) >= 0 ? v : 'none');
+    const g1 = norm(currentState.gc1Truth, ['true', 'false']);
+    const g2 = norm(currentState.gc2Truth, ['true', 'false']);
+    const g1wT = norm(currentState.gc1WaterTiming, ['early', 'late']);
+    const g1lT = norm(currentState.gc1LightningTiming, ['early', 'late']);
+    const g2wT = norm(currentState.gc2WaterTiming, ['early', 'late']);
+    const g2lT = norm(currentState.gc2LightningTiming, ['early', 'late']);
+
+    let earlyWater = 'none', lateWater = 'none', earlyLightning = 'none', lateLightning = 'none';
+
+    // 早シェア (ES) を担当する GC を特定
+    let es_gc = null;
+    if (g1 !== 'none') {
+        if (g1 === 'true' && g1wT === 'early') es_gc = 1;
+        else if (g1 === 'false' && g1lT === 'early') es_gc = 1;
+    }
+    if (g2 !== 'none') {
+        if (g2 === 'true' && g2wT === 'early') es_gc = 2;
+        else if (g2 === 'false' && g2lT === 'early') es_gc = 2;
+    }
+    if (es_gc === 1) { earlyWater = g1; earlyLightning = g1; }
+    else if (es_gc === 2) { earlyWater = g2; earlyLightning = g2; }
+
+    // 遅シェア (LS) を担当する GC を特定
+    let ls_gc = null;
+    if (g1 !== 'none') {
+        if (g1 === 'true' && g1wT === 'late') ls_gc = 1;
+        else if (g1 === 'false' && g1lT === 'late') ls_gc = 1;
+    }
+    if (g2 !== 'none') {
+        if (g2 === 'true' && g2wT === 'late') ls_gc = 2;
+        else if (g2 === 'false' && g2lT === 'late') ls_gc = 2;
+    }
+    if (ls_gc === 1) { lateWater = g1; lateLightning = g1; }
+    else if (ls_gc === 2) { lateWater = g2; lateLightning = g2; }
+
+    currentState.earlyWater = earlyWater;
+    currentState.lateWater = lateWater;
+    currentState.earlyLightning = earlyLightning;
+    currentState.lateLightning = lateLightning;
+    // 視線は GC の真偽のみで決まる（早遅に依存しない）
+    currentState.earlyEye = g1;
+    currentState.lateEye = g2;
+    // 加速度爆弾は GC1/GC2 いずれかの真偽から決まる
+    currentState.bomb = (g1 === 'true' || g1 === 'false') ? g1
+                       : (g2 === 'true' || g2 === 'false') ? g2 : 'none';
+}
+
 // Firebaseのボスの真偽状態を更新する関数
 function setBossTruth(key, value) {
     // 2回押しても解除されないよう、クリックされた値をそのままセットする
@@ -329,14 +386,8 @@ function setBossTruth(key, value) {
 
     if (key === 'gc1') {
         currentState.gc1Truth = newVal;
-        currentState.earlyWater = newVal;
-        currentState.earlyLightning = newVal;
-        currentState.earlyEye = newVal;
     } else if (key === 'gc2') {
         currentState.gc2Truth = newVal;
-        currentState.lateWater = newVal;
-        currentState.lateLightning = newVal;
-        currentState.lateEye = newVal;
     } else if (key === 'fire') {
         currentState.fire = newVal;
     } else if (key === 'tsunami') {
@@ -346,6 +397,9 @@ function setBossTruth(key, value) {
     } else if (key === 'iceFan') {
         currentState.iceFan = newVal;
     }
+
+    // 早遅を保持したまま、v1/v3 と同じ規則で派生フィールドを再計算する
+    recomputeSharedDerivedFields();
 
     set(dbRef, currentState);
 }
