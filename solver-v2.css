@@ -323,6 +323,7 @@ body.pc-mode .page-select {
     border-collapse: collapse;
     font-size: 0.78rem;
     line-height: 1.1;
+    table-layout: fixed;
 }
 
 .solver-table th,
@@ -331,6 +332,14 @@ body.pc-mode .page-select {
     text-align: center;
     vertical-align: middle;
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* 真・偽カラムは内容の長さに関わらず常に同じ幅にする */
+.solver-table th:nth-child(2),
+.solver-table td:nth-child(2),
+.solver-table th:nth-child(3),
+.solver-table td:nth-child(3) {
+    width: 25%;
 }
 
 .solver-table th {
