@@ -132,6 +132,46 @@ body.pc-mode .phase-tab {
     overflow: hidden;
 }
 
+/* P4ビュー：実装切り替えバー + 実装ペイン(v1/v2/v3)を縦に並べる */
+#view-p4 {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.p4-impl-bar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    background: #1b1b22;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+}
+
+.p4-impl-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #8b93a8;
+    white-space: nowrap;
+}
+
+/* v1/v2/v3 のうち選ばれているものだけ表示し、残りの高さを使う */
+.p4-impl-pane {
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.p4-iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
 /* fit-area: 利用可能な高さぴったりに固定し、内側(.fit-inner)を
    JS(nav.js)が自然サイズで測定してから scale() で収める。
    data-fit="both" -> 幅・高さ両方で縮小率を計算（画像・表）
