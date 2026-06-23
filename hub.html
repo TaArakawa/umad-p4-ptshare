@@ -160,19 +160,31 @@
         </div>
     </div>
 
-    <!-- P4 カンペ（既存 solver-v2 をそのまま内包・無改変） -->
+    <!-- P4 カンペ（v1/v2/v3 の実装を切り替えられる。v3は既存solver-v2をそのまま内包・無改変、
+         v1/v2はID構成が異なる別実装のためiframeで分離して埋め込む） -->
     <div id="view-p4" class="phase-view">
-        <div class="fit-area" id="fit-p4" data-fit="height">
+        <div class="p4-impl-bar">
+            <span class="p4-impl-label">P4の表示</span>
+            <select class="page-select" id="p4-impl-select" onchange="setP4Impl(this.value)">
+                <option value="v1">カンペアプリv1</option>
+                <option value="v2">カンペアプリv2</option>
+                <option value="v3" selected>カンペアプリv3</option>
+            </select>
+        </div>
+
+        <div class="p4-impl-pane" id="p4-impl-v1" data-impl="v1">
+            <iframe class="p4-iframe" data-src="index.html" title="カンペアプリv1"></iframe>
+        </div>
+        <div class="p4-impl-pane" id="p4-impl-v2" data-impl="v2">
+            <iframe class="p4-iframe" data-src="solver.html" title="カンペアプリv2"></iframe>
+        </div>
+
+        <div class="fit-area p4-impl-pane" id="fit-p4" data-fit="height" data-impl="v3">
             <div class="fit-inner">
         <div class="container">
             <!-- ヘッダーエリア -->
             <header class="solver-header">
                 <div class="header-left">
-                    <select class="page-select" onchange="navigatePage(this)">
-                        <option value="index.html">カンペアプリv1</option>
-                        <option value="solver.html">カンペアプリv2</option>
-                        <option value="hub.html" selected>カンペアプリv3</option>
-                    </select>
                     <h1>カンペアプリv3</h1>
                 </div>
                 <div class="header-right">

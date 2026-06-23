@@ -20,14 +20,33 @@ const navRef = ref(navDb, 'kfk_nav');
 
 window.setPhase = (phase) => update(navRef, { phase });
 
-// v1/v2 はID構成が異なる別実装で、hub.html (v3) と同一ページに
-// 組み込むとID重複で互いの動作が壊れるため同居できない。
-// そのため別タブで開き、このタブのhub（フェーズタブ）はそのまま残す。
-window.navigatePage = (selectEl) => {
-    const value = selectEl.value;
-    if (value === 'hub.html') return;
-    window.open(value, '_blank');
-    selectEl.value = 'hub.html';
+// P4の実装切り替え（v1/v2/v3）。
+// v1/v2 はID構成が異なる別実装で、v3 (solver-v2.js) と同一ドキュメントに
+// 直接埋め込むとID重複で互いの動作が壊れるため、iframeで別ドキュメントとして分離する。
+// hub.html自体は移動しないので、フェーズタブ（P1/P3/P4）は維持される。
+const P4_IMPL_KEY = 'kfk_p4_impl';
+
+window.setP4Impl = (impl) => {
+    if (!['v1', 'v2', 'v3'].includes(impl)) impl = 'v3';
+
+    document.querySelectorAll('.p4-impl-pane').forEach(pane => {
+        const active = pane.dataset.impl === impl;
+        pane.style.display = active ? '' : 'none';
+        if (active) {
+            // 初回表示時だけ iframe に src を入れる（不要な接続を避ける遅延読み込み）。
+            const iframe = pane.querySelector('iframe.p4-iframe[data-src]');
+            if (iframe) {
+                iframe.src = iframe.dataset.src;
+                iframe.removeAttribute('data-src');
+            }
+        }
+    });
+
+    const select = document.getElementById('p4-impl-select');
+    if (select) select.value = impl;
+
+    localStorage.setItem(P4_IMPL_KEY, impl);
+    scheduleFit();
 };
 
 // ---- スクロールなしで各フェーズ画面を画面内に収める ----
@@ -115,4 +134,5 @@ new MutationObserver(() => {
 });
 
 applyPhaseDisplay();
+window.setP4Impl(localStorage.getItem(P4_IMPL_KEY) || 'v3');
 scheduleFit();
