@@ -605,14 +605,15 @@ function setBossTruth(key, value) {
 // どちらかを押すともう片方も同じ値に揃える。2回目(GC2)は水と雷を独立して設定可能。
 function setBossTiming(key, value) {
     const currentVal = bossState[`${key}_timing`];
-    const newVal = (currentVal === value) ? 'none' : value;
+    // 既に選択済みの早/遅を再クリックしても選択解除はせず、そのまま維持する。
+    if (currentVal === value) return;
 
-    bossState[`${key}_timing`] = newVal;
+    bossState[`${key}_timing`] = value;
 
     if (key === 'gc1_water') {
-        bossState.gc1_lightning_timing = newVal;
+        bossState.gc1_lightning_timing = value;
     } else if (key === 'gc1_lightning') {
-        bossState.gc1_water_timing = newVal;
+        bossState.gc1_water_timing = value;
     }
 
     if (key.startsWith('gc1')) lastEditedGC = 1;
