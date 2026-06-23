@@ -666,21 +666,17 @@ body.pc-mode .solver-timeline {
 
 .timeline-list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
     width: 100%;
     position: relative;
-}
-
-#v3-tl-step7 {
-    grid-column: span 2;
 }
 
 .timeline-item {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 8px 10px;
+    padding: 6px;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -688,6 +684,7 @@ body.pc-mode .solver-timeline {
     box-sizing: border-box;
     transition: all 0.2s ease;
     opacity: 0.65;
+    min-width: 0;
 }
 
 .timeline-item.ready {
