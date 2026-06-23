@@ -272,19 +272,20 @@ scheduleFit();
 
     Promise.all([countPromise, headPromise])
         .then(([count, data]) => {
-            badge.textContent = `v1.0.${count}`;
             badge.href = `https://github.com/${REPO}/commit/${data.sha}`;
             const message = (data.commit && data.commit.message) || '';
             const dateStr = (data.commit && data.commit.committer && data.commit.committer.date) || '';
             const date = dateStr ? new Date(dateStr) : null;
             const dateLabel = date
-                ? `${date.getMonth() + 1}/${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
-                : '';
-            badge.title = `${message.split('\n')[0]}${dateLabel ? ' (' + dateLabel + ')' : ''}`;
+                ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+                : '不明';
+            badge.textContent = `v1.0.${count} (最終更新日時: ${dateLabel})`;
+            badge.title = message.split('\n')[0];
         })
         .catch(() => {
-            badge.textContent = 'v?';
-            badge.title = 'バージョン情報の取得に失敗しました';
+            // HTMLに直書きされたフォールバック表示(最新の更新日時)をそのまま残し、
+            // ホバー時のツールチップでのみエラーを通知する
+            badge.title = '最新バージョン情報の取得に失敗しました（キャッシュを表示中）';
         });
 })();
 })();

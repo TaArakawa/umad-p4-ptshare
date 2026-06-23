@@ -10,6 +10,21 @@
         .pc-text { display: none; }
         body.pc-mode .sp-text { display: none; }
         body.pc-mode .pc-text { display: inline; }
+
+        .gimmick-order-card { grid-column: 1 / -1; }
+        .gimmick-order-list {
+            list-style: decimal;
+            margin: 0;
+            padding-left: 1.4em;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+        .gimmick-order-list li { padding: 2px 0; }
+        body.pc-mode .gimmick-order-list { font-size: 0.95rem; gap: 8px; }
     </style>
 </head>
 <body>
@@ -332,6 +347,73 @@
                         </tr>
                     </tbody>
                 </table>
+            </section>
+
+            <!-- タイムラインセクション (PC版のみ表示) -->
+            <section class="card solver-card solver-timeline" id="card-gimmick-order">
+                <div class="card-header">
+                    <h2>【時系列タイムライン】</h2>
+                </div>
+                <div class="timeline-list">
+                    <div class="timeline-item ready" id="v3-tl-step1">
+                        <div class="tl-header">
+                            <span class="tl-num">1</span>
+                            <span class="tl-name">無の氾濫</span>
+                        </div>
+                        <div class="tl-content" id="v3-tl-res-flood">
+                            <div class="tl-row">
+                                <span class="tl-label"><span class="icon">🟡</span>アラガン</span>
+                                <span class="badge-pill pill-yellow">異色</span>
+                            </div>
+                            <div class="tl-row">
+                                <span class="tl-label"><span class="icon">🟣</span>死の超越</span>
+                                <span class="badge-pill pill-purple">同色</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item" id="v3-tl-step2">
+                        <div class="tl-header">
+                            <span class="tl-num">2</span>
+                            <span class="tl-name">早水 ＆ 早雷</span>
+                        </div>
+                        <div class="tl-content" id="v3-tl-res-earlyWaterLightning"></div>
+                    </div>
+                    <div class="timeline-item" id="v3-tl-step3">
+                        <div class="tl-header">
+                            <span class="tl-num">3</span>
+                            <span class="tl-name">早視線 ＆ 雷床記録</span>
+                        </div>
+                        <div class="tl-content" id="v3-tl-res-earlyEyeLightningFloor"></div>
+                    </div>
+                    <div class="timeline-item" id="v3-tl-step4">
+                        <div class="tl-header">
+                            <span class="tl-num">4</span>
+                            <span class="tl-name">ほのお</span>
+                        </div>
+                        <div class="tl-content" id="v3-tl-res-fire"></div>
+                    </div>
+                    <div class="timeline-item" id="v3-tl-step5">
+                        <div class="tl-header">
+                            <span class="tl-num">5</span>
+                            <span class="tl-name">遅水 ＆ 遅雷 ＆ 氷床記録</span>
+                        </div>
+                        <div class="tl-content" id="v3-tl-res-lateWaterLightningIceFloor"></div>
+                    </div>
+                    <div class="timeline-item" id="v3-tl-step6">
+                        <div class="tl-header">
+                            <span class="tl-num">6</span>
+                            <span class="tl-name">遅視線</span>
+                        </div>
+                        <div class="tl-content" id="v3-tl-res-lateEye"></div>
+                    </div>
+                    <div class="timeline-item" id="v3-tl-step7">
+                        <div class="tl-header">
+                            <span class="tl-num">7</span>
+                            <span class="tl-name">つなみ ＆ 雷床 ＆ 氷床</span>
+                        </div>
+                        <div class="tl-content" id="v3-tl-res-waterLightningIceFloor"></div>
+                    </div>
+                </div>
             </section>
 
         </main>

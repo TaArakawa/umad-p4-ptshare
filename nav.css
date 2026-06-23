@@ -79,6 +79,32 @@ body.pc-mode {
     margin: 0 auto;
 }
 
+/* ギミック発生順序カード（v1基準）：グリッド全幅に表示する */
+.gimmick-order-card {
+    grid-column: 1 / -1;
+}
+
+.gimmick-order-list {
+    list-style: decimal;
+    margin: 0;
+    padding-left: 1.4em;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+.gimmick-order-list li {
+    padding: 2px 0;
+}
+
+body.pc-mode .gimmick-order-list {
+    font-size: 0.95rem;
+    gap: 8px;
+}
+
 /* フェーズタブ：PC版のみ表示（画面最上部に固定）。
    スマホ版は画面を広く使うため、タブを出さずP4のみを表示する
    （表示の強制切り替えは nav.js の applyPhaseDisplay が行う）。 */
