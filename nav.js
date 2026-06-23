@@ -73,11 +73,19 @@ window.setP4Impl = (impl) => {
         const active = pane.dataset.impl === impl;
         pane.style.display = active ? '' : 'none';
         if (active) {
-            // 初回表示時だけ iframe に src を入れる（不要な接続を避ける遅延読み込み）。
-            const iframe = pane.querySelector('iframe.p4-iframe[data-src]');
+            // 表示するたびに iframe を最新コード＋最新Firebase状態で読み直す。
+            // 毎回キャッシュ回避クエリ(_t)を付けて読み込むことで、
+            // ブラウザが古い index.html / solver.html（=古い同期コードや古い表示状態）を
+            // キャッシュから返してしまい v3 の入力が反映されない、という不具合を防ぐ。
+            const iframe = pane.querySelector('iframe.p4-iframe');
             if (iframe) {
-                iframe.src = iframe.dataset.src;
-                iframe.removeAttribute('data-src');
+                const base = iframe.dataset.src || iframe.getAttribute('data-base-src');
+                if (base) {
+                    iframe.setAttribute('data-base-src', base);
+                    iframe.removeAttribute('data-src');
+                    const sep = base.indexOf('?') >= 0 ? '&' : '?';
+                    iframe.src = base + sep + '_t=' + Date.now();
+                }
             }
         }
     });
