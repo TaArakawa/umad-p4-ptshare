@@ -52,11 +52,7 @@ window.setPhase = (phase) => {
         newValue: phase
     }));
 
-    if (!isOfflineMode && navRef) {
-        navRef.update({ phase }).catch(err => {
-            console.warn("Firebase navRef.update failed", err);
-        });
-    }
+
 
     // 即座にローカル表示に反映
     lastPhase = phase;
@@ -178,26 +174,18 @@ function applyPhaseDisplay() {
         b.classList.toggle('active', b.dataset.phase === phase));
 }
 
-if (!isOfflineMode) {
-    navRef.on('value', (snap) => {
-        lastPhase = (snap.val() && snap.val().phase) || 'P1';
-        applyPhaseDisplay();
-        scheduleFit();
-    });
-} else {
-    // オフライン時はローカルストレージおよびストレージイベントで同期
-    const updateLocalPhase = () => {
-        lastPhase = safeStorage.getItem('kfk_nav_local_phase') || 'P1';
-        applyPhaseDisplay();
-        scheduleFit();
-    };
-    updateLocalPhase();
-    window.addEventListener('storage', (e) => {
-        if (e.key === 'kfk_nav_local_phase') {
-            updateLocalPhase();
-        }
-    });
-}
+// フェーズの管理はローカルストレージおよびストレージイベントで同期 (Firebaseは介さない)
+const updateLocalPhase = () => {
+    lastPhase = safeStorage.getItem('kfk_nav_local_phase') || 'P1';
+    applyPhaseDisplay();
+    scheduleFit();
+};
+updateLocalPhase();
+window.addEventListener('storage', (e) => {
+    if (e.key === 'kfk_nav_local_phase') {
+        updateLocalPhase();
+    }
+});
 
 window.addEventListener('resize', scheduleFit);
 window.addEventListener('orientationchange', scheduleFit);
