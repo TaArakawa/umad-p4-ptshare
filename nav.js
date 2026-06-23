@@ -245,4 +245,30 @@ scheduleFit();
         } catch (e) {}
     }, 250); // 250msごとにチェックして高速同期
 })();
+
+// バージョン表示：GitHubの main ブランチの最新コミットを取得して右上に表示する。
+// pushするたびにmainの最新コミットが変わるので、特別な手動更新は不要で自動的に追従する。
+(function() {
+    const badge = document.getElementById('version-badge');
+    if (!badge) return;
+
+    fetch('https://api.github.com/repos/TaArakawa/umad-p4-ptshare/commits/main')
+        .then(res => res.ok ? res.json() : Promise.reject(res.status))
+        .then(data => {
+            const sha = (data.sha || '').slice(0, 7);
+            const dateStr = (data.commit && data.commit.committer && data.commit.committer.date) || '';
+            const date = dateStr ? new Date(dateStr) : null;
+            const dateLabel = date
+                ? `${date.getMonth() + 1}/${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+                : '';
+            badge.textContent = `v${sha}${dateLabel ? ' ・ ' + dateLabel : ''}`;
+            badge.href = `https://github.com/TaArakawa/umad-p4-ptshare/commit/${data.sha}`;
+            const message = (data.commit && data.commit.message) || '';
+            badge.title = message.split('\n')[0];
+        })
+        .catch(() => {
+            badge.textContent = 'v?';
+            badge.title = 'バージョン情報の取得に失敗しました';
+        });
+})();
 })();
