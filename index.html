@@ -11,7 +11,10 @@
 <body>
     <script>
         // FOUC（レイアウトのガタつき）を防ぐため、レンダリング前にモードを適用
-        const savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_ui_mode') || 'mobile';
+        let savedMode = 'mobile';
+        try {
+            savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_ui_mode') || 'mobile';
+        } catch (e) {}
         if (savedMode === 'pc' || savedMode === 'hud') {
             document.body.classList.add('hud-mode');
         }
@@ -383,8 +386,82 @@
     </div>
 
     <!-- Firebase SDKの読み込み -->
-        <script type="module" src="app.js"></script>
+        <script type="module" src="app.js?v=20260623"></script>
 
+    <!-- 自律全画面フィットスクリプト (スクロールなしで1画面に収める) -->
+    <script>
+        (function() {
+            function applyFit() {
+                const isHud = document.body.classList.contains('hud-mode');
+                const availW = window.innerWidth;
+                const availH = window.innerHeight;
+                
+                if (isHud) {
+                    // PCモード（HUDモード）: 全体を1画面に収める
+                    const container = document.querySelector('.scroll-container');
+                    if (!container) return;
+                    
+                    container.style.maxHeight = 'none';
+                    container.style.height = 'auto';
+                    container.style.overflow = 'visible';
+                    
+                    document.querySelectorAll('.section-page').forEach(page => {
+                        page.style.minHeight = 'auto';
+                        page.style.transform = 'none';
+                        page.style.width = '100%';
+                        page.style.height = 'auto';
+                    });
+                    
+                    const naturalW = container.scrollWidth;
+                    const naturalH = container.scrollHeight;
+                    if (naturalW <= 0 || naturalH <= 0) return;
+                    
+                    const scale = Math.min(1, availW / naturalW, availH / naturalH);
+                    
+                    container.style.transform = `scale(${scale})`;
+                    container.style.transformOrigin = 'top center';
+                    container.style.width = naturalW + 'px';
+                } else {
+                    // スマホモード: 各ページを個別に画面高さに収める
+                    const container = document.querySelector('.scroll-container');
+                    if (container) {
+                        container.style.transform = 'none';
+                        container.style.width = '100%';
+                        container.style.height = '100dvh';
+                        container.style.overflowY = 'auto';
+                    }
+                    
+                    document.querySelectorAll('.section-page').forEach(page => {
+                        page.style.transform = 'none';
+                        page.style.height = 'auto';
+                        page.style.minHeight = 'auto';
+                        
+                        const naturalW = page.scrollWidth;
+                        const naturalH = page.scrollHeight;
+                        if (naturalW <= 0 || naturalH <= 0) return;
+                        
+                        const scale = Math.min(1, availH / naturalH, availW / naturalW);
+                        
+                        page.style.transform = `scale(${scale})`;
+                        page.style.transformOrigin = 'top center';
+                        page.style.width = (availW / scale) + 'px';
+                        page.style.height = (availH / scale) + 'px';
+                        page.style.minHeight = 'none';
+                    });
+                }
+            }
+            
+            window.addEventListener('resize', applyFit);
+            window.addEventListener('load', applyFit);
+            new MutationObserver(applyFit).observe(document.body, {
+                attributes: true,
+                attributeFilter: ['class'],
+                childList: true,
+                subtree: true
+            });
+            setTimeout(applyFit, 100);
+        })();
+    </script>
 </body>
 
 </html>

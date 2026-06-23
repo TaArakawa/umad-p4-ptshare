@@ -1,6 +1,14 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, onValue, update }
-  from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+(function() {
+let isOfflineMode = false;
+
+const safeStorage = {
+    getItem: (key) => {
+        try { return localStorage.getItem(key); } catch (e) { return null; }
+    },
+    setItem: (key, val) => {
+        try { localStorage.setItem(key, val); } catch (e) {}
+    }
+};
 
 const firebaseConfig = {
   apiKey: "AIzaSyCFKYzhiYnxDwXYiICGmw5xHNKK087ukwU",
@@ -13,12 +21,48 @@ const firebaseConfig = {
 };
 
 // 既存の solver-v2.js が無名（[DEFAULT]）で initializeApp するため、
-// ここでは名前付きアプリとして初期化し二重初期化エラーを避ける。
-const navApp = initializeApp(firebaseConfig, "nav");
-const navDb = getDatabase(navApp);
-const navRef = ref(navDb, 'kfk_nav');
+// 二重初期化エラーを避けるよう名前付きアプリとして初期化する。
+let navDb, navRef;
+if (typeof firebase !== 'undefined') {
+    try {
+        let navApp;
+        if (firebase.apps.some(app => app.name === 'nav')) {
+            navApp = firebase.app('nav');
+        } else {
+            navApp = firebase.initializeApp(firebaseConfig, "nav");
+        }
+        navDb = navApp.database();
+        navRef = navDb.ref('kfk_nav');
+    } catch (e) {
+        console.error("Firebase initialization failed, falling back to offline mode", e);
+        isOfflineMode = true;
+    }
+} else {
+    console.warn("Firebase SDK failed to load. Operating in offline/standalone mode.");
+    isOfflineMode = true;
+}
 
-window.setPhase = (phase) => update(navRef, { phase });
+window.setPhase = (phase) => {
+    // 常にローカルストレージに保存し、ローカルでの同期イベントを発火
+    try {
+        safeStorage.setItem('kfk_nav_local_phase', phase);
+    } catch (e) {}
+    window.dispatchEvent(new StorageEvent('storage', {
+        key: 'kfk_nav_local_phase',
+        newValue: phase
+    }));
+
+    if (!isOfflineMode && navRef) {
+        navRef.update({ phase }).catch(err => {
+            console.warn("Firebase navRef.update failed", err);
+        });
+    }
+
+    // 即座にローカル表示に反映
+    lastPhase = phase;
+    applyPhaseDisplay();
+    scheduleFit();
+};
 
 // P4の実装切り替え（v1/v2/v3）。
 // v1/v2 はID構成が異なる別実装で、v3 (solver-v2.js) と同一ドキュメントに
@@ -45,7 +89,29 @@ window.setP4Impl = (impl) => {
     const select = document.getElementById('p4-impl-select');
     if (select) select.value = impl;
 
-    localStorage.setItem(P4_IMPL_KEY, impl);
+    try {
+        safeStorage.setItem(P4_IMPL_KEY, impl);
+    } catch (e) {}
+    scheduleFit();
+};
+
+// P5のギミック表示切り替え（全体像/AA, フラッド, オーケストラ, スリースターズ, エクサフレア, ミッシング）。
+const P5_GIMMICK_KEY = 'kfk_p5_gimmick';
+
+window.setP5Gimmick = (gimmick) => {
+    if (!['aa', 'flood', 'orch', 'stars', 'exa', 'missing'].includes(gimmick)) gimmick = 'aa';
+
+    document.querySelectorAll('.p5-gimmick-panel').forEach(panel => {
+        panel.style.display = panel.dataset.gimmick === gimmick ? '' : 'none';
+    });
+
+    document.querySelectorAll('.p5-gimmick-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.gimmick === gimmick);
+    });
+
+    try {
+        safeStorage.setItem(P5_GIMMICK_KEY, gimmick);
+    } catch (e) {}
     scheduleFit();
 };
 
@@ -107,15 +173,31 @@ function applyPhaseDisplay() {
     document.getElementById('view-p1').style.display = (phase === 'P1') ? '' : 'none';
     document.getElementById('view-p3').style.display = (phase === 'P3') ? '' : 'none';
     document.getElementById('view-p4').style.display = (phase === 'P4') ? '' : 'none';
+    document.getElementById('view-p5').style.display = (phase === 'P5') ? '' : 'none';
     document.querySelectorAll('.phase-tab').forEach(b =>
         b.classList.toggle('active', b.dataset.phase === phase));
 }
 
-onValue(navRef, (snap) => {
-    lastPhase = (snap.val() && snap.val().phase) || 'P1';
-    applyPhaseDisplay();
-    scheduleFit();
-});
+if (!isOfflineMode) {
+    navRef.on('value', (snap) => {
+        lastPhase = (snap.val() && snap.val().phase) || 'P1';
+        applyPhaseDisplay();
+        scheduleFit();
+    });
+} else {
+    // オフライン時はローカルストレージおよびストレージイベントで同期
+    const updateLocalPhase = () => {
+        lastPhase = safeStorage.getItem('kfk_nav_local_phase') || 'P1';
+        applyPhaseDisplay();
+        scheduleFit();
+    };
+    updateLocalPhase();
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'kfk_nav_local_phase') {
+            updateLocalPhase();
+        }
+    });
+}
 
 window.addEventListener('resize', scheduleFit);
 window.addEventListener('orientationchange', scheduleFit);
@@ -134,5 +216,33 @@ new MutationObserver(() => {
 });
 
 applyPhaseDisplay();
-window.setP4Impl(localStorage.getItem(P4_IMPL_KEY) || 'v3');
+let initialP4Impl = 'v3';
+let initialP5Gimmick = 'aa';
+try {
+    initialP4Impl = safeStorage.getItem(P4_IMPL_KEY) || 'v3';
+    initialP5Gimmick = safeStorage.getItem(P5_GIMMICK_KEY) || 'aa';
+} catch (e) {}
+window.setP4Impl(initialP4Impl);
+window.setP5Gimmick(initialP5Gimmick);
 scheduleFit();
+
+// iframe内の「スマホ/PC」モード切替を親ウィンドウに確実に同期させるための localStorage ポーリング監視
+(function() {
+    let lastMode = null;
+    try {
+        lastMode = safeStorage.getItem('kfk_shared_ui_mode') || 'mobile';
+    } catch (e) {}
+    
+    setInterval(() => {
+        try {
+            const currentMode = safeStorage.getItem('kfk_shared_ui_mode') || 'mobile';
+            if (currentMode !== lastMode) {
+                lastMode = currentMode;
+                if (typeof window.setMode === 'function') {
+                    window.setMode(currentMode);
+                }
+            }
+        } catch (e) {}
+    }, 250); // 250msごとにチェックして高速同期
+})();
+})();

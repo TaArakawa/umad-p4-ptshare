@@ -15,7 +15,10 @@
 <body>
     <script>
         // FOUC（レイアウトのガタつき）を防ぐため、レンダリング前にモードを適用
-        const savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_solver_ui_mode') || 'mobile';
+        let savedMode = 'mobile';
+        try {
+            savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_solver_ui_mode') || 'mobile';
+        } catch (e) {}
         if (savedMode === 'pc' || savedMode === 'hud') {
             document.body.classList.add('pc-mode');
         }

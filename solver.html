@@ -15,7 +15,10 @@
 <body>
     <script>
         // FOUC（レイアウトのガタつき）を防ぐため、レンダリング前にモードを適用
-        const savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_solver_ui_mode') || 'mobile';
+        let savedMode = 'mobile';
+        try {
+            savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_solver_ui_mode') || 'mobile';
+        } catch (e) {}
         if (savedMode === 'pc' || savedMode === 'hud') {
             document.body.classList.add('pc-mode');
         }
@@ -281,6 +284,47 @@
     </div>
 
     <!-- Firebase SDK & Core Logic -->
-    <script type="module" src="solver.js"></script>
+    <script type="module" src="solver.js?v=20260623"></script>
+
+    <!-- 自律全画面フィットスクリプト (スクロールなしで1画面に収める) -->
+    <script>
+        (function() {
+            function applyFit() {
+                const container = document.querySelector('.container');
+                if (!container) return;
+                
+                // bodyの寄せ指定などをリセットして上端基準にする
+                const body = document.body;
+                body.style.alignItems = 'flex-start';
+                body.style.paddingTop = '0px';
+                
+                container.style.maxHeight = 'none';
+                container.style.overflow = 'visible';
+                
+                const availW = window.innerWidth;
+                const availH = window.innerHeight;
+                
+                const naturalW = container.scrollWidth;
+                const naturalH = container.scrollHeight;
+                if (naturalW <= 0 || naturalH <= 0) return;
+                
+                const scale = Math.min(1, availW / naturalW, availH / naturalH);
+                
+                container.style.transform = `scale(${scale})`;
+                container.style.transformOrigin = 'top center';
+                container.style.width = naturalW + 'px';
+            }
+            
+            window.addEventListener('resize', applyFit);
+            window.addEventListener('load', applyFit);
+            new MutationObserver(applyFit).observe(document.body, {
+                attributes: true,
+                attributeFilter: ['class'],
+                childList: true,
+                subtree: true
+            });
+            setTimeout(applyFit, 100);
+        })();
+    </script>
 </body>
 </html>

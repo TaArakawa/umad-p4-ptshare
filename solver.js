@@ -1,6 +1,18 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+const safeStorage = {
+    getItem: (key) => {
+        try { return localStorage.getItem(key); } catch (e) { return null; }
+    },
+    setItem: (key, val) => {
+        try { localStorage.setItem(key, val); } catch (e) {}
+    },
+    removeItem: (key) => {
+        try { localStorage.removeItem(key); } catch (e) {}
+    }
+};
+
 // Firebase設定 (メインのapp.jsと同じ)
 const firebaseConfig = {
     apiKey: "AIzaSyCFKYzhiYnxDwXYiICGmw5xHNKK087ukwU",
@@ -41,7 +53,7 @@ let localState = {
 
 // ローカルストレージから個人デバフ状態を復元
 function loadLocalState() {
-    const saved = localStorage.getItem('kfk_solver_local_state');
+    const saved = safeStorage.getItem('kfk_solver_local_state');
     if (saved) {
         try {
             localState = JSON.parse(saved);
@@ -53,7 +65,7 @@ function loadLocalState() {
 
 // 個人デバフ状態を保存
 function saveLocalState() {
-    localStorage.setItem('kfk_solver_local_state', JSON.stringify(localState));
+    safeStorage.setItem('kfk_solver_local_state', JSON.stringify(localState));
 }
 
 // UIの描画とハイライトの更新
@@ -238,7 +250,7 @@ function triggerPulse(element) {
     element.classList.add('pulse-update');
 }
 
-let lastResetTime = localStorage.getItem('kfk_last_reset_time') || '0';
+let lastResetTime = safeStorage.getItem('kfk_last_reset_time') || '0';
 
 // --- Firebase同期設定 ---
 onValue(dbRef, (snapshot) => {
@@ -249,7 +261,7 @@ onValue(dbRef, (snapshot) => {
     const firebaseResetTime = data.resetTime || 0;
     if (firebaseResetTime && String(firebaseResetTime) !== lastResetTime) {
         lastResetTime = String(firebaseResetTime);
-        localStorage.setItem('kfk_last_reset_time', lastResetTime);
+        safeStorage.setItem('kfk_last_reset_time', lastResetTime);
         
         // 個人デバフのローカル状態をリセット
         localState = {
@@ -570,22 +582,31 @@ window.setMode = function (mode) {
         document.body.classList.add('pc-mode');
         btnMobile.classList.remove('active');
         btnPc.classList.add('active');
-        localStorage.setItem('kfk_shared_ui_mode', 'pc');
+        safeStorage.setItem('kfk_shared_ui_mode', 'pc');
     } else {
         document.body.classList.remove('pc-mode');
         btnMobile.classList.add('active');
         btnPc.classList.remove('active');
-        localStorage.setItem('kfk_shared_ui_mode', 'mobile');
+        safeStorage.setItem('kfk_shared_ui_mode', 'mobile');
     }
 };
 
 // ページ読み込み時に保存されたモードを復元
-const savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_solver_ui_mode') || 'mobile';
+const savedMode = safeStorage.getItem('kfk_shared_ui_mode') || safeStorage.getItem('kfk_solver_ui_mode') || 'mobile';
 setMode(savedMode);
 
-// 別タブ間でのリアルタイム切り替え同期
-window.addEventListener('storage', (e) => {
-    if (e.key === 'kfk_shared_ui_mode') {
-        setMode(e.newValue || 'mobile');
-    }
-});
+// UIモードの同期 (同一タブ内 iframe 間の同期と、別タブ同期の両立)
+(function() {
+    let lastMode = safeStorage.getItem('kfk_shared_ui_mode') || 'mobile';
+    setInterval(() => {
+        try {
+            const currentMode = safeStorage.getItem('kfk_shared_ui_mode') || 'mobile';
+            if (currentMode !== lastMode) {
+                lastMode = currentMode;
+                if (typeof window.setMode === 'function') {
+                    window.setMode(currentMode);
+                }
+            }
+        } catch (e) {}
+    }, 250); // 250msごとにチェックして高速同期
+})();
