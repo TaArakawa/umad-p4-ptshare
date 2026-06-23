@@ -246,25 +246,41 @@ scheduleFit();
     }, 250); // 250msごとにチェックして高速同期
 })();
 
-// バージョン表示：GitHubの main ブランチの最新コミットを取得して右上に表示する。
-// pushするたびにmainの最新コミットが変わるので、特別な手動更新は不要で自動的に追従する。
+// バージョン表示：GitHubの main ブランチの状態を取得し、わかりやすい
+// 「1.0.<コミット数>」形式のバージョン番号として右上に表示する。
+// コミット数はpushするたびに1つずつ増えるので、GitHubに詳しくない人にも
+// 「数字が増えた＝新しいpushが反映された」とひと目で分かる。
 (function() {
     const badge = document.getElementById('version-badge');
     if (!badge) return;
 
-    fetch('https://api.github.com/repos/TaArakawa/umad-p4-ptshare/commits/main')
-        .then(res => res.ok ? res.json() : Promise.reject(res.status))
-        .then(data => {
-            const sha = (data.sha || '').slice(0, 7);
+    const REPO = 'TaArakawa/umad-p4-ptshare';
+
+    // commits API の Link ヘッダー（per_page=1 でページネーションさせ、
+    // rel="last" のページ番号 = mainブランチの総コミット数）を使うと、
+    // 全件取得せず1リクエストだけでコミット数が分かる。
+    const countPromise = fetch(`https://api.github.com/repos/${REPO}/commits?sha=main&per_page=1`)
+        .then(res => {
+            if (!res.ok) return Promise.reject(res.status);
+            const link = res.headers.get('Link') || '';
+            const match = link.match(/[?&]page=(\d+)[^>]*>;\s*rel="last"/);
+            return match ? parseInt(match[1], 10) : 1;
+        });
+
+    const headPromise = fetch(`https://api.github.com/repos/${REPO}/commits/main`)
+        .then(res => res.ok ? res.json() : Promise.reject(res.status));
+
+    Promise.all([countPromise, headPromise])
+        .then(([count, data]) => {
+            badge.textContent = `v1.0.${count}`;
+            badge.href = `https://github.com/${REPO}/commit/${data.sha}`;
+            const message = (data.commit && data.commit.message) || '';
             const dateStr = (data.commit && data.commit.committer && data.commit.committer.date) || '';
             const date = dateStr ? new Date(dateStr) : null;
             const dateLabel = date
                 ? `${date.getMonth() + 1}/${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
                 : '';
-            badge.textContent = `v${sha}${dateLabel ? ' ・ ' + dateLabel : ''}`;
-            badge.href = `https://github.com/TaArakawa/umad-p4-ptshare/commit/${data.sha}`;
-            const message = (data.commit && data.commit.message) || '';
-            badge.title = message.split('\n')[0];
+            badge.title = `${message.split('\n')[0]}${dateLabel ? ' (' + dateLabel + ')' : ''}`;
         })
         .catch(() => {
             badge.textContent = 'v?';
