@@ -72,91 +72,159 @@
         </div>
     </div>
 
-    <!-- P2 カンペ（妖星乱舞など） -->
-    <div id="view-p2" class="phase-view">
-        <div class="fit-area" id="fit-p2" data-fit="both">
-            <div class="fit-inner">
-                <div class="hub-card hub-cheat-sheet-card" style="display: flex; gap: 15px; align-items: flex-start; max-width: none;">
-                    <div>
-                        <img src="kfk_slide1.png" alt="P2 カンペ" class="phase-image" style="max-height: 480px; width: auto; display: block; border-radius: 6px;">
+    <!-- P2 カンペ（妖星乱舞。スライド画像を廃し、HTML/CSS製ビジュアル図解と解説を内包） -->
+    <div id="view-p2" class="phase-view animate-fade-in">
+        <div class="p2-gimmick-bar">
+            <span class="phase-tabs-label" style="font-size: 0.75rem; font-weight: bold; color: #8b93a8; margin-right: 8px;">塔踏み配置:</span>
+            <button class="p2-gimmick-tab" data-view="odd" onclick="window.setP2View('odd')">奇数回 (1, 3, 5回目)</button>
+            <button class="p2-gimmick-tab" data-view="even" onclick="window.setP2View('even')">偶数回 (2, 4, 6回目)</button>
+        </div>
+
+        <div class="p2-content-pane" style="flex: 1 1 auto; width: 100%; min-height: 0; overflow: hidden; position: relative;">
+            <div class="fit-area" id="fit-p2" data-fit="both">
+                <div class="fit-inner">
+                    <div class="p2-gimmick-card">
+                        <div class="p2-gimmick-layout">
+                            
+                            <!-- 左側：ビジュアル配置図 -->
+                            <div class="p2-diagram-pane">
+                                
+                                <!-- 奇数回配置図 -->
+                                <div class="p2-view-pane" data-view="odd">
+                                    <div class="p2-direction-indicator">▲ フィールド中央 (北 / ボス側) ▲</div>
+                                    <div class="p2-towers-container">
+                                        <!-- 左塔 -->
+                                        <div class="p2-tower-wrapper">
+                                            <div class="p2-tower-label">左塔 (扇デバフ側)</div>
+                                            <div class="p2-tower">
+                                                <div class="p2-tower-center">LEFT TOWER</div>
+                                                <div class="p2-marker type-share" style="top: -12px; left: 50%; transform: translateX(-50%);">頭割り</div>
+                                                <div class="p2-marker type-none" style="top: 15px; left: 50%; transform: translateX(-50%);">無職 (重なる)</div>
+                                                <div class="p2-marker type-fan-out" style="top: 45px; left: 12px;">扇を出す</div>
+                                                <div class="p2-marker type-fan-in" style="top: 90px; left: -50px;">扇を受ける</div>
+                                                <div class="p2-marker type-circle" style="bottom: 5px; left: 50%; transform: translateX(-50%);">円を出す</div>
+                                            </div>
+                                        </div>
+                                        <!-- 右塔 -->
+                                        <div class="p2-tower-wrapper">
+                                            <div class="p2-tower-label">右塔 (円デバフ側)</div>
+                                            <div class="p2-tower">
+                                                <div class="p2-tower-center">RIGHT TOWER</div>
+                                                <div class="p2-marker type-share" style="top: -12px; left: 50%; transform: translateX(-50%);">頭割り</div>
+                                                <div class="p2-marker type-none" style="top: 15px; left: 50%; transform: translateX(-50%);">無職 (重なる)</div>
+                                                <div class="p2-marker type-circle" style="bottom: 5px; left: 50%; transform: translateX(-50%);">円を出す</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p2-direction-indicator">▼ フィールド外周 (南側) ▼</div>
+                                </div>
+
+                                <!-- 偶数回配置図 -->
+                                <div class="p2-view-pane" data-view="even">
+                                    <div class="p2-direction-indicator">▲ フィールド中央 (北 / ボス側) ▲</div>
+                                    <div class="p2-towers-container">
+                                        <!-- 左塔 -->
+                                        <div class="p2-tower-wrapper">
+                                            <div class="p2-tower-label">左塔 (優先度: 強)</div>
+                                            <div class="p2-tower">
+                                                <div class="p2-tower-center">LEFT TOWER</div>
+                                                <div class="p2-marker type-fan-out" style="top: 5px; left: 10px;">扇出す (L)</div>
+                                                <div class="p2-marker type-fan-out" style="top: 5px; right: 10px;">扇出す (R)</div>
+                                                <div class="p2-marker type-fan-in" style="top: 90px; left: -50px;">扇を受ける</div>
+                                                <div class="p2-marker type-circle" style="bottom: 5px; left: 50%; transform: translateX(-50%);">円を出す</div>
+                                                <div class="p2-marker type-kick" style="top: -28px; left: 50%; transform: translateX(-50%);">蹴られる (タゲサ)</div>
+                                            </div>
+                                        </div>
+                                        <!-- 右塔 -->
+                                        <div class="p2-tower-wrapper">
+                                            <div class="p2-tower-label">右塔 (優先度: 弱)</div>
+                                            <div class="p2-tower">
+                                                <div class="p2-tower-center">RIGHT TOWER</div>
+                                                <div class="p2-marker type-fan-out" style="top: 5px; left: 10px;">扇出す (L)</div>
+                                                <div class="p2-marker type-fan-out" style="top: 5px; right: 10px;">扇出す (R)</div>
+                                                <div class="p2-marker type-fan-in" style="top: 90px; left: -50px;">扇を受ける</div>
+                                                <div class="p2-marker type-circle" style="bottom: 5px; left: 50%; transform: translateX(-50%);">円を出す</div>
+                                                <div class="p2-marker type-kick" style="top: -28px; left: 50%; transform: translateX(-50%);">蹴られる (タゲサ)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p2-direction-indicator">▼ フィールド外周 (南側) ▼</div>
+                                </div>
+
+                            </div>
+
+                            <!-- 右側：解説テキスト -->
+                            <div class="p2-text-pane">
+                                <table class="cheat-sheet-table-html hub-cheat-sheet-table" style="font-size: 0.78rem; width: 100%;">
+                                    <tr>
+                                        <td colspan="3" class="row-center" style="font-size: 0.95rem; color: #a7f3d0; font-weight: 800; padding: 6px;">P2: 妖星乱舞（ゴッドケフカ）</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" class="section-header" style="font-size: 0.72rem; padding: 4px 10px;">基本ギミック</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; width: 75px; padding: 4px 6px;">終末の双腕</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">ヘイト1位対象 タンク2人頭割り強攻撃（バフ受け）</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 4px 6px;">破壊の翼</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">
+                                            ・**半面**: 光っていない側が安置<br>
+                                            ・**両端強**: 近いMT ＆ 遠いST(外周端) / 他はボスタゲサ外
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" class="section-header" style="font-size: 0.72rem; padding: 4px 10px;">ミッシング (スペルハザード ＆ 塔踏み)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 4px 6px;">初期デバフ</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">
+                                            **扇×3 / 円×3 / 頭割り×2** (ロール内で扇・円振分け、残りに頭割り)<br>
+                                            ※優先度: H1 > MT > ST > H2 | D1 > D2 > D3 > D4
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 4px 6px;">デバフ変化</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">
+                                            ・**奇数回塔** (1/3/5回目): 踏むと **扇×2 / 円×2** 付与<br>
+                                            ・**偶数回塔** (2/4/6回目): 踏むと **頭割り×2 / 扇×1 / 円×1** 付与
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 4px 6px;">散開ルール</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px; line-height: 1.3;">
+                                            偶数回は**南調整**：塔の中でデバフ被りがない場合はそのまま、被る場合は南側の人が逆の塔を踏む。<br>
+                                            無職の終焉誘導はDPS固定、扇受けはタンヒラ固定。
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" class="section-header" style="font-size: 0.72rem; padding: 4px 10px;">過去・未来の終焉 ＆ 消滅の脚</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 4px 6px;">終焉の破滅</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">偶数回：最も近い4人へ円範囲（扇持ち ＆ 無職が誘導）</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 4px 6px;">消滅 of 脚</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">
+                                            **未来**＝前方半面 / **過去**＝後方半面<br>
+                                            誘導：塔の間（またはその逆側）の**タゲサ外**に立つ
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" class="section-header" style="font-size: 0.72rem; padding: 4px 10px;">トライン (三角形落下)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 4px 6px;">回避処理</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">
+                                            **1回目外周3箇所 ⇒ 2回目外周1箇所 ⇒ 3回目中央＋外周2箇所**<br>
+                                            中央で待機 ⇒ 1回目の三角形の爆発箇所に逃げ込む
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    <table class="cheat-sheet-table-html hub-cheat-sheet-table" style="font-size: 0.82rem; width: 440px;">
-                        <tr>
-                            <td colspan="3" class="row-center" style="font-size: 1.05rem; color: #a7f3d0; font-weight: 800; padding: 6px;">P2: 妖星乱舞（ゴッドケフカ）</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3" class="section-header" style="font-size: 0.8rem; padding: 4px 10px;">基本ギミック</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold; width: 75px; padding: 4px 6px;">終末の双腕</td>
-                            <td colspan="2" style="text-align: left; padding: 4px 8px;">ヘイト1位対象 タンク2人頭割り強攻撃（バフ受け）</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold; padding: 4px 6px;">破壊の翼</td>
-                            <td colspan="2" style="text-align: left; padding: 4px 8px;">
-                                ・**半面**: 光っていない側が安置<br>
-                                ・**両端強**: 近いMT ＆ 遠いST(外周端) / 他はボスタゲサ外
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3" class="section-header" style="font-size: 0.8rem; padding: 4px 10px;">ミッシング (スペルハザード ＆ 塔踏み)</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold; padding: 4px 6px;">初期デバフ</td>
-                            <td colspan="2" style="text-align: left; padding: 4px 8px;">
-                                **扇×3 / 円×3 / 頭割り×2** (ロール内で扇・円振分け、残りに頭割り)<br>
-                                ※優先度: H1 > MT > ST > H2 | D1 > D2 > D3 > D4
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold; padding: 4px 6px;">デバフ変化</td>
-                            <td colspan="2" style="text-align: left; padding: 4px 8px;">
-                                ・**奇数回塔** (1/3/5回目): 踏むと **扇×2 / 円×2** 付与<br>
-                                ・**偶数回塔** (2/4/6回目): 踏むと **頭割り×2 / 扇×1 / 円×1** 付与
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold; padding: 4px 6px;">奇数回の散開<br>(左:扇 / 右:円)</td>
-                            <td colspan="2" style="text-align: left; padding: 4px 8px; line-height: 1.25;">
-                                ・**頭割り**: 12時 (塔の端)　・**頭割入る人**: 塔を踏まず重なる<br>
-                                ・**扇を出す**: 9.5時 (塔の内側寄りが安全)<br>
-                                ・**扇を受ける**: 8.5時 (塔の外・フチに立つ)<br>
-                                ・**円を出す**: 6時 (塔を踏む)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold; padding: 4px 6px;">偶数回の散開</td>
-                            <td colspan="2" style="text-align: left; padding: 4px 8px; line-height: 1.25;">
-                                ・**扇を出す**: 11.5時 / 12.5時 (塔の端)<br>
-                                ・**扇を受ける**: 9時 (塔の外に一歩離れる)<br>
-                                ・**円を出す**: 6時　・**蹴られる人**: 塔の対角でタゲサ踏む
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3" class="section-header" style="font-size: 0.8rem; padding: 4px 10px;">過去・未来の終焉 ＆ 消滅の脚</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold; padding: 4px 6px;">終焉の破滅</td>
-                            <td colspan="2" style="text-align: left; padding: 4px 8px;">偶数回：最も近い4人へ円範囲（扇持ち ＆ 無職が誘導）</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold; padding: 4px 6px;">消滅の脚</td>
-                            <td colspan="2" style="text-align: left; padding: 4px 8px;">
-                                **未来**＝前方半面 / **過去**＝後方半面<br>
-                                誘導：塔の間（またはその逆側）の**タゲサ外**に立つ
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3" class="section-header" style="font-size: 0.8rem; padding: 4px 10px;">トライン (三角形落下)</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold; padding: 4px 6px;">回避処理</td>
-                            <td colspan="2" style="text-align: left; padding: 4px 8px;">
-                                **1回目外周3箇所 ⇒ 2回目外周1箇所 ⇒ 3回目中央＋外周2箇所**<br>
-                                中央で待機 ⇒ 1回目の三角形の爆発箇所に逃げ込む
-                            </td>
-                        </tr>
-                    </table>
                 </div>
             </div>
         </div>

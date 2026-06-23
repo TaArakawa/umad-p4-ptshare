@@ -99,6 +99,26 @@ window.setP4Impl = (impl) => {
     scheduleFit();
 };
 
+// P2のサブビュー表示切り替え（奇数回 / 偶数回）
+const P2_VIEW_KEY = 'kfk_p2_view';
+
+window.setP2View = (view) => {
+    if (!['odd', 'even'].includes(view)) view = 'odd';
+
+    document.querySelectorAll('.p2-view-pane').forEach(pane => {
+        pane.style.display = pane.dataset.view === view ? '' : 'none';
+    });
+
+    document.querySelectorAll('.p2-gimmick-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.view === view);
+    });
+
+    try {
+        safeStorage.setItem(P2_VIEW_KEY, view);
+    } catch (e) {}
+    scheduleFit();
+};
+
 // P5のギミック表示切り替え（全体像/AA, フラッド, オーケストラ, スリースターズ, エクサフレア, ミッシング）。
 const P5_GIMMICK_KEY = 'kfk_p5_gimmick';
 
@@ -215,12 +235,15 @@ new MutationObserver(() => {
 applyPhaseDisplay();
 let initialP4Impl = 'v3';
 let initialP5Gimmick = 'aa';
+let initialP2View = 'odd';
 try {
     initialP4Impl = safeStorage.getItem(P4_IMPL_KEY) || 'v3';
     initialP5Gimmick = safeStorage.getItem(P5_GIMMICK_KEY) || 'aa';
+    initialP2View = safeStorage.getItem(P2_VIEW_KEY) || 'odd';
 } catch (e) {}
 window.setP4Impl(initialP4Impl);
 window.setP5Gimmick(initialP5Gimmick);
+window.setP2View(initialP2View);
 scheduleFit();
 
 // iframe内の「スマホ/PC」モード切替を親ウィンドウに確実に同期させるための localStorage ポーリング監視
