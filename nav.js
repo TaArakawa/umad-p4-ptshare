@@ -99,7 +99,7 @@ window.setP4Impl = (impl) => {
 const P5_GIMMICK_KEY = 'kfk_p5_gimmick';
 
 window.setP5Gimmick = (gimmick) => {
-    if (!['aa', 'flood', 'orch', 'stars', 'exa', 'missing'].includes(gimmick)) gimmick = 'aa';
+    if (!['timeline', 'aa', 'flood', 'orch', 'stars', 'exa', 'missing'].includes(gimmick)) gimmick = 'timeline';
 
     document.querySelectorAll('.p5-gimmick-panel').forEach(panel => {
         panel.style.display = panel.dataset.gimmick === gimmick ? '' : 'none';

@@ -189,6 +189,7 @@
     <!-- P5 カンペ（連続アルテマ〜ミッシング・ゼロ。インタラクティブなギミック別図解＆解説） -->
     <div id="view-p5" class="phase-view animate-fade-in">
         <div class="p5-gimmick-bar">
+            <button class="p5-gimmick-tab" data-gimmick="timeline" onclick="window.setP5Gimmick('timeline')">タイムライン</button>
             <button class="p5-gimmick-tab" data-gimmick="aa" onclick="window.setP5Gimmick('aa')">全体像/AA</button>
             <button class="p5-gimmick-tab" data-gimmick="flood" onclick="window.setP5Gimmick('flood')">フラッド</button>
             <button class="p5-gimmick-tab" data-gimmick="orch" onclick="window.setP5Gimmick('orch')">オーケストラ</button>
@@ -200,6 +201,79 @@
         <div class="p5-content-pane" style="flex: 1 1 auto; width: 100%; min-height: 0; overflow: hidden; position: relative;">
             <div class="fit-area" id="fit-p5" data-fit="both">
             <div class="fit-inner">
+                <!-- ⓪ 全体タイムライン -->
+                <div class="p5-gimmick-panel" id="p5-gimmick-panel-timeline" data-gimmick="timeline">
+                    <div class="p5-gimmick-card">
+                        <div class="p5-gimmick-layout">
+                            <div class="p5-gimmick-text-pane" style="flex: 1 1 100%;">
+                                <div class="p5-gimmick-title">P5 全体タイムライン</div>
+
+                                <div class="p5-timeline">
+                                    <div class="p5-timeline-row">
+                                        <div class="p5-timeline-step type-attack"><span class="step-num">①</span>オートアタック<br>（魔撃）</div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-attack"><span class="step-num">②</span>連続アルテマ</div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-attack"><span class="step-num">③</span>オートアタック<br>×3</div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-boss" onclick="window.setP5Gimmick('flood')"><span class="step-num">④</span>フラッド<br><small>頭割り×4</small></div>
+                                    </div>
+
+                                    <div class="p5-timeline-divider"></div>
+
+                                    <div class="p5-timeline-row">
+                                        <div class="p5-timeline-step type-boss" onclick="window.setP5Gimmick('orch')"><span class="step-num">⑤</span>狂気の<br>オーケストラ①</div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-switch"><span class="step-num"></span>タンク<br>スイッチ</div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-attack"><span class="step-num">⑥</span>オートアタック<br>×2</div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-boss" onclick="window.setP5Gimmick('stars')"><span class="step-num">⑦</span>スリー<br>スターズ</div>
+                                    </div>
+
+                                    <div class="p5-timeline-divider"></div>
+
+                                    <div class="p5-timeline-row">
+                                        <div class="p5-timeline-step type-attack"><span class="step-num">⑧</span>連続アルテマ</div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-attack"><span class="step-num">⑨</span>オートアタック<br>×2</div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-boss" onclick="window.setP5Gimmick('exa')"><span class="step-num">⑩</span>混沌の終末<br><small>エクサ×6</small></div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-dodge"><span class="step-num"></span>終末の渦<br><small>散開</small></div>
+                                    </div>
+
+                                    <div class="p5-timeline-divider"></div>
+
+                                    <div class="p5-timeline-row">
+                                        <div class="p5-timeline-step type-boss" onclick="window.setP5Gimmick('orch')"><span class="step-num">⑪</span>狂気の<br>オーケストラ②</div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-switch"><span class="step-num"></span>MTが<br>ヘイト取返し</div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-attack"><span class="step-num">⑫</span>オートアタック<br>×3</div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-boss" onclick="window.setP5Gimmick('missing')"><span class="step-num">⑬</span>ミッシング<br><small>頭割り＋移動</small></div>
+                                        <span class="p5-timeline-arrow">→</span>
+                                        <div class="p5-timeline-step type-enrage" onclick="window.setP5Gimmick('missing')"><span class="step-num">⑭</span>ミッシング<br>・ゼロ</div>
+                                    </div>
+                                </div>
+
+                                <div class="p5-timeline-legend">
+                                    <span class="legend-item"><span class="legend-dot type-attack"></span>全体攻撃/AA</span>
+                                    <span class="legend-item"><span class="legend-dot type-boss"></span>大ギミック（タブで詳細）</span>
+                                    <span class="legend-item"><span class="legend-dot type-dodge"></span>散開・回避</span>
+                                    <span class="legend-item"><span class="legend-dot type-switch"></span>タンク対応</span>
+                                    <span class="legend-item"><span class="legend-dot type-enrage"></span>時間切れ</span>
+                                </div>
+
+                                <div class="p5-gimmick-highlight">
+                                    色つきの大ギミックをクリックすると、該当タブの詳細解説に移動します。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- ① 全体像 / AA -->
                 <div class="p5-gimmick-panel" id="p5-gimmick-panel-aa" data-gimmick="aa">
                     <div class="p5-gimmick-card">
