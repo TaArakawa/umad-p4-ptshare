@@ -167,7 +167,7 @@ function scheduleFit() {
     });
 }
 
-// フェーズ切り替え（P1/P3/P4タブ）はPC版のみ。
+// フェーズ切り替え（P1/P2/P3/P4/P5タブ）はPC版のみ。
 // スマホ版は画面を広く使うため常にP4のみを表示し、タブは出さない。
 let lastPhase = 'P1';
 
@@ -175,6 +175,7 @@ function applyPhaseDisplay() {
     const isPc = document.body.classList.contains('pc-mode');
     const phase = isPc ? lastPhase : 'P4';
     document.getElementById('view-p1').style.display = (phase === 'P1') ? '' : 'none';
+    document.getElementById('view-p2').style.display = (phase === 'P2') ? '' : 'none';
     document.getElementById('view-p3').style.display = (phase === 'P3') ? '' : 'none';
     document.getElementById('view-p4').style.display = (phase === 'P4') ? '' : 'none';
     document.getElementById('view-p5').style.display = (phase === 'P5') ? '' : 'none';
