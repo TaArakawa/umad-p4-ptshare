@@ -285,13 +285,15 @@ body.pc-mode .page-select {
     background: none;
     border: none;
     color: #94a3b8;
-    padding: 3px 12px;
+    padding: 4px 18px;
     font-size: 0.72rem;
     font-weight: bold;
     border-radius: 2.5px;
     cursor: pointer;
     transition: all 0.15s ease;
     position: relative;
+    min-width: 45px;
+    text-align: center;
 }
 
 .timing-btn::after {
@@ -641,4 +643,173 @@ body.pc-mode .pc-text {
 .pulse-update {
     animation: pulse-highlight 0.8s ease-out;
 }
+
+/* ==========================================================================
+   タイムラインスタイル
+   ========================================================================== */
+
+/* スマホ版では非表示 */
+.solver-timeline {
+    display: none !important;
+}
+
+/* PC版のタイムラインスタイル (最下部に表示) */
+body.pc-mode .solver-timeline {
+    display: flex !important;
+    grid-column: 1 / -1;
+    margin-top: 15px;
+    width: 100%;
+    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
+    flex-direction: column;
+}
+
+.timeline-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    width: 100%;
+    position: relative;
+}
+
+#v3-tl-step7 {
+    grid-column: span 2;
+}
+
+.timeline-item {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    opacity: 0.65;
+}
+
+.timeline-item.ready {
+    opacity: 1;
+    border-color: #059669;
+    background: linear-gradient(145deg, #1e1e24, #0f2d1e);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+}
+
+#v3-tl-step1 {
+    opacity: 1;
+    border-color: #0284c7;
+    background: linear-gradient(145deg, #1e1e24, #0b2535);
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15);
+}
+
+.tl-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 4px;
+    margin-bottom: 2px;
+}
+
+.tl-num {
+    background-color: #475569;
+    color: #cbd5e1;
+    font-weight: bold;
+    font-size: 0.7rem;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.timeline-item.ready .tl-num {
+    background-color: #10b981;
+    color: #ffffff;
+}
+
+#v3-tl-step1 .tl-num {
+    background-color: #0284c7;
+    color: #ffffff;
+}
+
+.tl-name {
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+
+.timeline-item.ready .tl-name {
+    color: #f1f5f9;
+}
+
+#v3-tl-step1 .tl-name {
+    color: #f1f5f9;
+}
+
+.tl-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+
+.tl-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    padding: 4px 6px;
+    box-sizing: border-box;
+    min-height: 30px;
+}
+
+.tl-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #cbd5e1;
+}
+
+.tl-label .gimmick-icon-mini {
+    height: 16px;
+    width: auto;
+    border-radius: 2px;
+}
+
+.tl-label .icon {
+    font-size: 0.9rem;
+    width: 16px;
+    text-align: center;
+    display: inline-block;
+}
+
+.badge-pill {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 0.75rem;
+    color: #ffffff;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    min-width: 60px;
+    box-sizing: border-box;
+}
+
+.pill-green { background-color: #15803d; border: 1px solid #22c55e; }
+.pill-red { background-color: #b91c1c; border: 1px solid #ef4444; }
+.pill-purple { background-color: #6b21a8; border: 1px solid #a855f7; }
+.pill-yellow { background-color: #854d0e; border: 1px solid #eab308; }
+.pill-blue { background-color: #1d4ed8; border: 1px solid #3b82f6; }
+.pill-orange { background-color: #c2410c; border: 1px solid #f97316; }
+.pill-gray { background-color: #334155; border: 1px solid #475569; color: #94a3b8; }
 

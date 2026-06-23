@@ -272,6 +272,122 @@ function renderUI() {
         const isTrue = bossState.iceFan_truth === 'true';
         document.getElementById(isTrue ? 'iceFan-resolver-true' : 'iceFan-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
     }
+
+    // タイムラインの更新
+    updateTimeline();
+}
+
+// 時系列タイムラインの更新
+function updateTimeline() {
+    const getPill = (text, type) => {
+        return `<span class="badge-pill pill-${type}">${text}</span>`;
+    };
+
+    const getPillForKey = (key, val, trueText, falseText, trueType, falseType) => {
+        if (val === 'true') {
+            return getPill(trueText, trueType);
+        } else if (val === 'false') {
+            return getPill(falseText, falseType);
+        } else {
+            return getPill('未入力', 'gray');
+        }
+    };
+
+    const getRowHtml = (iconHtml, label, key, val, trueText, falseText, trueType, falseType) => {
+        const pill = getPillForKey(key, val, trueText, falseText, trueType, falseType);
+        return `
+            <div class="tl-row">
+                <span class="tl-label">${iconHtml}${label}</span>
+                ${pill}
+            </div>
+        `;
+    };
+
+    const isValReady = (val) => {
+        return val === 'true' || val === 'false';
+    };
+
+    const setStepReady = (stepId, isReady) => {
+        const item = document.getElementById(stepId);
+        if (item) {
+            if (isReady) {
+                item.classList.add('ready');
+            } else {
+                item.classList.remove('ready');
+            }
+        }
+    };
+
+    const iconWater = `<img src="img/water.jpg" class="gimmick-icon-mini">`;
+    const iconLightning = `<img src="img/lightning.jpg" class="gimmick-icon-mini">`;
+    const iconEye = `<img src="img/sight.jpg" class="gimmick-icon-mini">`;
+    const iconFire = `<img src="img/fire.jpg" class="gimmick-icon-mini">`;
+    const iconWave = `<img src="img/tsunami.jpg" class="gimmick-icon-mini">`;
+    const iconLineLightning = `<span class="icon">⚡</span>`;
+    const iconIceFan = `<span class="icon">❄️</span>`;
+
+    // Step 1: 無の氾濫 (常に確定状態)
+    setStepReady('v3-tl-step1', true);
+
+    // Step 2: 早水 ＆ 早雷
+    const t2 = document.getElementById('v3-tl-res-earlyWaterLightning');
+    if (t2) {
+        const ready = isValReady(currentState.earlyWater) && isValReady(currentState.earlyLightning);
+        setStepReady('v3-tl-step2', ready);
+        t2.innerHTML = 
+            getRowHtml(iconWater, '早水', 'earlyWater', currentState.earlyWater, '頭割り', 'ひとり受け', 'green', 'red') +
+            getRowHtml(iconLightning, '早雷', 'earlyLightning', currentState.earlyLightning, 'ひとり受け', '頭割り', 'red', 'green');
+    }
+
+    // Step 3: 早視線 ＆ 雷床記録
+    const t3 = document.getElementById('v3-tl-res-earlyEyeLightningFloor');
+    if (t3) {
+        const ready = isValReady(currentState.earlyEye) && isValReady(currentState.lineLightning);
+        setStepReady('v3-tl-step3', ready);
+        t3.innerHTML = 
+            getRowHtml(iconEye, '早視線', 'earlyEye', currentState.earlyEye, '見ない', '見る', 'purple', 'yellow') +
+            getRowHtml(iconLineLightning, '雷床', 'lineLightning', currentState.lineLightning, '踏まない', '踏む', 'green', 'yellow');
+    }
+
+    // Step 4: ほのお
+    const t4 = document.getElementById('v3-tl-res-fire');
+    if (t4) {
+        const ready = isValReady(currentState.fire);
+        setStepReady('v3-tl-step4', ready);
+        t4.innerHTML = 
+            getRowHtml(iconFire, 'ほのお', 'fire', currentState.fire, '離れる', '近づく', 'orange', 'blue');
+    }
+
+    // Step 5: 遅水 ＆ 遅雷 ＆ 氷床記録
+    const t5 = document.getElementById('v3-tl-res-lateWaterLightningIceFloor');
+    if (t5) {
+        const ready = isValReady(currentState.lateWater) && isValReady(currentState.lateLightning) && isValReady(currentState.iceFan);
+        setStepReady('v3-tl-step5', ready);
+        t5.innerHTML = 
+            getRowHtml(iconWater, '遅水', 'lateWater', currentState.lateWater, '頭割り', 'ひとり受け', 'green', 'red') +
+            getRowHtml(iconLightning, '遅雷', 'lateLightning', currentState.lateLightning, 'ひとり受け', '頭割り', 'red', 'green') +
+            getRowHtml(iconIceFan, '氷床', 'iceFan', currentState.iceFan, '踏まない', '踏む', 'green', 'yellow');
+    }
+
+    // Step 6: 遅視線
+    const t6 = document.getElementById('v3-tl-res-lateEye');
+    if (t6) {
+        const ready = isValReady(currentState.lateEye);
+        setStepReady('v3-tl-step6', ready);
+        t6.innerHTML = 
+            getRowHtml(iconEye, '遅視線', 'lateEye', currentState.lateEye, '見ない', '見る', 'purple', 'yellow');
+    }
+
+    // Step 7: つなみ ＆ 雷床 ＆ 氷床
+    const t7 = document.getElementById('v3-tl-res-waterLightningIceFloor');
+    if (t7) {
+        const ready = isValReady(currentState.water) && isValReady(currentState.lineLightning) && isValReady(currentState.iceFan);
+        setStepReady('v3-tl-step7', ready);
+        t7.innerHTML = 
+            getRowHtml(iconWave, 'つなみ', 'water', currentState.water, '近づく', '離れる', 'blue', 'orange') +
+            getRowHtml(iconLineLightning, '雷床', 'lineLightning', currentState.lineLightning, '踏まない', '踏む', 'green', 'yellow') +
+            getRowHtml(iconIceFan, '氷床', 'iceFan', currentState.iceFan, '踏まない', '踏む', 'green', 'yellow');
+    }
 }
 
 let isInitialLoad = true;
