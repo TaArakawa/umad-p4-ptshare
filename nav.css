@@ -122,7 +122,6 @@ body.pc-mode .phase-tab {
     font-size: 1.15rem;
 }
 
-/* 各フェーズビュー：タブの下の残り全高を使い、スクロールさせずに収める */
 .phase-view {
     flex: 1 1 auto;
     width: 100%;
@@ -130,10 +129,12 @@ body.pc-mode .phase-tab {
     display: flex;
     justify-content: center;
     overflow: hidden;
+    position: relative;
 }
 
-/* P4ビュー：実装切り替えバー + 実装ペイン(v1/v2/v3)を縦に並べる */
-#view-p4 {
+/* P4/P5ビュー：切り替えバーとコンテンツを縦に並べる */
+#view-p4,
+#view-p5 {
     flex-direction: column;
     align-items: stretch;
 }
@@ -163,6 +164,7 @@ body.pc-mode .phase-tab {
     width: 100%;
     min-height: 0;
     overflow: hidden;
+    position: relative;
 }
 
 .p4-iframe {
@@ -177,6 +179,9 @@ body.pc-mode .phase-tab {
    data-fit="both" -> 幅・高さ両方で縮小率を計算（画像・表）
    data-fit="height" -> 高さのみで縮小率を計算（P4ソルバーは幅は元々レスポンシブ） */
 .fit-area {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -186,6 +191,10 @@ body.pc-mode .phase-tab {
     box-sizing: border-box;
 }
 
+.fit-area[data-fit="height"] {
+    align-items: flex-start;
+}
+
 .fit-area[data-fit="both"] .fit-inner {
     display: inline-block;
 }
@@ -193,6 +202,7 @@ body.pc-mode .phase-tab {
 .fit-area[data-fit="height"] .fit-inner {
     display: block;
     width: 100%;
+    transform-origin: top center;
 }
 
 .fit-inner {
@@ -296,4 +306,199 @@ body.pc-mode .phase-tab {
     font-weight: bold;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     white-space: nowrap;
+}
+
+/* P5 Gimmick Tab Bar */
+.p5-gimmick-bar {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 8px 12px;
+    background: #1b1b22;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+    overflow-x: auto;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+.p5-gimmick-bar::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome/Safari */
+}
+
+.p5-gimmick-tab {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #a3aed0;
+    background: #23232f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.p5-gimmick-tab:hover {
+    color: #ffffff;
+    background: #2a2a3a;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.p5-gimmick-tab.active {
+    color: #ffffff;
+    background: #3b6fe0;
+    border-color: #6f9bff;
+    box-shadow: 0 0 8px rgba(111, 155, 255, 0.3);
+}
+
+/* P5 Gimmick Container and Layout */
+.p5-gimmick-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 900px;
+    background-color: #1e1e24;
+    border: 1px solid #2d3748;
+    border-radius: 12px;
+    padding: 16px;
+    box-sizing: border-box;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.p5-gimmick-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Desktop layout: two columns */
+body.pc-mode .p5-gimmick-layout {
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.p5-gimmick-text-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 280px;
+}
+
+.p5-gimmick-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #ffffff;
+    border-left: 4px solid #3b6fe0;
+    padding-left: 8px;
+    margin-bottom: 4px;
+}
+
+.p5-gimmick-list {
+    margin: 0;
+    padding-left: 20px;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.p5-gimmick-list li {
+    margin-bottom: 0;
+}
+
+.p5-gimmick-list strong {
+    color: #f3f4f6;
+}
+
+.p5-gimmick-highlight {
+    background-color: rgba(16, 185, 129, 0.08);
+    border: 1px dashed rgba(16, 185, 129, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #a7f3d0;
+    line-height: 1.4;
+}
+
+.p5-gimmick-media-pane {
+    flex: 1.2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 320px;
+}
+
+/* Image Grids */
+.p5-image-grid-1x1 {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.p5-image-grid-1x2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+}
+
+.p5-image-grid-2x2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px;
+    width: 100%;
+}
+
+.p5-image-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #15151c;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 6px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.p5-image-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 4px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.p5-diagram {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 180px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+/* PC adjustment for diagram height */
+body.pc-mode .p5-diagram {
+    max-height: 240px;
+}
+
+/* P4ソルバーのコンテナが親の高さに合わせて潰れてしまうのを防ぎ、
+   自然な高さを正確に測定できるようにするための設定。 */
+#fit-p4 .container {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+body.pc-mode #fit-p4 .container {
+    max-height: none !important;
+    overflow: visible !important;
 }

@@ -1,6 +1,18 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+const safeStorage = {
+    getItem: (key) => {
+        try { return localStorage.getItem(key); } catch (e) { return null; }
+    },
+    setItem: (key, val) => {
+        try { localStorage.setItem(key, val); } catch (e) {}
+    },
+    removeItem: (key) => {
+        try { localStorage.removeItem(key); } catch (e) {}
+    }
+};
+
 const firebaseConfig = {
     apiKey: "AIzaSyCFKYzhiYnxDwXYiICGmw5xHNKK087ukwU",
     authDomain: "umad-p4-ptshare.firebaseapp.com",
@@ -583,20 +595,20 @@ window.setLocalBomb = function (status) {
         btnTrue.classList.add('active-true');
         resText.classList.add('active-true');
         resText.innerText = rules.bomb.true;
-        localStorage.setItem('kfk_local_bomb', 'true');
+        safeStorage.setItem('kfk_local_bomb', 'true');
     } else if (status === 'false') {
         btnFalse.classList.add('active-false');
         resText.classList.add('active-false');
         resText.innerText = rules.bomb.false;
-        localStorage.setItem('kfk_local_bomb', 'false');
+        safeStorage.setItem('kfk_local_bomb', 'false');
     } else {
         resText.innerText = "---";
-        localStorage.removeItem('kfk_local_bomb');
+        safeStorage.removeItem('kfk_local_bomb');
     }
 };
 
 // ページ読み込み時に前回の個人用加速度爆弾の状態を復元
-const savedBomb = localStorage.getItem('kfk_local_bomb');
+const savedBomb = safeStorage.getItem('kfk_local_bomb');
 if (savedBomb) {
     setLocalBomb(savedBomb);
 }
@@ -610,25 +622,34 @@ window.setMode = function (mode) {
         document.body.classList.add('hud-mode');
         btnMobile.classList.remove('active');
         btnHud.classList.add('active');
-        localStorage.setItem('kfk_shared_ui_mode', 'pc');
+        safeStorage.setItem('kfk_shared_ui_mode', 'pc');
     } else {
         document.body.classList.remove('hud-mode');
         btnMobile.classList.add('active');
         btnHud.classList.remove('active');
-        localStorage.setItem('kfk_shared_ui_mode', 'mobile');
+        safeStorage.setItem('kfk_shared_ui_mode', 'mobile');
     }
 };
 
 // ページ読み込み時に保存されたモードを復元
-const savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_ui_mode') || 'mobile';
+const savedMode = safeStorage.getItem('kfk_shared_ui_mode') || safeStorage.getItem('kfk_ui_mode') || 'mobile';
 setMode(savedMode);
 
-// 別タブ間でのリアルタイム切り替え同期
-window.addEventListener('storage', (e) => {
-    if (e.key === 'kfk_shared_ui_mode') {
-        setMode(e.newValue || 'mobile');
-    }
-});
+// UIモードの同期 (同一タブ内 iframe 間の同期と、別タブ同期の両立)
+(function() {
+    let lastMode = safeStorage.getItem('kfk_shared_ui_mode') || 'mobile';
+    setInterval(() => {
+        try {
+            const currentMode = safeStorage.getItem('kfk_shared_ui_mode') || 'mobile';
+            if (currentMode !== lastMode) {
+                lastMode = currentMode;
+                if (typeof window.setMode === 'function') {
+                    window.setMode(currentMode);
+                }
+            }
+        } catch (e) {}
+    }, 250); // 250msごとにチェックして高速同期
+})();
 
 // 初期表示用タイムライン描画
 updateTimeline();

@@ -14,9 +14,34 @@
     </style>
 </head>
 <body>
+    <div id="debug-err-console" style="display:none; background: #fee2e2; border: 2px solid #ef4444; color: #b91c1c; padding: 12px; margin: 10px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; z-index: 9999; position: relative;">
+        <strong>[JS Error Detected]</strong>
+        <pre id="debug-err-text" style="margin: 6px 0 0 0; white-space: pre-wrap; word-break: break-all;"></pre>
+    </div>
+    <script>
+        window.addEventListener('error', function(e) {
+            const consoleEl = document.getElementById('debug-err-console');
+            const textEl = document.getElementById('debug-err-text');
+            if (consoleEl && textEl) {
+                consoleEl.style.display = 'block';
+                textEl.textContent += '\n' + e.message + ' at ' + e.filename + ':' + e.lineno + ':' + e.colno;
+            }
+        });
+        window.addEventListener('unhandledrejection', function(e) {
+            const consoleEl = document.getElementById('debug-err-console');
+            const textEl = document.getElementById('debug-err-text');
+            if (consoleEl && textEl) {
+                consoleEl.style.display = 'block';
+                textEl.textContent += '\nUnhandled Promise Rejection: ' + (e.reason ? (e.reason.message || e.reason) : e);
+            }
+        });
+    </script>
     <script>
         // FOUC（レイアウトのガタつき）を防ぐため、レンダリング前にモードを適用
-        const savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_solver_ui_mode') || 'mobile';
+        let savedMode = 'mobile';
+        try {
+            savedMode = localStorage.getItem('kfk_shared_ui_mode') || localStorage.getItem('kfk_solver_ui_mode') || 'mobile';
+        } catch (e) {}
         if (savedMode === 'pc' || savedMode === 'hud') {
             document.body.classList.add('pc-mode');
         }
@@ -26,9 +51,10 @@
     <!-- フェーズタブ（常時表示・全員同期。画面最上部に固定） -->
     <div class="phase-tabs">
         <span class="phase-tabs-label">フェーズ</span>
-        <button class="phase-tab" data-phase="P1" onclick="setPhase('P1')">P1</button>
-        <button class="phase-tab" data-phase="P3" onclick="setPhase('P3')">P3</button>
-        <button class="phase-tab" data-phase="P4" onclick="setPhase('P4')">P4</button>
+        <button class="phase-tab" data-phase="P1" onclick="window.setPhase('P1')">P1</button>
+        <button class="phase-tab" data-phase="P3" onclick="window.setPhase('P3')">P3</button>
+        <button class="phase-tab" data-phase="P4" onclick="window.setPhase('P4')">P4</button>
+        <button class="phase-tab" data-phase="P5" onclick="window.setPhase('P5')">P5</button>
     </div>
 
     <!-- P1 カンペ（ずびずばテレポ散開図） -->
@@ -160,12 +186,233 @@
         </div>
     </div>
 
+    <!-- P5 カンペ（連続アルテマ〜ミッシング・ゼロ。インタラクティブなギミック別図解＆解説） -->
+    <div id="view-p5" class="phase-view animate-fade-in">
+        <div class="p5-gimmick-bar">
+            <button class="p5-gimmick-tab" data-gimmick="aa" onclick="window.setP5Gimmick('aa')">全体像/AA</button>
+            <button class="p5-gimmick-tab" data-gimmick="flood" onclick="window.setP5Gimmick('flood')">フラッド</button>
+            <button class="p5-gimmick-tab" data-gimmick="orch" onclick="window.setP5Gimmick('orch')">オーケストラ</button>
+            <button class="p5-gimmick-tab" data-gimmick="stars" onclick="window.setP5Gimmick('stars')">スリースターズ</button>
+            <button class="p5-gimmick-tab" data-gimmick="exa" onclick="window.setP5Gimmick('exa')">エクサフレア</button>
+            <button class="p5-gimmick-tab" data-gimmick="missing" onclick="window.setP5Gimmick('missing')">ミッシング</button>
+        </div>
+
+        <div class="p5-content-pane" style="flex: 1 1 auto; width: 100%; min-height: 0; overflow: hidden; position: relative;">
+            <div class="fit-area" id="fit-p5" data-fit="both">
+            <div class="fit-inner">
+                <!-- ① 全体像 / AA -->
+                <div class="p5-gimmick-panel" id="p5-gimmick-panel-aa" data-gimmick="aa">
+                    <div class="p5-gimmick-card">
+                        <div class="p5-gimmick-layout">
+                            <div class="p5-gimmick-text-pane">
+                                <div class="p5-gimmick-title">全体像 / AA (魔撃)</div>
+                                <ul class="p5-gimmick-list">
+                                    <li><strong>開始位置</strong>: フィールドマーカー8方向散開。STはヘイト2位を維持。</li>
+                                    <li><strong>連続アルテマ</strong>: 詠唱完了で超高速 of 4連続全体攻撃（1発約10万）。差し込みヒール推奨。</li>
+                                    <li><strong>オートアタック（魔撃）</strong>: ヘイト1位 ＋ ヒーラーからランダム1名 ＋ DPSからランダム1名、の計3方向頭割り。ロールごとに指定位置で散開して受ける。</li>
+                                </ul>
+                                <div class="p5-gimmick-highlight">
+                                    <strong>AA（魔撃）の散開位置指定</strong><br>
+                                    ・<strong>Aマーカー（北）</strong>：ヘイト1位（タンク頭割り・約44万）<br>
+                                    ・<strong>3マーカー（南西）</strong>：ヒラ対象（2人頭割り）<br>
+                                    ・<strong>2マーカー（南東）</strong>：DPS対象（4人頭割り）<br>
+                                    ※被魔法ダメージ増加デバフがあるため、他人の頭割りを重複して受けると即死。
+                                </div>
+                            </div>
+                            <div class="p5-gimmick-media-pane" style="flex: 0.6; min-width: 200px;">
+                                <div class="p5-image-wrapper" style="width: 100%; padding: 20px; background: #15151c; border-color: #3b6fe0; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px;">
+                                    <div style="font-size: 3rem; margin-bottom: 10px;">🛡️⚔️</div>
+                                    <div style="font-weight: 700; color: #cbd5e1; text-align: center; margin-bottom: 8px;">AA散開はロール別</div>
+                                    <div style="font-size: 0.8rem; color: #94a3b8; text-align: center; line-height: 1.4;">
+                                        北(A) ＝ タンク (AA約44万)<br>
+                                        南西(3) ＝ ヒーラー (2人頭割り)<br>
+                                        南東(2) ＝ DPS (4人頭割り)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ② フラッド -->
+                <div class="p5-gimmick-panel" id="p5-gimmick-panel-flood" data-gimmick="flood">
+                    <div class="p5-gimmick-card">
+                        <div class="p5-gimmick-layout">
+                            <div class="p5-gimmick-text-pane">
+                                <div class="p5-gimmick-title">カオティックフラッド</div>
+                                <ul class="p5-gimmick-list">
+                                    <li><strong>直線予兆の高速出現</strong>: 1列飛ばしの直線範囲が縦4・横4 of グリッド状に高速出現（縦2列→横2列等）。</li>
+                                    <li><strong>共通安置での待機</strong>: 全員中央付近の「1・2回目の予兆の隣（隣接する安全なマス）」で一緒に待機する。</li>
+                                    <li><strong>着弾に合わせたスライド</strong>: 1回目が着弾したらその跡地（中）へ入り、2回目が着弾したらその跡地へ移動する（それ以降の移動は不要）。</li>
+                                </ul>
+                                <div class="p5-gimmick-highlight">
+                                    <strong>カオティックフラッド（頭割り）</strong><br>
+                                    避けている間にも、全員を対象とした4連続頭割り攻撃が着弾し続けるため、全員が完全に同じ安置で固まって動きを同期させる必要があります。
+                                </div>
+                            </div>
+                            <div class="p5-gimmick-media-pane">
+                                <div class="p5-image-grid-1x2">
+                                    <div class="p5-image-wrapper">
+                                        <span class="p5-image-label">予兆の出現例（交互）</span>
+                                        <img src="img/p5/kfk_p5_flood1.png" class="p5-diagram">
+                                    </div>
+                                    <div class="p5-image-wrapper">
+                                        <span class="p5-image-label">安置での待機とスライド移動</span>
+                                        <img src="img/p5/kfk_p5_flood2.png" class="p5-diagram">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ③ 狂気のオーケストラ -->
+                <div class="p5-gimmick-panel" id="p5-gimmick-panel-orch" data-gimmick="orch">
+                    <div class="p5-gimmick-card">
+                        <div class="p5-gimmick-layout">
+                            <div class="p5-gimmick-text-pane">
+                                <div class="p5-gimmick-title">狂気のオーケストラ</div>
+                                <ul class="p5-gimmick-list">
+                                    <li><strong>① 詠唱完了時のデバフ付与</strong>: ヘイト1・2位に強攻撃（フレア/ホーリーデバフ付与）＋ランダム3人に円範囲。確認後<strong>タンクスイッチ</strong>。</li>
+                                    <li><strong>② 近い3人円範囲＋1位頭割り</strong>: 1回目でホーリー未対象の無職3人がボスのサークル内に入って円範囲を誘導。タンク2人は北で頭割り（タゲサ外に立つ）。他は離れる。</li>
+                                    <li><strong>③ フレア発動</strong>: MTは北端、STはボス前で無敵使用、他は南端で距離減衰を耐える。直後のAA2回はタンクが<strong>無敵</strong>で受ける。</li>
+                                </ul>
+                                <div class="p5-gimmick-highlight">
+                                    <strong>タンクの立ち位置制限（注意！）</strong><br>
+                                    ②のフェーズ時、タンクは<strong>絶対にターゲットサークル内に入らない</strong>こと（近い人対象の円範囲に巻き込まれて即死する危険があります）。
+                                </div>
+                            </div>
+                            <div class="p5-gimmick-media-pane">
+                                <div class="p5-image-grid-2x2">
+                                    <div class="p5-image-wrapper">
+                                        <span class="p5-image-label">① 詠唱完了時の初期散開</span>
+                                        <img src="img/p5/kfk_p5_orch1.png" class="p5-diagram">
+                                    </div>
+                                    <div class="p5-image-wrapper">
+                                        <span class="p5-image-label">② フレア・ホーリーデバフ散開</span>
+                                        <img src="img/p5/kfk_p5_orch2.png" class="p5-diagram">
+                                    </div>
+                                    <div class="p5-image-wrapper">
+                                        <span class="p5-image-label">③ 近い人3人＋頭割り受け</span>
+                                        <img src="img/p5/kfk_p5_orch3.png" class="p5-diagram">
+                                    </div>
+                                    <div class="p5-image-wrapper">
+                                        <span class="p5-image-label">④ 各自の最終位置（フレア発動）</span>
+                                        <img src="img/p5/kfk_p5_orch4.png" class="p5-diagram">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ④ スリースターズ -->
+                <div class="p5-gimmick-panel" id="p5-gimmick-panel-stars" data-gimmick="stars">
+                    <div class="p5-gimmick-card">
+                        <div class="p5-gimmick-layout">
+                            <div class="p5-gimmick-text-pane">
+                                <div class="p5-gimmick-title">スリースターズ</div>
+                                <ul class="p5-gimmick-list">
+                                    <li><strong>塔とデバフの出現</strong>: 9つの塔（炎3・氷3・雷3）が出現。全員に属性耐性低下デバフ（炎2・氷2・雷2・無職2人）。</li>
+                                    <li><strong>塔を踏むルール</strong>:<br>
+                                        ・デバフ持ち：<strong>自属性から時計回り側</strong>の他属性塔（2つ点灯時は時計回り手前）。<br>
+                                        ・無職：<strong>2つ点灯した属性の反時計回り側</strong>の塔。
+                                    </li>
+                                    <li><strong>2択のカタストロフ（1・3回目）</strong>: 塔踏みと同時にボスが光る（緑＝ドーナツ＝塔内側で踏む / 茶＝円＝塔外側で踏む）。</li>
+                                </ul>
+                                <div class="p5-gimmick-highlight">
+                                    <strong>移動の継続</strong><br>
+                                    塔は合計3回点灯します。踏むたびにデバフが変化しますが、毎回同じ法則（時計回り / 無職は2つ点灯の中央左）で次の点灯塔へ移動し続けます。
+                                </div>
+                            </div>
+                            <div class="p5-gimmick-media-pane">
+                                <div class="p5-image-grid-1x2">
+                                    <div class="p5-image-wrapper">
+                                        <span class="p5-image-label">属性塔の初期配置（例）</span>
+                                        <img src="img/p5/kfk_p5_stars1.png" class="p5-diagram">
+                                    </div>
+                                    <div class="p5-image-wrapper">
+                                        <span class="p5-image-label">1回目移動 ＋ 緑カタストロフ</span>
+                                        <img src="img/p5/kfk_p5_stars2.png" class="p5-diagram">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ⑤ 混沌の終末 -->
+                <div class="p5-gimmick-panel" id="p5-gimmick-panel-exa" data-gimmick="exa">
+                    <div class="p5-gimmick-card">
+                        <div class="p5-gimmick-layout">
+                            <div class="p5-gimmick-text-pane">
+                                <div class="p5-gimmick-title">混沌の終末（エクサフレア）</div>
+                                <ul class="p5-gimmick-list">
+                                    <li><strong>交互のエクサ予兆</strong>: 北西（南東行）⇒北東（南西行）と交互に、必ず1レーンの隙間を空けて高速エクサフレアが出現（計6回）。</li>
+                                    <li><strong>軸を合わせた回避</strong>: 予兆が出現していないレーンの軸に入り、次の予兆を確認してそこの安置レーンへスライドするのを繰り返す。</li>
+                                    <li><strong>終末の渦の着弾</strong>: 5回目付近で全員対象の円範囲「終末の渦」詠唱開始。</li>
+                                </ul>
+                                <div class="p5-gimmick-highlight">
+                                    <strong>焦らずエクサを避けること（重要）</strong><br>
+                                    渦の詠唱が見えても焦ってすぐに散開を始めると、まだ終わっていないエクサに引かれます。しっかり6回のエクサを避けきってから、散開します。
+                                </div>
+                            </div>
+                            <div class="p5-gimmick-media-pane">
+                                <div class="p5-image-grid-1x2">
+                                    <div class="p5-image-wrapper">
+                                        <span class="p5-image-label">北西・北東から交互のエクサ</span>
+                                        <img src="img/p5/kfk_p5_exa1.png" class="p5-diagram">
+                                    </div>
+                                    <div class="p5-image-wrapper">
+                                        <span class="p5-image-label">エクサ避け（向かうように避ける）</span>
+                                        <img src="img/p5/kfk_p5_exa2.png" class="p5-diagram">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ⑥ ミッシング -->
+                <div class="p5-gimmick-panel" id="p5-gimmick-panel-missing" data-gimmick="missing">
+                    <div class="p5-gimmick-card">
+                        <div class="p5-gimmick-layout">
+                            <div class="p5-gimmick-text-pane">
+                                <div class="p5-gimmick-title">ミッシング ＆ ミッシング・ゼロ</div>
+                                <ul class="p5-gimmick-list">
+                                    <li><strong>① ミッシング（全体強攻撃 ＋ 頭割り）</strong>: 全員Aマーカー集合。詠唱完了で約38万の全体攻撃 ＋ 頭割り予兆（沼）。</li>
+                                    <li><strong>② 沼とオレンジ床の回避</strong>: 沼は踏むと即死級（蘇生不可）。数字マーカー頭割り ⇒ アルファベット移動を繰り返し、沼を時計回りに避け続ける。<br>
+                                        （海外勢式：沼を無視して常に90度時計回りに突き進む方法も判断がシンプルで強力）</li>
+                                    <li><strong>③ ミッシング・ゼロ（時間切れ）</strong>: ボスが中央へ移動し時間切れの超ロング詠唱を開始。バースト ＋ メレーLB3で削り切る。</li>
+                                </ul>
+                                <div class="p5-gimmick-highlight">
+                                    <strong>時間切れ「ミッシング・ゼロ」発動</strong><br>
+                                    詠唱完了までにボスのHPを削りきれないと、ケフカが<strong>「休憩とって出直しな！」</strong>と放ち、即死全体攻撃でワイプとなります。
+                                </div>
+                            </div>
+                            <div class="p5-gimmick-media-pane">
+                                <div class="p5-image-grid-1x1">
+                                    <div class="p5-image-wrapper">
+                                        <span class="p5-image-label">床予兆と頭割りの時計回り移動</span>
+                                        <img src="img/p5/kfk_p5_missing.jpg" class="p5-diagram">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+
     <!-- P4 カンペ（v1/v2/v3 の実装を切り替えられる。v3は既存solver-v2をそのまま内包・無改変、
          v1/v2はID構成が異なる別実装のためiframeで分離して埋め込む） -->
     <div id="view-p4" class="phase-view">
         <div class="p4-impl-bar">
             <span class="p4-impl-label">P4の表示</span>
-            <select class="page-select" id="p4-impl-select" onchange="setP4Impl(this.value)">
+            <select class="page-select" id="p4-impl-select" onchange="window.setP4Impl(this.value)">
                 <option value="v1">カンペアプリv1</option>
                 <option value="v2">カンペアプリv2</option>
                 <option value="v3" selected>カンペアプリv3</option>
@@ -173,13 +420,14 @@
         </div>
 
         <div class="p4-impl-pane" id="p4-impl-v1" data-impl="v1">
-            <iframe class="p4-iframe" data-src="index.html" title="カンペアプリv1"></iframe>
+            <iframe class="p4-iframe" data-src="index.html?v=20260623" title="カンペアプリv1"></iframe>
         </div>
         <div class="p4-impl-pane" id="p4-impl-v2" data-impl="v2">
-            <iframe class="p4-iframe" data-src="solver.html" title="カンペアプリv2"></iframe>
+            <iframe class="p4-iframe" data-src="solver.html?v=20260623" title="カンペアプリv2"></iframe>
         </div>
 
-        <div class="fit-area p4-impl-pane" id="fit-p4" data-fit="height" data-impl="v3">
+        <div class="p4-impl-pane" id="fit-p4-container" data-impl="v3">
+            <div class="fit-area" id="fit-p4" data-fit="height">
             <div class="fit-inner">
         <div class="container">
             <!-- ヘッダーエリア -->
@@ -189,8 +437,8 @@
                 </div>
                 <div class="header-right">
                     <div class="toggle-group">
-                        <button class="toggle-btn active" id="btn-mode-mobile" onclick="setMode('mobile')">📱 スマホ</button>
-                        <button class="toggle-btn" id="btn-mode-pc" onclick="setMode('pc')">💻 PC</button>
+                        <button class="toggle-btn active" id="btn-mode-mobile" onclick="window.setMode('mobile')">📱 スマホ</button>
+                        <button class="toggle-btn" id="btn-mode-pc" onclick="window.setMode('pc')">💻 PC</button>
                     </div>
                     <button class="reset-btn" id="localResetBtn">選択リセット</button>
                 </div>
@@ -490,13 +738,16 @@
             </main>
         </div>
             </div>
+            </div>
         </div>
     </div>
     </div>
 
-    <!-- Firebase SDK & Core Logic -->
-    <script type="module" src="solver-v2.js"></script>
-    <!-- フェーズ同期（kfk_nav のみ担当・名前付きFirebaseアプリ） -->
-    <script type="module" src="nav.js"></script>
+    <!-- Firebase SDK (Compat version) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <!-- Core Logic & Navigation (通常のスクリプトとして読み込むことで、file:// スキーム時の CORS ブロックを回避) -->
+    <script src="solver-v2.js?v=20260623"></script>
+    <script src="nav.js?v=20260623"></script>
 </body>
 </html>
