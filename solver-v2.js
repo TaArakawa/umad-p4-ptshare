@@ -399,8 +399,9 @@ if (!isOfflineMode) {
 // 自動推論ロジック (1回目と2回目で早の頭割り、遅の頭割り、早の散開、遅の散開が重複せず分配される特性を利用)
 function deduceState() {
     // 1回目 (GC1) からの推論を実行可能か判定
-    const canDeduceFromGC1 = bossState.gc1_truth !== 'none' && 
-                             bossState.gc1_water_timing !== 'none' && 
+    // GC1は水と雷の早遅が連動するため、真偽が未確定でも水・雷の早遅さえ分かれば
+    // ロール(ES/LS/EP/LP)の組み合わせが一意に決まり、GC2側の早遅を推論できる。
+    const canDeduceFromGC1 = bossState.gc1_water_timing !== 'none' &&
                              bossState.gc1_lightning_timing !== 'none';
                              
     // 2回目 (GC2) からの推論を実行可能か判定
@@ -434,16 +435,16 @@ function deduceState() {
         const all = ['ES', 'LS', 'EP', 'LP'];
         const roles2 = all.filter(r => !roles1.includes(r));
         
-        if (bossState.gc2_truth !== 'none') {
-            if (bossState.gc2_truth === 'true') {
-                bossState.gc2_water_timing = roles2.includes('ES') ? 'early' : 'late';
-                bossState.gc2_lightning_timing = roles2.includes('EP') ? 'early' : 'late';
-            } else {
-                bossState.gc2_water_timing = roles2.includes('EP') ? 'early' : 'late';
-                bossState.gc2_lightning_timing = roles2.includes('ES') ? 'early' : 'late';
-            }
+        // GC1の水・雷が連動しているため、roles2(GC1が使わなかった残り2ロール)は
+        // GC2の真偽に関わらず一意に決まる。真偽が未確定でもGC2の早遅を確定できる。
+        if (bossState.gc2_truth === 'true') {
+            bossState.gc2_water_timing = roles2.includes('ES') ? 'early' : 'late';
+            bossState.gc2_lightning_timing = roles2.includes('EP') ? 'early' : 'late';
+        } else {
+            bossState.gc2_water_timing = roles2.includes('EP') ? 'early' : 'late';
+            bossState.gc2_lightning_timing = roles2.includes('ES') ? 'early' : 'late';
         }
-    } 
+    }
     else if (primaryGC === 2) {
         // GC2 -> GC1
         const r2_water = bossState.gc2_truth === 'true' 
