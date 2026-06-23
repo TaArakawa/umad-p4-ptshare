@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
     <title>絶妖星乱舞 カンペアプリ統合</title>
     <link rel="stylesheet" href="solver-v2.css?v=20260623">
-    <link rel="stylesheet" href="nav.css?v=20260623">
+    <link rel="stylesheet" href="nav.css?v=20260624c">
     <style>
         .sp-text { display: inline; }
         .pc-text { display: none; }
@@ -48,7 +48,7 @@
     </script>
 
     <!-- バージョン表示：GitHubの最新コミットを取得し、pushごとに自動更新される -->
-    <a id="version-badge" class="version-badge" href="https://github.com/TaArakawa/umad-p4-ptshare" target="_blank" rel="noopener" title="最新コミットを取得中...">v1.1.0 (最終更新日時: 2026-06-24 03:05)</a>
+    <a id="version-badge" class="version-badge" href="https://github.com/TaArakawa/umad-p4-ptshare" target="_blank" rel="noopener" title="最新コミットを取得中...">v1.4.0 (最終更新日時: 2026-06-24 07:10)</a>
 
     <div class="hub-root">
     <!-- フェーズタブ（常時表示・全員同期。画面最上部に固定） -->
@@ -83,9 +83,39 @@
         <div class="p2-content-pane" style="flex: 1 1 auto; width: 100%; min-height: 0; overflow: hidden; position: relative;">
             <div class="fit-area" id="fit-p2" data-fit="both">
                 <div class="fit-inner">
+                    <!-- ペア固定＆ラウンド進行（ぴれん式） -->
+                    <div class="p2-gimmick-card p2-pairing-card">
+                        <div class="p2-card-title">ペア固定 ＆ ラウンド進行（ぴれん式）</div>
+                        <div class="p2-pair-row">
+                            <div class="p2-pair-group">
+                                <div class="p2-pair-badge role-th">MT + H1</div>
+                                <div class="p2-pair-badge role-th">ST + H2</div>
+                            </div>
+                            <div class="p2-pair-group">
+                                <div class="p2-pair-badge role-dps">D1 + D3</div>
+                                <div class="p2-pair-badge role-dps">D2 + D4</div>
+                            </div>
+                        </div>
+                        <div class="p2-pair-note">事前にペアを固定（西タンヒラ・東DPSで分かれると見やすい）／頭割りはタンヒラ・DPSそれぞれどちらか一方のペアにランダムで付与</div>
+                        <div class="p2-round-track">
+                            <div class="p2-round-cell team-share">1</div>
+                            <div class="p2-round-cell team-share">2</div>
+                            <div class="p2-round-cell team-share">3</div>
+                            <div class="p2-round-cell team-other">4</div>
+                            <div class="p2-round-cell team-other">5</div>
+                            <div class="p2-round-cell team-other">6</div>
+                            <div class="p2-round-cell team-other">7</div>
+                            <div class="p2-round-cell team-share">8</div>
+                        </div>
+                        <div class="p2-round-legend">
+                            <span><i class="p2-legend-dot dot-share"></i>頭割りが付いたペア（TH＋DPS）が担当</span>
+                            <span><i class="p2-legend-dot dot-other"></i>それ以外のペアが担当</span>
+                        </div>
+                    </div>
+
                     <div class="p2-gimmick-card">
                         <div class="p2-gimmick-layout">
-                            
+
                             <!-- 左側：ビジュアル配置図 -->
                             <div class="p2-diagram-pane">
                                 
@@ -125,7 +155,7 @@
                                     <div class="p2-towers-container">
                                         <!-- 左塔 -->
                                         <div class="p2-tower-wrapper">
-                                            <div class="p2-tower-label">左塔 (優先度: 強)</div>
+                                            <div class="p2-tower-label">左塔 (扇デバフ側)</div>
                                             <div class="p2-tower">
                                                 <div class="p2-tower-center">LEFT TOWER</div>
                                                 <div class="p2-marker type-fan-out" style="top: 5px; left: 10px;">扇出す (L)</div>
@@ -137,7 +167,7 @@
                                         </div>
                                         <!-- 右塔 -->
                                         <div class="p2-tower-wrapper">
-                                            <div class="p2-tower-label">右塔 (優先度: 弱)</div>
+                                            <div class="p2-tower-label">右塔 (円デバフ側)</div>
                                             <div class="p2-tower">
                                                 <div class="p2-tower-center">RIGHT TOWER</div>
                                                 <div class="p2-marker type-fan-out" style="top: 5px; left: 10px;">扇出す (L)</div>
@@ -174,54 +204,111 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3" class="section-header" style="font-size: 0.72rem; padding: 4px 10px;">ミッシング (スペルハザード ＆ 塔踏み)</td>
+                                        <td colspan="3" class="section-header" style="font-size: 0.72rem; padding: 4px 10px;">ミッシング (スペルハザード ＆ 塔踏み) ─ ぴれん式・ペア固定</td>
                                     </tr>
                                     <tr>
-                                        <td style="font-weight: bold; padding: 4px 6px;">初期デバフ</td>
+                                        <td style="font-weight: bold; width: 75px; padding: 4px 6px;">初期デバフ</td>
                                         <td colspan="2" style="text-align: left; padding: 4px 8px;">
-                                            **扇×3 / 円×3 / 頭割り×2** (ロール内で扇・円振分け、残りに頭割り)<br>
-                                            ※優先度: H1 > MT > ST > H2 | D1 > D2 > D3 > D4
+                                            **扇×3 / 円×3 / 頭割り×2**（タンヒラ・DPSそれぞれ〈頭・円・円・円〉か〈頭・扇・扇・扇〉の内訳）
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="font-weight: bold; padding: 4px 6px;">デバフ変化</td>
+                                        <td style="font-weight: bold; padding: 4px 6px;">ペア＆担当</td>
                                         <td colspan="2" style="text-align: left; padding: 4px 8px;">
-                                            ・**奇数回塔** (1/3/5回目): 踏むと **扇×2 / 円×2** 付与<br>
-                                            ・**偶数回塔** (2/4/6回目): 踏むと **頭割り×2 / 扇×1 / 円×1** 付与
+                                            上の「ペア固定＆ラウンド進行」図参照（頭割りペア＝1・2・3・8回目／その他＝4・5・6・7回目）
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="font-weight: bold; padding: 4px 6px;">散開ルール</td>
+                                        <td style="font-weight: bold; padding: 4px 6px;">奇数回</td>
                                         <td colspan="2" style="text-align: left; padding: 4px 8px; line-height: 1.3;">
-                                            偶数回は**南調整**：塔の中でデバフ被りがない場合はそのまま、被る場合は南側の人が逆の塔を踏む。<br>
-                                            無職の終焉誘導はDPS固定、扇受けはタンヒラ固定。
+                                            左塔下＝扇 / 右塔下＝円。頭割り優先度：**ヒラ＞タンク＞近接DPS＞遠隔DPS**
                                         </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 4px 6px;">偶数回</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px; line-height: 1.3;">
+                                            左から優先度：**ヒラ＞タンク＞近接DPS＞遠隔DPS**。<br>
+                                            塔以外のペアは位置固定（左タンヒラ・右DPS）。過去/未来の分身誘導は扇担当2人＋近接2人。
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 4px 6px;">3回目分岐</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px; line-height: 1.3;">
+                                            塔処理後、自分のデバフで分岐：<br>
+                                            円がついた→<code>/mk stop &lt;me&gt;</code> ／ 扇がついた→<code>/mk bind &lt;me&gt;</code>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 4px 6px;">8回目</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">マーカーの数字基準（左1／右2）で処理</td>
                                     </tr>
                                     <tr>
                                         <td colspan="3" class="section-header" style="font-size: 0.72rem; padding: 4px 10px;">過去・未来の終焉 ＆ 消滅の脚</td>
                                     </tr>
                                     <tr>
                                         <td style="font-weight: bold; padding: 4px 6px;">終焉の破滅</td>
-                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">偶数回：最も近い4人へ円範囲（扇持ち ＆ 無職が誘導）</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">2回目以降：最も近い4人へ円範囲（扇持ち＆近接が誘導）。4回目はAマーカーに集合。</td>
                                     </tr>
                                     <tr>
-                                        <td style="font-weight: bold; padding: 4px 6px;">消滅 of 脚</td>
-                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">
-                                            **未来**＝前方半面 / **過去**＝後方半面<br>
-                                            誘導：塔の間（またはその逆側）の**タゲサ外**に立つ
+                                        <td style="font-weight: bold; padding: 4px 6px;">消滅の脚</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px; line-height: 1.3;">
+                                            **未来**＝着弾後に塔の反対側で待機→詠唱が見えたら塔側へ駆け込む<br>
+                                            **過去**＝着弾後にそのまま塔の間で待機
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3" class="section-header" style="font-size: 0.72rem; padding: 4px 10px;">トライン (三角形落下)</td>
+                                        <td colspan="3" class="section-header" style="font-size: 0.72rem; padding: 4px 10px;">裁きの光 ＆ トライン</td>
                                     </tr>
                                     <tr>
-                                        <td style="font-weight: bold; padding: 4px 6px;">回避処理</td>
-                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">
-                                            **1回目外周3箇所 ⇒ 2回目外周1箇所 ⇒ 3回目中央＋外周2箇所**<br>
-                                            中央で待機 ⇒ 1回目の三角形の爆発箇所に逃げ込む
+                                        <td style="font-weight: bold; padding: 4px 6px;">裁きの光</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">全体攻撃。**スペルハザードが1スタックでも残っていると即死**（塔踏み漏れ厳禁）</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 4px 6px;">トライン</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px; line-height: 1.3;">
+                                            1回目の三角に入る→破壊の翼（半面）回避→**3回目は必ず中央**に確定着弾。<br>
+                                            破壊の翼（近遠強）：ヒラ/DPSは**南→東**、タンクは**北→西**で安地を探す。MTはトライン範囲に注意しつつボスに近づき、STは絶対最外周。
                                         </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 4px 6px;">時間切れ</td>
+                                        <td colspan="2" style="text-align: left; padding: 4px 8px;">終末の双腕（タンク強攻撃）着弾後、**6分20秒**で時間切れ。P1から0秒バーストなら5〜6秒分のバーストを稼げる。</td>
                                     </tr>
                                 </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- トライン候補マップ -->
+                    <div class="p2-gimmick-card p2-trine-card">
+                        <div class="p2-card-title">トライン 候補マップ（外周6 ＋ 中央1）</div>
+                        <div class="p2-trine-layout">
+                            <div class="p2-trine-field">
+                                <div class="p2-trine-boss">BOSS</div>
+                                <div class="p2-trine-spot wave-1" style="top: 20px; left: 110px;">1</div>
+                                <div class="p2-trine-spot wave-2" style="top: 65px; left: 188px;">2</div>
+                                <div class="p2-trine-spot wave-1" style="top: 155px; left: 188px;">1</div>
+                                <div class="p2-trine-spot wave-3" style="top: 200px; left: 110px;">3</div>
+                                <div class="p2-trine-spot wave-1" style="top: 155px; left: 32px;">1</div>
+                                <div class="p2-trine-spot wave-3" style="top: 65px; left: 32px;">3</div>
+                                <div class="p2-trine-spot wave-3" style="top: 110px; left: 110px;">3</div>
+                            </div>
+                            <div class="p2-trine-legend">
+                                <span><i class="p2-legend-dot" style="background-color: rgba(220,38,38,0.85); border-radius: 50%;"></i>1回目＝外周3箇所</span>
+                                <span><i class="p2-legend-dot" style="background-color: rgba(217,119,6,0.85); border-radius: 50%;"></i>2回目＝外周1箇所</span>
+                                <span><i class="p2-legend-dot" style="background-color: rgba(5,150,105,0.85); border-radius: 50%;"></i>3回目＝中央＋外周2箇所（中央は必ず3回目）</span>
+                                <span style="margin-top: 6px; color: #8b93a8;">※実際に光る候補地は毎回ランダム。数字は出現順の一例。</span>
+                            </div>
+                            <div class="p2-compass">
+                                <div class="p2-compass-cell"></div>
+                                <div class="p2-compass-cell tank">北<br>タンク</div>
+                                <div class="p2-compass-cell"></div>
+                                <div class="p2-compass-cell tank">西<br>タンク</div>
+                                <div class="p2-compass-cell center">破壊の翼<br>(近遠強)</div>
+                                <div class="p2-compass-cell healer-dps">東<br>ヒラ/DPS</div>
+                                <div class="p2-compass-cell"></div>
+                                <div class="p2-compass-cell healer-dps">南<br>ヒラ/DPS</div>
+                                <div class="p2-compass-cell"></div>
                             </div>
                         </div>
                     </div>
