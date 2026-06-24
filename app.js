@@ -450,17 +450,28 @@ window.setDecision = function (key, status) {
         if (k === 'earlyEye') {
             bossState.gc1_truth = status;
             lastEditedGC = 2; // 真偽値の変更時は他方を優先編集ソースとして再推論
+            // 真偽値が両方揃う前は updateFirebaseState() を通らず currentState を
+            // そのまま保存するため、ここで currentState 側も更新しておかないと
+            // クリックがサーバーに反映されない。
+            currentState.earlyEye = status;
+            currentState.gc1Truth = status;
         } else if (k === 'lateEye') {
             bossState.gc2_truth = status;
             lastEditedGC = 1;
+            currentState.lateEye = status;
+            currentState.gc2Truth = status;
         } else if (k === 'fire') {
             bossState.fire_truth = status;
+            currentState.fire = status;
         } else if (k === 'water') {
             bossState.tsunami_truth = status;
+            currentState.water = status;
         } else if (k === 'lineLightning') {
             bossState.lineLightning_truth = status;
+            currentState.lineLightning = status;
         } else if (k === 'iceFan') {
             bossState.iceFan_truth = status;
+            currentState.iceFan = status;
         } else {
             const g1 = bossState.gc1_truth;
             const g2 = bossState.gc2_truth;
