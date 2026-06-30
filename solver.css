@@ -601,3 +601,38 @@ body.pc-mode .pc-text {
     border-color: var(--accent-false);
     color: var(--accent-false);
 }
+
+/* =====================================================================
+   背景色テーマ：ライト（白背景）。CSS変数を白基調に差し替え、
+   カード/表上の淡いグレー文字を濃色へ反転する。意味を持つ配色は維持。
+   ===================================================================== */
+body.theme-light {
+    --bg-color: #eef1f5;
+    --card-bg: #ffffff;
+    --text-color: #1f2933;
+    --border-color: #cbd5e1;
+    --btn-idle: #e3e8f0;
+}
+
+body.theme-light .card-header h2,
+body.theme-light .solver-table th,
+body.theme-light .debuff-cell,
+body.theme-light .debuff-row.active .debuff-cell.default-active {
+    color: #1f2933;
+}
+
+body.theme-light .truth-btn,
+body.theme-light .toggle-btn {
+    color: #64748b;
+}
+
+body.theme-light h1 {
+    color: #047857;
+}
+
+body.theme-light .card {
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+}
+body.theme-light .card-header {
+    border-bottom-color: rgba(15, 23, 42, 0.10);
+}

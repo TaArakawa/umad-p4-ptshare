@@ -670,3 +670,40 @@ body.hud-mode #tl-step7 {
     border-radius: 4px;
     padding: 2px 6px;
 }
+
+/* =====================================================================
+   背景色テーマ：ライト（白背景）。CSS変数を白基調に差し替え、
+   タイムライン上の淡いグレー文字を濃色へ反転する。意味を持つ配色は維持。
+   ===================================================================== */
+body.theme-light {
+    --bg-color: #eef1f5;
+    --card-bg: #ffffff;
+    --text-color: #1f2933;
+    --border-color: #cbd5e1;
+    --btn-idle: #e3e8f0;
+}
+
+body.theme-light h1 {
+    color: #047857;
+}
+
+body.theme-light .tl-name {
+    color: #64748b;
+}
+body.theme-light .timeline-item.ready .tl-name,
+body.theme-light #tl-step1 .tl-name,
+body.theme-light .tl-label {
+    color: #1f2933;
+}
+
+/* 特別ハイライトカード（濃色 → 淡いアクセント色へ） */
+body.theme-light .card-local {
+    background-color: #eff6ff;
+    border-color: #bfdbfe;
+}
+body.theme-light .timeline-item.ready {
+    background: linear-gradient(145deg, #ffffff, #ecfdf5);
+}
+body.theme-light #tl-step1 {
+    background: linear-gradient(145deg, #ffffff, #eff6ff);
+}

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
     <title>絶妖星乱舞 カンペアプリ統合</title>
-    <link rel="stylesheet" href="solver-v2.css?v=20260630d">
-    <link rel="stylesheet" href="nav.css?v=20260624c">
+    <link rel="stylesheet" href="solver-v2.css?v=20260630s">
+    <link rel="stylesheet" href="nav.css?v=20260630g">
     <style>
         .sp-text { display: inline; }
         .pc-text { display: none; }
@@ -187,7 +187,7 @@
                             <div class="p2-text-pane">
                                 <table class="cheat-sheet-table-html hub-cheat-sheet-table" style="font-size: 0.78rem; width: 100%;">
                                     <tr>
-                                        <td colspan="3" class="row-center" style="font-size: 0.95rem; color: #a7f3d0; font-weight: 800; padding: 6px;">P2: 妖星乱舞（ゴッドケフカ）</td>
+                                        <td colspan="3" class="row-center section-title-cell" style="font-size: 0.95rem; font-weight: 800; padding: 6px;">P2: 妖星乱舞（ゴッドケフカ）</td>
                                     </tr>
                                     <tr>
                                         <td colspan="3" class="section-header" style="font-size: 0.72rem; padding: 4px 10px;">基本ギミック</td>
@@ -740,6 +740,12 @@
                 <option value="v2">カンペアプリv2</option>
                 <option value="v3" selected>カンペアプリv3</option>
             </select>
+            <label class="theme-switch" title="背景色（黒/白）を切り替え">
+                <span class="theme-switch-icon theme-switch-icon-dark">🌙</span>
+                <input type="checkbox" id="theme-toggle" onchange="window.setTheme(this.checked ? 'light' : 'dark')">
+                <span class="theme-switch-track"><span class="theme-switch-thumb"></span></span>
+                <span class="theme-switch-icon theme-switch-icon-light">☀️</span>
+            </label>
         </div>
 
         <div class="p4-impl-pane" id="p4-impl-v1" data-impl="v1">
@@ -1139,5 +1145,6 @@
     <!-- Core Logic & Navigation (通常のスクリプトとして読み込むことで、file:// スキーム時の CORS ブロックを回避) -->
     <script src="solver-v2.js?v=20260630c"></script>
     <script src="nav.js?v=20260624"></script>
+    <script src="theme.js?v=20260630"></script>
 </body>
 </html>
