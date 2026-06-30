@@ -245,7 +245,7 @@ function renderUI() {
         document.getElementById(isTrue ? 'iceFan-resolver-true' : 'iceFan-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
     }
 
-    // ギミックアイコンの点灯（真偽が選択されたらアイコンを光らせる：真=緑 / 偽=赤）
+    // ギミック欄の点灯（真偽が選択されたらギミックのセルをGCのように色付け：真=緑 / 偽=赤）
     [
         ['card-fire', bossState.fire_truth],
         ['card-tsunami', bossState.tsunami_truth],
@@ -254,11 +254,11 @@ function renderUI() {
     ].forEach(([cardId, truth]) => {
         const card = document.getElementById(cardId);
         if (!card) return;
-        const icon = card.querySelector('.debuff-icon, .debuff-icon-emoji');
-        if (!icon) return;
-        icon.classList.remove('icon-lit-true', 'icon-lit-false');
-        if (truth === 'true') icon.classList.add('icon-lit-true');
-        else if (truth === 'false') icon.classList.add('icon-lit-false');
+        const cell = card.querySelector('.debuff-cell');
+        if (!cell) return;
+        cell.classList.remove('lit-true', 'lit-false');
+        if (truth === 'true') cell.classList.add('lit-true');
+        else if (truth === 'false') cell.classList.add('lit-false');
     });
 }
 

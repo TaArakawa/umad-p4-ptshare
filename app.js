@@ -425,14 +425,13 @@ onValue(dbRef, (snapshot) => {
             resText.innerText = "---";
         }
 
-        // ほのお・つなみ・雷床・氷床は真偽が選択されたらギミックアイコンを光らせる（真=緑 / 偽=赤）
-        // ほのお・つなみは画像(.gimmick-icon)、雷床・氷床は絵文字(.icon)。
+        // ほのお・つなみ・雷床・氷床は真偽が選択されたらギミック欄（ラベル行）をGCのように点灯（真=緑 / 偽=赤）
         if (key === 'fire' || key === 'water' || key === 'lineLightning' || key === 'iceFan') {
-            const icon = card.querySelector('.gimmick-icon, .icon');
-            if (icon) {
-                icon.classList.remove('icon-lit-true', 'icon-lit-false');
-                if (value === 'true') icon.classList.add('icon-lit-true');
-                else if (value === 'false') icon.classList.add('icon-lit-false');
+            const labelRow = card.querySelector('.label-row');
+            if (labelRow) {
+                labelRow.classList.remove('lit-true', 'lit-false');
+                if (value === 'true') labelRow.classList.add('lit-true');
+                else if (value === 'false') labelRow.classList.add('lit-false');
             }
         }
     });

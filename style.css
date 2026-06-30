@@ -655,15 +655,18 @@ body.hud-mode #tl-step7 {
 
 
 /* ギミックアイコンの点灯：ほのお・つなみ・雷床・氷床で真偽が選択されたらアイコンを光らせる（真=緑 / 偽=赤） */
-.gimmick-icon.icon-lit-true,
-.icon.icon-lit-true {
-    outline: 2px solid #22c55e;
-    border-radius: 6px;
-    box-shadow: 0 0 10px 3px rgba(34, 197, 94, 0.85);
+/* ギミック欄の点灯：真偽が選択されたらギミックのラベル行をGCのように色付け（真=緑 / 偽=赤） */
+.label-row.lit-true {
+    background-color: rgba(34, 197, 94, 0.18);
+    border: 1px solid var(--accent-true);
+    color: var(--accent-true);
+    border-radius: 4px;
+    padding: 2px 6px;
 }
-.gimmick-icon.icon-lit-false,
-.icon.icon-lit-false {
-    outline: 2px solid #ef4444;
-    border-radius: 6px;
-    box-shadow: 0 0 10px 3px rgba(239, 68, 68, 0.85);
+.label-row.lit-false {
+    background-color: rgba(239, 68, 68, 0.18);
+    border: 1px solid var(--accent-false);
+    color: var(--accent-false);
+    border-radius: 4px;
+    padding: 2px 6px;
 }
