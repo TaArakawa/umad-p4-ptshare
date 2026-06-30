@@ -61,6 +61,10 @@ function loadLocalState() {
             console.error("Local state parse error", e);
         }
     }
+    // 視線と加速度は各グランドクロスで必ず同時につく（同じGC）ため、加速度を視線に追従させて
+    // 正規化する。これにより過去の不整合な保存状態（視線=GC1・加速度=GC2など）も解消する。
+    localState.gc1_bomb = !!localState.gc1_sight;
+    localState.gc2_bomb = !!localState.gc2_sight;
 }
 
 // 個人デバフ状態を保存
@@ -550,36 +554,29 @@ document.getElementById('row-2-lightning').addEventListener('pointerdown', (e) =
     renderUI();
 });
 
-// 視線の行クリック
-document.getElementById('row-1-sight').addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    if (localState.gc2_sight) return;
-    localState.gc1_sight = !localState.gc1_sight;
+// 視線・加速度の行クリック
+// 視線と加速度は各グランドクロスで必ず同時につく（同じGC）ため、どちらの行を押しても
+// 同一GCの視線・加速度を連動してトグルする。GC1/GC2のクロス排他は維持する。
+function toggleSightBomb(gc) {
+    const other = gc === 1 ? 2 : 1;
+    if (localState[`gc${other}_sight`] || localState[`gc${other}_bomb`]) return; // 他方GC選択中は押せない
+    const next = !(localState[`gc${gc}_sight`] && localState[`gc${gc}_bomb`]);
+    localState[`gc${gc}_sight`] = next;
+    localState[`gc${gc}_bomb`] = next;
     saveLocalState();
     renderUI();
+}
+['row-1-sight', 'row-1-bomb'].forEach(id => {
+    document.getElementById(id).addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        toggleSightBomb(1);
+    });
 });
-document.getElementById('row-2-sight').addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    if (localState.gc1_sight) return;
-    localState.gc2_sight = !localState.gc2_sight;
-    saveLocalState();
-    renderUI();
-});
-
-// 加速度の行クリック
-document.getElementById('row-1-bomb').addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    if (localState.gc2_bomb) return;
-    localState.gc1_bomb = !localState.gc1_bomb;
-    saveLocalState();
-    renderUI();
-});
-document.getElementById('row-2-bomb').addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    if (localState.gc1_bomb) return;
-    localState.gc2_bomb = !localState.gc2_bomb;
-    saveLocalState();
-    renderUI();
+['row-2-sight', 'row-2-bomb'].forEach(id => {
+    document.getElementById(id).addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        toggleSightBomb(2);
+    });
 });
 
 // 5. ローカルリセットボタン
