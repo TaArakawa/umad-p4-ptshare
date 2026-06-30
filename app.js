@@ -424,6 +424,17 @@ onValue(dbRef, (snapshot) => {
         } else {
             resText.innerText = "---";
         }
+
+        // ほのお・つなみ・雷床・氷床は真偽が選択されたらギミックアイコンを光らせる（真=緑 / 偽=赤）
+        // ほのお・つなみは画像(.gimmick-icon)、雷床・氷床は絵文字(.icon)。
+        if (key === 'fire' || key === 'water' || key === 'lineLightning' || key === 'iceFan') {
+            const icon = card.querySelector('.gimmick-icon, .icon');
+            if (icon) {
+                icon.classList.remove('icon-lit-true', 'icon-lit-false');
+                if (value === 'true') icon.classList.add('icon-lit-true');
+                else if (value === 'false') icon.classList.add('icon-lit-false');
+            }
+        }
     });
 
     // 次回比較用に保存

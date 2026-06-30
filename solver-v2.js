@@ -278,6 +278,22 @@ function renderUI() {
         document.getElementById(isTrue ? 'iceFan-resolver-true' : 'iceFan-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
     }
 
+    // ギミックアイコンの点灯（真偽が選択されたらアイコンを光らせる：真=緑 / 偽=赤）
+    [
+        ['card-fire', bossState.fire_truth],
+        ['card-tsunami', bossState.tsunami_truth],
+        ['card-lineLightning', bossState.lineLightning_truth],
+        ['card-iceFan', bossState.iceFan_truth]
+    ].forEach(([cardId, truth]) => {
+        const card = document.getElementById(cardId);
+        if (!card) return;
+        const icon = card.querySelector('.debuff-icon, .debuff-icon-emoji');
+        if (!icon) return;
+        icon.classList.remove('icon-lit-true', 'icon-lit-false');
+        if (truth === 'true') icon.classList.add('icon-lit-true');
+        else if (truth === 'false') icon.classList.add('icon-lit-false');
+    });
+
     // タイムラインの更新
     updateTimeline();
 }
