@@ -75,10 +75,11 @@ function loadLocalState() {
             console.error("Local state parse error", e);
         }
     }
-    // 視線と加速度は各グランドクロスで必ず同時につく（同じGC）ため、加速度を視線に追従させて
-    // 正規化する。これにより過去の不整合な保存状態（視線=GC1・加速度=GC2など）も解消する。
-    localState.gc1_bomb = !!localState.gc1_sight;
-    localState.gc2_bomb = !!localState.gc2_sight;
+    // 不変条件の正規化：視線がつくGCには必ず加速度もつく／視線・加速度はそれぞれ早遅どちらか一方。
+    // （加速度だけがつくケースは許容する。）過去の不整合な保存状態もここで解消し、ソフトロックを防ぐ。
+    if (localState.gc1_sight) { localState.gc1_bomb = true; localState.gc2_sight = false; localState.gc2_bomb = false; }
+    else if (localState.gc2_sight) { localState.gc2_bomb = true; localState.gc1_sight = false; localState.gc1_bomb = false; }
+    else if (localState.gc1_bomb && localState.gc2_bomb) { localState.gc2_bomb = false; }
 }
 
 // 個人デバフ状態を保存
@@ -899,29 +900,39 @@ document.getElementById('row-2-lightning').addEventListener('pointerdown', (e) =
 });
 
 // 視線・加速度の行クリック
-// 視線と加速度は各グランドクロスで必ず同時につく（同じGC）ため、どちらの行を押しても
-// 同一GCの視線・加速度を連動してトグルする。GC1/GC2のクロス排他は維持する。
-function toggleSightBomb(gc) {
+// 視線がつくと必ず同じGCに加速度もつく（が、加速度だけがつくケースもある）。
+// ・視線を押す → 同じGCの視線＋加速度をオン（外すと加速度は単独で残る）
+// ・加速度を押す → そのGCの加速度のみをトグル（外すと同じGCの視線も外れる）
+// 視線・加速度はそれぞれ早(GC1)・遅(GC2)どちらか一方のクロス排他を維持する。
+function clickSight(gc) {
     const other = gc === 1 ? 2 : 1;
-    if (localState[`gc${other}_sight`] || localState[`gc${other}_bomb`]) return; // 他方GC選択中は押せない
-    const next = !(localState[`gc${gc}_sight`] && localState[`gc${gc}_bomb`]);
-    localState[`gc${gc}_sight`] = next;
-    localState[`gc${gc}_bomb`] = next;
+    if (localState[`gc${other}_sight`]) return; // 視線は早・遅どちらか一方
+    if (localState[`gc${gc}_sight`]) {
+        localState[`gc${gc}_sight`] = false; // 視線だけ外す（加速度は単独で残す）
+    } else {
+        if (localState[`gc${other}_bomb`]) return; // 反対側に加速度がある間は視線をつけられない
+        localState[`gc${gc}_sight`] = true;
+        localState[`gc${gc}_bomb`] = true;  // 視線には必ず同じGCの加速度が伴う
+    }
     saveLocalState();
     renderUI();
 }
-['row-1-sight', 'row-1-bomb'].forEach(id => {
-    document.getElementById(id).addEventListener('pointerdown', (e) => {
-        e.preventDefault();
-        toggleSightBomb(1);
-    });
-});
-['row-2-sight', 'row-2-bomb'].forEach(id => {
-    document.getElementById(id).addEventListener('pointerdown', (e) => {
-        e.preventDefault();
-        toggleSightBomb(2);
-    });
-});
+function clickBomb(gc) {
+    const other = gc === 1 ? 2 : 1;
+    if (localState[`gc${other}_bomb`]) return; // 加速度は早・遅どちらか一方
+    if (localState[`gc${gc}_bomb`]) {
+        localState[`gc${gc}_bomb`] = false;
+        localState[`gc${gc}_sight`] = false; // 加速度なしに視線は成立しない
+    } else {
+        localState[`gc${gc}_bomb`] = true;   // 加速度のみ（視線は伴わない場合もある）
+    }
+    saveLocalState();
+    renderUI();
+}
+document.getElementById('row-1-sight').addEventListener('pointerdown', (e) => { e.preventDefault(); clickSight(1); });
+document.getElementById('row-2-sight').addEventListener('pointerdown', (e) => { e.preventDefault(); clickSight(2); });
+document.getElementById('row-1-bomb').addEventListener('pointerdown', (e) => { e.preventDefault(); clickBomb(1); });
+document.getElementById('row-2-bomb').addEventListener('pointerdown', (e) => { e.preventDefault(); clickBomb(2); });
 
 // 5. リセットボタン
 document.getElementById('localResetBtn').addEventListener('pointerdown', (e) => {
