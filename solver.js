@@ -121,9 +121,16 @@ function renderUI() {
     row2Sight.classList.remove('active', 'inactive', 'sight-selected');
     if (localState.gc1_sight) {
         row1Sight.classList.add('active', 'sight-selected');
-        row2Sight.classList.add('inactive');
     } else if (localState.gc2_sight) {
         row2Sight.classList.add('active', 'sight-selected');
+    }
+    // 加速度がついた回が確定したら、反対側のGCに視線が来ることはないので
+    // その回の視線は選べない（グレーアウト＝inactive）ようにする。
+    // 例: 1回目に加速度を選んだら2回目の視線は選択不可。
+    // （視線がつく回は必ず加速度も伴うため、視線選択時のクロス排他もこれで成立する）
+    if (localState.gc1_bomb) {
+        row2Sight.classList.add('inactive');
+    } else if (localState.gc2_bomb) {
         row1Sight.classList.add('inactive');
     }
 
