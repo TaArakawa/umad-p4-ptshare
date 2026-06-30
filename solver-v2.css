@@ -403,6 +403,9 @@ body.pc-mode .page-select {
     display: flex;
     align-items: center;
     justify-content: space-between; /* Push name to left, timing group to right */
+    /* 横幅が足りない時は早/遅トグルを名前の下へ折り返し、隣の真/偽列へ
+       はみ出してかぶらないようにする（特にPC表示で英名が出ると幅を食うため） */
+    flex-wrap: wrap;
     gap: 4px;
     font-weight: bold;
     color: #cbd5e1;
@@ -418,7 +421,41 @@ body.pc-mode .page-select {
     display: flex;
     align-items: center;
     gap: 3px;
+    min-width: 0;
+    /* 幅が足りない時は英名を折り返して隣の列へはみ出さないようにする。
+       極端に狭い時は (Lightning) のような長い英単語も折り返して
+       はみ出しを防ぐ（必要な時だけ単語内で改行）。 */
+    white-space: normal;
+    overflow-wrap: break-word;
 }
+
+.debuff-cell .timing-toggle-group {
+    flex: 0 0 auto;
+}
+
+/* PC表示で横幅が狭い時は、早/遅トグルを名前の「下の段」に全行統一で配置する。
+   PC表示は英名 (Water)/(Lightning) を出すため横幅を食い、横並びのままだと
+   名前の長い雷だけトグルが下段に落ちて不揃いになる。名前側を1行まるごと
+   使わせ、トグルを次の行へ送ることで全行そろえ、真/偽列へのはみ出しも防ぐ。 */
+body.pc-mode .debuff-cell {
+    flex-wrap: wrap;
+}
+
+body.pc-mode .debuff-info {
+    flex-basis: 100%;
+}
+
+/* 横幅が十分にあるPC表示では、早/遅トグルを名前の「横」に並べる。
+   一番長い「雷 (Lightning)」も横並びで余裕を持って収まる幅を閾値にし、
+   水・雷が同時に切り替わるようにして「雷だけ下段」になるのを防ぐ。
+   （実測では約1060pxまで横並びで収まるため、余裕とハブの余白差を見て
+   1100pxを閾値とする） */
+@media (min-width: 1100px) {
+    body.pc-mode .debuff-info {
+        flex-basis: auto;
+    }
+}
+
 
 .debuff-cell:hover {
     background-color: rgba(255, 255, 255, 0.05);
@@ -578,6 +615,16 @@ body.pc-mode .solver-table {
 body.pc-mode .solver-table th,
 body.pc-mode .solver-table td {
     padding: 12px 10px;
+}
+
+/* PC表示では真/偽の効果列を少し狭め、デバフ名＋早/遅トグルを横並びで
+   置けるようデバフ列（1列目）を広げる。効果テキストは短い（頭割/早見ない等）
+   ので20%でも収まる。 */
+body.pc-mode .solver-table th:nth-child(2),
+body.pc-mode .solver-table td:nth-child(2),
+body.pc-mode .solver-table th:nth-child(3),
+body.pc-mode .solver-table td:nth-child(3) {
+    width: 20%;
 }
 
 body.pc-mode .solver-table th {
@@ -837,4 +884,61 @@ body.pc-mode .solver-timeline {
     background-color: rgba(239, 68, 68, 0.18);
     border-color: var(--accent-false);
     color: var(--accent-false);
+}
+
+/* =====================================================================
+   背景色テーマ：ライト（白背景）
+   body.theme-light のとき CSS変数を白基調に差し替える。
+   真偽の緑/赤・ギミックの配色など「意味を持つ色」はそのまま維持し、
+   カード/表/タイムライン上の淡いグレー文字だけを濃色へ反転して可読性を保つ。
+   ===================================================================== */
+body.theme-light {
+    --bg-color: #eef1f5;
+    --card-bg: #ffffff;
+    --text-color: #1f2933;
+    --border-color: #cbd5e1;
+    --btn-idle: #e3e8f0;
+}
+
+/* カード/表/タイムラインの見出し・本文（暗色テーマでは淡いグレー）を濃色へ */
+body.theme-light .card-header h2,
+body.theme-light .solver-table th,
+body.theme-light .debuff-cell,
+body.theme-light .tl-name.ready,
+body.theme-light #v3-tl-step1 .tl-name,
+body.theme-light .tl-label,
+body.theme-light .debuff-row.active .debuff-cell.default-active {
+    color: #1f2933;
+}
+
+/* 二次的な文字（未点灯のタイムライン名など）は中間グレーで */
+body.theme-light .tl-name,
+body.theme-light .effect-cell {
+    color: #64748b;
+}
+
+body.theme-light .truth-btn,
+body.theme-light .toggle-btn {
+    color: #64748b;
+}
+
+/* タイトル（淡い緑）は白地で薄すぎるため濃い緑へ */
+body.theme-light h1 {
+    color: #047857;
+}
+
+/* 特別ハイライトのタイムラインカード（濃色 → 淡いアクセント色へ） */
+body.theme-light .timeline-item.ready {
+    background: linear-gradient(145deg, #ffffff, #ecfdf5);
+}
+body.theme-light #v3-tl-step1 {
+    background: linear-gradient(145deg, #ffffff, #eff6ff);
+}
+
+/* カード境界・区切り線は白地では見えないため淡いグレーに */
+body.theme-light .card {
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+}
+body.theme-light .card-header {
+    border-bottom-color: rgba(15, 23, 42, 0.10);
 }
