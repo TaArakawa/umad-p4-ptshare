@@ -821,14 +821,19 @@ body.pc-mode .solver-timeline {
 
 
 /* ギミックアイコンの点灯：ほのお・つなみ・雷床・氷床で真偽が選択されたらアイコンを光らせる（真=緑 / 偽=赤） */
-/* ギミック欄の点灯：真偽が選択されたらギミックのセルをGCのように色付け（真=緑 / 偽=赤）。
-   GCのアクティブ青(.debuff-row.active .debuff-cell)より優先度を上げて上書きする。 */
-.debuff-row.active .debuff-cell.lit-true {
+/* ギミック欄はデフォルトでは無強調（GCの未選択セルと同じ）。ギミック行は常時 active のため、
+   .default-active で GC のアクティブ青を打ち消し、真偽選択時のみ lit-* で緑/赤に点灯させる。 */
+.debuff-row.active .debuff-cell.default-active {
+    background-color: transparent;
+    border-color: transparent;
+    color: #cbd5e1;
+}
+.debuff-row.active .debuff-cell.default-active.lit-true {
     background-color: rgba(34, 197, 94, 0.18);
     border-color: var(--accent-true);
     color: var(--accent-true);
 }
-.debuff-row.active .debuff-cell.lit-false {
+.debuff-row.active .debuff-cell.default-active.lit-false {
     background-color: rgba(239, 68, 68, 0.18);
     border-color: var(--accent-false);
     color: var(--accent-false);
