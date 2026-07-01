@@ -1,6 +1,14 @@
 (function() {
 let isOfflineMode = false;
 
+// オーバーレイモード（overlay.js）がPiPウィンドウへこのv3 UI一式を実体移動して
+// いる間は、この関数がその移動先document（PiPウィンドウ）を返す。通常時は
+// overlay.js が window.__overlayActiveDoc を設定しないため、常にこのウィンドウ
+// 自身の document を返し、既存の挙動は一切変わらない。
+function getActiveDocument() {
+    return window.__overlayActiveDoc || document;
+}
+
 // Firebase設定 (メインのapp.jsと同じ)
 const firebaseConfig = {
     apiKey: "AIzaSyCFKYzhiYnxDwXYiICGmw5xHNKK087ukwU",
@@ -91,13 +99,17 @@ function saveLocalState() {
 
 // UIの描画とハイライトの更新
 function renderUI() {
+    // オーバーレイモードでPiPウィンドウへ移動済みの場合は、その移動先document
+    // から要素を取得する（詳細は getActiveDocument() のコメントを参照）。
+    const activeDoc = getActiveDocument();
+
     // --- 1. デバフ行のアクティブ・非アクティブ（排他制御）の反映 ---
-    
+
     // 水・雷の排他制御
-    const row1Water = document.getElementById('row-1-water');
-    const row1Lightning = document.getElementById('row-1-lightning');
-    const row2Water = document.getElementById('row-2-water');
-    const row2Lightning = document.getElementById('row-2-lightning');
+    const row1Water = activeDoc.getElementById('row-1-water');
+    const row1Lightning = activeDoc.getElementById('row-1-lightning');
+    const row2Water = activeDoc.getElementById('row-2-water');
+    const row2Lightning = activeDoc.getElementById('row-2-lightning');
 
     row1Water.classList.remove('active', 'inactive');
     row1Lightning.classList.remove('active', 'inactive');
@@ -125,8 +137,8 @@ function renderUI() {
     }
 
     // 視線の排他制御
-    const row1Sight = document.getElementById('row-1-sight');
-    const row2Sight = document.getElementById('row-2-sight');
+    const row1Sight = activeDoc.getElementById('row-1-sight');
+    const row2Sight = activeDoc.getElementById('row-2-sight');
     row1Sight.classList.remove('active', 'inactive', 'sight-selected');
     row2Sight.classList.remove('active', 'inactive', 'sight-selected');
     if (localState.gc1_sight) {
@@ -145,8 +157,8 @@ function renderUI() {
     }
 
     // 加速度の排他制御
-    const row1Bomb = document.getElementById('row-1-bomb');
-    const row2Bomb = document.getElementById('row-2-bomb');
+    const row1Bomb = activeDoc.getElementById('row-1-bomb');
+    const row2Bomb = activeDoc.getElementById('row-2-bomb');
     row1Bomb.classList.remove('active', 'inactive');
     row2Bomb.classList.remove('active', 'inactive');
     if (localState.gc1_bomb) {
@@ -160,14 +172,14 @@ function renderUI() {
     // --- 2. ボス「真・偽」トグルボタンのアクティブ表示 ---
     const keys = ['gc1', 'gc2', 'fire', 'tsunami', 'lineLightning', 'iceFan'];
     keys.forEach(k => {
-        const btnTrue = document.getElementById(`${k}-true`);
-        const btnFalse = document.getElementById(`${k}-false`);
+        const btnTrue = activeDoc.getElementById(`${k}-true`);
+        const btnFalse = activeDoc.getElementById(`${k}-false`);
         btnTrue.classList.remove('active-true');
         btnFalse.classList.remove('active-false');
 
         // カラムヘッダー (GC1 & GC2 のみ)
-        const hdrTrue = document.getElementById(`${k}-hdr-true`);
-        const hdrFalse = document.getElementById(`${k}-hdr-false`);
+        const hdrTrue = activeDoc.getElementById(`${k}-hdr-true`);
+        const hdrFalse = activeDoc.getElementById(`${k}-hdr-false`);
         if (hdrTrue && hdrFalse) {
             hdrTrue.classList.remove('active-true', 'inactive-header');
             hdrFalse.classList.remove('active-false', 'inactive-header');
@@ -197,8 +209,8 @@ function renderUI() {
         { key: 'gc2_lightning', id: 'gc2-lightning' }
     ];
     timingKeys.forEach(item => {
-        const btnEarly = document.getElementById(`${item.id}-early`);
-        const btnLate = document.getElementById(`${item.id}-late`);
+        const btnEarly = activeDoc.getElementById(`${item.id}-early`);
+        const btnLate = activeDoc.getElementById(`${item.id}-late`);
         if (btnEarly && btnLate) {
             btnEarly.classList.remove('active-early');
             btnLate.classList.remove('active-late');
@@ -215,7 +227,7 @@ function renderUI() {
     // --- 4. 解決策セルのハイライト計算とクラス適用 ---
     
     // 全てのエフェクトセルのハイライトを一括クリア
-    document.querySelectorAll('.effect-cell').forEach(el => {
+    activeDoc.querySelectorAll('.effect-cell').forEach(el => {
         el.classList.remove('highlight-true', 'highlight-false');
     });
 
@@ -224,19 +236,19 @@ function renderUI() {
         const isTrue = bossState.gc1_truth === 'true';
         // 水
         if (localState.gc1_water_lightning === 'water') {
-            document.getElementById(isTrue ? '1-water-true' : '1-water-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+            activeDoc.getElementById(isTrue ? '1-water-true' : '1-water-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
         // 雷
         if (localState.gc1_water_lightning === 'lightning') {
-            document.getElementById(isTrue ? '1-lightning-true' : '1-lightning-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+            activeDoc.getElementById(isTrue ? '1-lightning-true' : '1-lightning-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
         // 視線
         if (localState.gc1_sight) {
-            document.getElementById(isTrue ? '1-sight-true' : '1-sight-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+            activeDoc.getElementById(isTrue ? '1-sight-true' : '1-sight-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
         // 加速度
         if (localState.gc1_bomb) {
-            document.getElementById(isTrue ? '1-bomb-true' : '1-bomb-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+            activeDoc.getElementById(isTrue ? '1-bomb-true' : '1-bomb-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
     }
 
@@ -245,44 +257,44 @@ function renderUI() {
         const isTrue = bossState.gc2_truth === 'true';
         // 水
         if (localState.gc2_water_lightning === 'water') {
-            document.getElementById(isTrue ? '2-water-true' : '2-water-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+            activeDoc.getElementById(isTrue ? '2-water-true' : '2-water-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
         // 雷
         if (localState.gc2_water_lightning === 'lightning') {
-            document.getElementById(isTrue ? '2-lightning-true' : '2-lightning-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+            activeDoc.getElementById(isTrue ? '2-lightning-true' : '2-lightning-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
         // 視線
         if (localState.gc2_sight) {
-            document.getElementById(isTrue ? '2-sight-true' : '2-sight-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+            activeDoc.getElementById(isTrue ? '2-sight-true' : '2-sight-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
         // 加速度
         if (localState.gc2_bomb) {
-            document.getElementById(isTrue ? '2-bomb-true' : '2-bomb-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+            activeDoc.getElementById(isTrue ? '2-bomb-true' : '2-bomb-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
         }
     }
 
     // ほのお
     if (bossState.fire_truth && bossState.fire_truth !== 'none') {
         const isTrue = bossState.fire_truth === 'true';
-        document.getElementById(isTrue ? 'fire-resolver-true' : 'fire-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+        activeDoc.getElementById(isTrue ? 'fire-resolver-true' : 'fire-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
     }
 
     // つなみ
     if (bossState.tsunami_truth && bossState.tsunami_truth !== 'none') {
         const isTrue = bossState.tsunami_truth === 'true';
-        document.getElementById(isTrue ? 'tsunami-resolver-true' : 'tsunami-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+        activeDoc.getElementById(isTrue ? 'tsunami-resolver-true' : 'tsunami-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
     }
 
     // 雷床
     if (bossState.lineLightning_truth && bossState.lineLightning_truth !== 'none') {
         const isTrue = bossState.lineLightning_truth === 'true';
-        document.getElementById(isTrue ? 'lineLightning-resolver-true' : 'lineLightning-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+        activeDoc.getElementById(isTrue ? 'lineLightning-resolver-true' : 'lineLightning-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
     }
 
     // 氷床
     if (bossState.iceFan_truth && bossState.iceFan_truth !== 'none') {
         const isTrue = bossState.iceFan_truth === 'true';
-        document.getElementById(isTrue ? 'iceFan-resolver-true' : 'iceFan-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
+        activeDoc.getElementById(isTrue ? 'iceFan-resolver-true' : 'iceFan-resolver-false').classList.add(isTrue ? 'highlight-true' : 'highlight-false');
     }
 
     // ギミック欄の点灯（真偽が選択されたらギミックのセルをGCのように色付け：真=緑 / 偽=赤）
@@ -292,7 +304,7 @@ function renderUI() {
         ['card-lineLightning', bossState.lineLightning_truth],
         ['card-iceFan', bossState.iceFan_truth]
     ].forEach(([cardId, truth]) => {
-        const card = document.getElementById(cardId);
+        const card = activeDoc.getElementById(cardId);
         if (!card) return;
         const cell = card.querySelector('.debuff-cell');
         if (!cell) return;
@@ -307,6 +319,8 @@ function renderUI() {
 
 // 時系列タイムラインの更新
 function updateTimeline() {
+    const activeDoc = getActiveDocument();
+
     const getPill = (text, type) => {
         return `<span class="badge-pill pill-${type}">${text}</span>`;
     };
@@ -336,7 +350,7 @@ function updateTimeline() {
     };
 
     const setStepReady = (stepId, isReady) => {
-        const item = document.getElementById(stepId);
+        const item = activeDoc.getElementById(stepId);
         if (item) {
             if (isReady) {
                 item.classList.add('ready');
@@ -358,7 +372,7 @@ function updateTimeline() {
     setStepReady('v3-tl-step1', true);
 
     // Step 2: 早水 ＆ 早雷
-    const t2 = document.getElementById('v3-tl-res-earlyWaterLightning');
+    const t2 = activeDoc.getElementById('v3-tl-res-earlyWaterLightning');
     if (t2) {
         const ready = isValReady(currentState.earlyWater) && isValReady(currentState.earlyLightning);
         setStepReady('v3-tl-step2', ready);
@@ -368,7 +382,7 @@ function updateTimeline() {
     }
 
     // Step 3: 早視線 ＆ 雷床記録
-    const t3 = document.getElementById('v3-tl-res-earlyEyeLightningFloor');
+    const t3 = activeDoc.getElementById('v3-tl-res-earlyEyeLightningFloor');
     if (t3) {
         const ready = isValReady(currentState.earlyEye) && isValReady(currentState.lineLightning);
         setStepReady('v3-tl-step3', ready);
@@ -378,7 +392,7 @@ function updateTimeline() {
     }
 
     // Step 4: ほのお
-    const t4 = document.getElementById('v3-tl-res-fire');
+    const t4 = activeDoc.getElementById('v3-tl-res-fire');
     if (t4) {
         const ready = isValReady(currentState.fire);
         setStepReady('v3-tl-step4', ready);
@@ -387,7 +401,7 @@ function updateTimeline() {
     }
 
     // Step 5: 遅水 ＆ 遅雷 ＆ 氷床記録
-    const t5 = document.getElementById('v3-tl-res-lateWaterLightningIceFloor');
+    const t5 = activeDoc.getElementById('v3-tl-res-lateWaterLightningIceFloor');
     if (t5) {
         const ready = isValReady(currentState.lateWater) && isValReady(currentState.lateLightning) && isValReady(currentState.iceFan);
         setStepReady('v3-tl-step5', ready);
@@ -398,7 +412,7 @@ function updateTimeline() {
     }
 
     // Step 6: 遅視線
-    const t6 = document.getElementById('v3-tl-res-lateEye');
+    const t6 = activeDoc.getElementById('v3-tl-res-lateEye');
     if (t6) {
         const ready = isValReady(currentState.lateEye);
         setStepReady('v3-tl-step6', ready);
@@ -407,7 +421,7 @@ function updateTimeline() {
     }
 
     // Step 7: つなみ ＆ 雷床 ＆ 氷床
-    const t7 = document.getElementById('v3-tl-res-waterLightningIceFloor');
+    const t7 = activeDoc.getElementById('v3-tl-res-waterLightningIceFloor');
     if (t7) {
         const ready = isValReady(currentState.water) && isValReady(currentState.lineLightning) && isValReady(currentState.iceFan);
         setStepReady('v3-tl-step7', ready);
@@ -500,11 +514,12 @@ function applyFirebaseData(data) {
     };
 
     if (!isInitialLoad) {
+        const activeDoc = getActiveDocument();
         Object.keys(currentTruths).forEach(key => {
             const oldValue = prevTruths[key];
             const newValue = currentTruths[key];
             if (oldValue !== newValue) {
-                const card = document.getElementById(`card-${key}`);
+                const card = activeDoc.getElementById(`card-${key}`);
                 if (card) {
                     triggerPulse(card);
                 }
@@ -995,18 +1010,22 @@ renderUI();
 
 // UIモード切り替え
 window.setMode = function (mode) {
-    const btnMobile = document.getElementById('btn-mode-mobile');
-    const btnPc = document.getElementById('btn-mode-pc');
+    // オーバーレイモードでPiPウィンドウへ移動済みの場合、スマホ/PCボタンや
+    // body.pc-modeクラスもその移動先document（PiPウィンドウ自身のbody）に
+    // 対して切り替える必要がある。
+    const activeDoc = getActiveDocument();
+    const btnMobile = activeDoc.getElementById('btn-mode-mobile');
+    const btnPc = activeDoc.getElementById('btn-mode-pc');
 
     if (mode === 'pc' || mode === 'hud') {
-        document.body.classList.add('pc-mode');
+        activeDoc.body.classList.add('pc-mode');
         if (btnMobile) btnMobile.classList.remove('active');
         if (btnPc) btnPc.classList.add('active');
         try {
             localStorage.setItem('kfk_shared_ui_mode', 'pc');
         } catch (e) {}
     } else {
-        document.body.classList.remove('pc-mode');
+        activeDoc.body.classList.remove('pc-mode');
         if (btnMobile) btnMobile.classList.add('active');
         if (btnPc) btnPc.classList.remove('active');
         try {
