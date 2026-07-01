@@ -174,11 +174,13 @@ h1 {
     background-color: #3f4e66;
 }
 
-body.pc-mode .page-select {
-    font-size: 0.9rem;
-    padding: 6px 28px 6px 10px;
-    background-position: right 10px center;
-    margin-right: 8px;
+@media (min-width: 768px) {
+    body.pc-mode .page-select {
+        font-size: 0.9rem;
+        padding: 6px 28px 6px 10px;
+        background-position: right 10px center;
+        margin-right: 8px;
+    }
 }
 
 /* メイングリッド */
@@ -451,12 +453,14 @@ body.pc-mode .page-select {
    PC表示は英名 (Water)/(Lightning) を出すため横幅を食い、横並びのままだと
    名前の長い雷だけトグルが下段に落ちて不揃いになる。名前側を1行まるごと
    使わせ、トグルを次の行へ送ることで全行そろえ、真/偽列へのはみ出しも防ぐ。 */
-body.pc-mode .debuff-cell {
-    flex-wrap: wrap;
-}
+@media (min-width: 768px) {
+    body.pc-mode .debuff-cell {
+        flex-wrap: wrap;
+    }
 
-body.pc-mode .debuff-info {
-    flex-basis: 100%;
+    body.pc-mode .debuff-info {
+        flex-basis: 100%;
+    }
 }
 
 /* 横幅が十分にあるPC表示では、早/遅トグルを名前の「横」に並べる。
@@ -549,155 +553,170 @@ body.pc-mode .debuff-info {
    PC版 (PCモード) スタイルオーバーライド
    ========================================================================== */
 
-body.pc-mode {
-    padding: 15px;
-    height: 100vh;
-    overflow: auto;
-}
+@media (min-width: 768px) {
+    body.pc-mode {
+        padding: 15px;
+        height: 100vh;
+        overflow: auto;
+    }
 
-body.pc-mode .container {
-    max-width: 1200px;
-    height: auto;
-    gap: 15px;
-    overflow: visible;
-}
+    body.pc-mode .container {
+        max-width: 1200px;
+        height: auto;
+        gap: 15px;
+        overflow: visible;
+    }
 
-body.pc-mode .solver-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 12px;
-    gap: 10px;
-}
+    body.pc-mode .solver-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 12px;
+        gap: 10px;
+    }
 
-body.pc-mode .header-left {
-    flex-direction: row;
-    align-items: center;
-    gap: 15px;
-}
+    body.pc-mode .header-left {
+        flex-direction: row;
+        align-items: center;
+        gap: 15px;
+    }
 
-body.pc-mode .header-right {
-    justify-content: flex-end;
-    gap: 15px;
-}
+    body.pc-mode .header-right {
+        justify-content: flex-end;
+        gap: 15px;
+    }
 
-body.pc-mode .back-link {
-    font-size: 0.95rem;
-}
+    body.pc-mode .back-link {
+        font-size: 0.95rem;
+    }
 
-body.pc-mode h1 {
-    font-size: 1.25rem;
-}
+    body.pc-mode h1 {
+        font-size: 1.25rem;
+    }
 
-body.pc-mode .toggle-btn {
-    font-size: 0.95rem;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
+    body.pc-mode .toggle-btn {
+        font-size: 0.95rem;
+        padding: 6px 12px;
+        border-radius: 4px;
+    }
 
-body.pc-mode .reset-btn {
-    font-size: 0.95rem;
-    padding: 8px 16px;
-    border-radius: 6px;
-}
+    body.pc-mode .reset-btn {
+        font-size: 0.95rem;
+        padding: 8px 16px;
+        border-radius: 6px;
+    }
 
-body.pc-mode .solver-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    overflow: visible;
-}
+    body.pc-mode .solver-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        overflow: visible;
+    }
 
-body.pc-mode #card-gc1, 
-body.pc-mode #card-gc2 {
-    grid-column: span 1; /* PC版では左右に並べる */
-}
+    body.pc-mode #card-gc1, 
+    body.pc-mode #card-gc2 {
+        grid-column: span 1; /* PC版では左右に並べる */
+    }
 
-body.pc-mode .card {
-    padding: 20px;
-    border-radius: 16px;
-    gap: 12px;
-}
+    body.pc-mode .card {
+        padding: 20px;
+        border-radius: 16px;
+        gap: 12px;
+    }
 
-body.pc-mode .card-header h2 {
-    font-size: 1.2rem;
-}
+    body.pc-mode .card-header h2 {
+        font-size: 1.2rem;
+    }
 
-body.pc-mode .solver-table {
-    font-size: 0.95rem;
-}
+    body.pc-mode .solver-table {
+        font-size: 0.95rem;
+    }
 
-body.pc-mode .solver-table th,
-body.pc-mode .solver-table td {
-    padding: 12px 10px;
-}
+    body.pc-mode .solver-table th,
+    body.pc-mode .solver-table td {
+        padding: 12px 10px;
+    }
 
-/* PC表示では真/偽の効果列を少し狭め、デバフ名＋早/遅トグルを横並びで
-   置けるようデバフ列（1列目）を広げる。効果テキストは短い（頭割/早見ない等）
-   ので20%でも収まる。 */
-body.pc-mode .solver-table th:nth-child(2),
-body.pc-mode .solver-table td:nth-child(2),
-body.pc-mode .solver-table th:nth-child(3),
-body.pc-mode .solver-table td:nth-child(3) {
-    width: 20%;
-}
+    /* PC表示では真/偽の効果列を少し狭め、デバフ名＋早/遅トグルを横並びで
+       置けるようデバフ列（1列目）を広げる。効果テキストは短い（頭割/早見ない等）
+       ので20%でも収まる。 */
+    body.pc-mode .solver-table th:nth-child(2),
+    body.pc-mode .solver-table td:nth-child(2),
+    body.pc-mode .solver-table th:nth-child(3),
+    body.pc-mode .solver-table td:nth-child(3) {
+        width: 20%;
+    }
 
-body.pc-mode .solver-table th {
-    font-size: 0.85rem;
-    padding-bottom: 10px;
-}
+    /* ほのお/つなみ/雷床/氷床カード(card-half)内のテーブルは、PCモードかつ狭い画面でも潰れないよう、
+       モバイル用の34%/33%/33%の列幅配分を明示的に上書き指定する */
+    body.pc-mode .card-half .solver-table th:nth-child(1),
+    body.pc-mode .card-half .solver-table td:nth-child(1) {
+        width: 34%;
+    }
+    body.pc-mode .card-half .solver-table th:nth-child(2),
+    body.pc-mode .card-half .solver-table td:nth-child(2),
+    body.pc-mode .card-half .solver-table th:nth-child(3),
+    body.pc-mode .card-half .solver-table td:nth-child(3) {
+        width: 33%;
+    }
 
-body.pc-mode .debuff-cell {
-    font-size: 1.05rem;
-    padding: 8px;
-    gap: 8px;
-}
+    body.pc-mode .solver-table th {
+        font-size: 0.85rem;
+        padding-bottom: 10px;
+    }
 
-body.pc-mode .debuff-cell span {
-    font-size: 1.05rem;
-}
+    body.pc-mode .debuff-cell {
+        font-size: 1.05rem;
+        padding: 8px;
+        gap: 8px;
+    }
 
-body.pc-mode .debuff-icon {
-    width: 32px;
-    height: 32px;
-}
+    body.pc-mode .debuff-cell span {
+        font-size: 1.05rem;
+    }
 
-body.pc-mode .debuff-icon-emoji {
-    width: 32px;
-    height: 32px;
-    font-size: 20px;
-    border-radius: 4px;
-}
+    body.pc-mode .debuff-icon {
+        width: 32px;
+        height: 32px;
+    }
 
-body.pc-mode .timing-toggle-group {
-    max-width: 120px;
-}
+    body.pc-mode .debuff-icon-emoji {
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+        border-radius: 4px;
+    }
 
-body.pc-mode .timing-btn {
-    padding: 8px 16px;
-    font-size: 1.05rem;
-}
+    body.pc-mode .timing-toggle-group {
+        max-width: 120px;
+    }
 
-body.pc-mode .effect-cell {
-    font-size: 1.0rem;
-    padding: 10px;
-}
+    body.pc-mode .timing-btn {
+        padding: 8px 16px;
+        font-size: 1.05rem;
+    }
 
-body.pc-mode .debuff-row.active .effect-cell.highlight-true,
-body.pc-mode .debuff-row.active .effect-cell.highlight-false {
-    font-size: 1.15rem;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
-}
+    body.pc-mode .effect-cell {
+        font-size: 1.0rem;
+        padding: 10px;
+    }
 
-body.pc-mode .en-text {
-    display: inline;
-}
+    body.pc-mode .debuff-row.active .effect-cell.highlight-true,
+    body.pc-mode .debuff-row.active .effect-cell.highlight-false {
+        font-size: 1.15rem;
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+    }
 
-body.pc-mode .sp-text {
-    display: none;
-}
+    body.pc-mode .en-text {
+        display: inline;
+    }
 
-body.pc-mode .pc-text {
-    display: inline;
+    body.pc-mode .sp-text {
+        display: none;
+    }
+
+    body.pc-mode .pc-text {
+        display: inline;
+    }
 }
 
 /* リアルタイム同期時のパルス（発光）エフェクト */
@@ -724,14 +743,16 @@ body.pc-mode .pc-text {
 }
 
 /* PC版のタイムラインスタイル (最下部に表示) */
-body.pc-mode .solver-timeline {
-    display: flex !important;
-    grid-column: 1 / -1;
-    margin-top: 15px;
-    width: 100%;
-    border-top: 1px solid var(--border-color);
-    padding-top: 10px;
-    flex-direction: column;
+@media (min-width: 768px) {
+    body.pc-mode .solver-timeline {
+        display: flex !important;
+        grid-column: 1 / -1;
+        margin-top: 15px;
+        width: 100%;
+        border-top: 1px solid var(--border-color);
+        padding-top: 10px;
+        flex-direction: column;
+    }
 }
 
 .timeline-list {
