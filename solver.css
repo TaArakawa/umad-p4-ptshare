@@ -174,11 +174,13 @@ h1 {
     background-color: #3f4e66;
 }
 
-body.pc-mode .page-select {
-    font-size: 0.9rem;
-    padding: 6px 28px 6px 10px;
-    background-position: right 10px center;
-    margin-right: 8px;
+@media (min-width: 768px) {
+    body.pc-mode .page-select {
+        font-size: 0.9rem;
+        padding: 6px 28px 6px 10px;
+        background-position: right 10px center;
+        margin-right: 8px;
+    }
 }
 
 /* メイングリッド (モバイルでもほのお/つなみ/雷床/氷床は2カラム並び) */
@@ -448,138 +450,140 @@ body.pc-mode .page-select {
    PC版 (PCモード) スタイルオーバーライド（大画面用にサイズを戻して最適化）
    ========================================================================== */
 
-body.pc-mode {
-    padding: 15px;
-    height: 100vh;
-    overflow: auto;
-}
+@media (min-width: 768px) {
+    body.pc-mode {
+        padding: 15px;
+        height: 100vh;
+        overflow: auto;
+    }
 
-body.pc-mode .container {
-    max-width: 1200px;
-    height: auto;
-    gap: 15px;
-    overflow: visible;
-}
+    body.pc-mode .container {
+        max-width: 1200px;
+        height: auto;
+        gap: 15px;
+        overflow: visible;
+    }
 
-body.pc-mode .solver-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 12px;
-    gap: 10px;
-}
+    body.pc-mode .solver-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 12px;
+        gap: 10px;
+    }
 
-body.pc-mode .header-left {
-    flex-direction: row;
-    align-items: center;
-    gap: 15px;
-}
+    body.pc-mode .header-left {
+        flex-direction: row;
+        align-items: center;
+        gap: 15px;
+    }
 
-body.pc-mode .header-right {
-    justify-content: flex-end;
-    gap: 15px;
-}
+    body.pc-mode .header-right {
+        justify-content: flex-end;
+        gap: 15px;
+    }
 
-body.pc-mode .back-link {
-    font-size: 0.95rem;
-}
+    body.pc-mode .back-link {
+        font-size: 0.95rem;
+    }
 
-body.pc-mode h1 {
-    font-size: 1.25rem;
-}
+    body.pc-mode h1 {
+        font-size: 1.25rem;
+    }
 
-body.pc-mode .toggle-btn {
-    font-size: 0.95rem;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
+    body.pc-mode .toggle-btn {
+        font-size: 0.95rem;
+        padding: 6px 12px;
+        border-radius: 4px;
+    }
 
-body.pc-mode .reset-btn {
-    font-size: 0.95rem;
-    padding: 8px 16px;
-    border-radius: 6px;
-}
+    body.pc-mode .reset-btn {
+        font-size: 0.95rem;
+        padding: 8px 16px;
+        border-radius: 6px;
+    }
 
-body.pc-mode .solver-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    overflow: visible;
-}
+    body.pc-mode .solver-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        overflow: visible;
+    }
 
-body.pc-mode #card-gc1, 
-body.pc-mode #card-gc2 {
-    grid-column: span 1; /* PC版では左右に並べる */
-}
+    body.pc-mode #card-gc1, 
+    body.pc-mode #card-gc2 {
+        grid-column: span 1; /* PC版では左右に並べる */
+    }
 
-body.pc-mode .card {
-    padding: 20px;
-    border-radius: 16px;
-    gap: 12px;
-}
+    body.pc-mode .card {
+        padding: 20px;
+        border-radius: 16px;
+        gap: 12px;
+    }
 
-body.pc-mode .card-header h2 {
-    font-size: 1.2rem;
-}
+    body.pc-mode .card-header h2 {
+        font-size: 1.2rem;
+    }
 
-body.pc-mode .truth-btn {
-    font-size: 0.95rem;
-    padding: 4px 12px;
-    border-radius: 5px;
-}
+    body.pc-mode .truth-btn {
+        font-size: 0.95rem;
+        padding: 4px 12px;
+        border-radius: 5px;
+    }
 
-body.pc-mode .solver-table {
-    font-size: 0.95rem;
-}
+    body.pc-mode .solver-table {
+        font-size: 0.95rem;
+    }
 
-body.pc-mode .solver-table th,
-body.pc-mode .solver-table td {
-    padding: 12px 10px;
-}
+    body.pc-mode .solver-table th,
+    body.pc-mode .solver-table td {
+        padding: 12px 10px;
+    }
 
-body.pc-mode .solver-table th {
-    font-size: 0.85rem;
-    padding-bottom: 10px;
-}
+    body.pc-mode .solver-table th {
+        font-size: 0.85rem;
+        padding-bottom: 10px;
+    }
 
-body.pc-mode .debuff-cell {
-    font-size: 1.05rem;
-    padding: 8px;
-    gap: 8px;
-}
+    body.pc-mode .debuff-cell {
+        font-size: 1.05rem;
+        padding: 8px;
+        gap: 8px;
+    }
 
-body.pc-mode .debuff-icon {
-    width: 32px;
-    height: 32px;
-}
+    body.pc-mode .debuff-icon {
+        width: 32px;
+        height: 32px;
+    }
 
-body.pc-mode .debuff-icon-emoji {
-    width: 32px;
-    height: 32px;
-    font-size: 20px;
-    border-radius: 4px;
-}
+    body.pc-mode .debuff-icon-emoji {
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+        border-radius: 4px;
+    }
 
-body.pc-mode .effect-cell {
-    font-size: 1.0rem;
-    padding: 10px;
-}
+    body.pc-mode .effect-cell {
+        font-size: 1.0rem;
+        padding: 10px;
+    }
 
-body.pc-mode .debuff-row.active .effect-cell.highlight-true,
-body.pc-mode .debuff-row.active .effect-cell.highlight-false {
-    font-size: 1.15rem;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
-}
+    body.pc-mode .debuff-row.active .effect-cell.highlight-true,
+    body.pc-mode .debuff-row.active .effect-cell.highlight-false {
+        font-size: 1.15rem;
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+    }
 
-body.pc-mode .en-text {
-    display: inline;
-}
+    body.pc-mode .en-text {
+        display: inline;
+    }
 
-body.pc-mode .sp-text {
-    display: none;
-}
+    body.pc-mode .sp-text {
+        display: none;
+    }
 
-body.pc-mode .pc-text {
-    display: inline;
+    body.pc-mode .pc-text {
+        display: inline;
+    }
 }
 
 /* リアルタイム同期時のパルス（発光）エフェクト */
