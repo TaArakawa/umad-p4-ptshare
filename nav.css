@@ -18,12 +18,21 @@ body.pc-mode {
     height: 100dvh;
 }
 
-/* バージョン表示：常に画面右上に固定。GitHubの最新コミットをnav.jsが取得して書き込む。 */
-.version-badge {
+/* 右上の固定コントロール群（バージョン表示＋オーバーレイボタン）をまとめて
+   1箇所だけ画面右上に固定し、横並びにする。個々の子要素はもう position:fixed
+   を持たない（このコンテナ側にまとめたため、子同士が重なることはない）。 */
+.top-right-controls {
     position: fixed;
-    top: 6px;
+    top: 3px;
     right: 8px;
     z-index: 2000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* バージョン表示：GitHubの最新コミットをnav.jsが取得して書き込む。 */
+.version-badge {
     padding: 3px 7px;
     background: rgba(21, 21, 28, 0.85);
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -170,6 +179,57 @@ body.pc-mode .phase-tab {
     min-width: 140px;
     padding: 12px 28px;
     font-size: 1.15rem;
+}
+
+/* オーバーレイモード切替ボタン（Document Picture-in-Picture）。
+   .top-right-controls（フレックスコンテナ）内に version-badge と横並びで
+   配置されるため、position は持たずコンテナ側の固定配置に任せる。 */
+.overlay-mode-btn {
+    padding: 3px 9px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #cfd2dc;
+    background: #2a2a35;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.overlay-mode-btn:hover:not(:disabled) {
+    background: #3b6fe0;
+    border-color: #6f9bff;
+    color: #ffffff;
+}
+
+.overlay-mode-btn:disabled {
+    color: #6b7280;
+    background: #23232b;
+    border-color: rgba(255, 255, 255, 0.08);
+    cursor: not-allowed;
+}
+
+body.theme-light .overlay-mode-btn {
+    color: #1f2937;
+    background: #e5e7eb;
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+body.theme-light .overlay-mode-btn:disabled {
+    color: #9ca3af;
+    background: #f3f4f6;
+}
+
+/* オーバーレイモードがChromium系ブラウザ限定であることを示す常時表示ラベル */
+.overlay-mode-hint {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #8b93a8;
+    white-space: nowrap;
+}
+
+body.theme-light .overlay-mode-hint {
+    color: #6b7280;
 }
 
 .phase-view {

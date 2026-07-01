@@ -10,6 +10,14 @@ const safeStorage = {
     }
 };
 
+// オーバーレイモード（overlay.js）がPiPウィンドウへフェーズ表示要素一式を
+// 実体移動している間は、この関数がその移動先document（PiPウィンドウ）を返す。
+// 通常時は overlay.js が window.__overlayActiveDoc を設定しないため、
+// 常にこのウィンドウ自身の document を返し、既存の挙動は一切変わらない。
+function getActiveDocument() {
+    return window.__overlayActiveDoc || document;
+}
+
 const firebaseConfig = {
   apiKey: "AIzaSyCFKYzhiYnxDwXYiICGmw5xHNKK087ukwU",
   authDomain: "umad-p4-ptshare.firebaseapp.com",
@@ -69,7 +77,7 @@ const P4_IMPL_KEY = 'kfk_p4_impl';
 window.setP4Impl = (impl) => {
     if (!['v1', 'v2', 'v3'].includes(impl)) impl = 'v3';
 
-    document.querySelectorAll('.p4-impl-pane').forEach(pane => {
+    getActiveDocument().querySelectorAll('.p4-impl-pane').forEach(pane => {
         const active = pane.dataset.impl === impl;
         pane.style.display = active ? '' : 'none';
         if (active) {
@@ -90,7 +98,7 @@ window.setP4Impl = (impl) => {
         }
     });
 
-    const select = document.getElementById('p4-impl-select');
+    const select = getActiveDocument().getElementById('p4-impl-select');
     if (select) select.value = impl;
 
     try {
@@ -105,11 +113,11 @@ const P2_VIEW_KEY = 'kfk_p2_view';
 window.setP2View = (view) => {
     if (!['odd', 'even'].includes(view)) view = 'odd';
 
-    document.querySelectorAll('.p2-view-pane').forEach(pane => {
+    getActiveDocument().querySelectorAll('.p2-view-pane').forEach(pane => {
         pane.style.display = pane.dataset.view === view ? '' : 'none';
     });
 
-    document.querySelectorAll('.p2-gimmick-tab').forEach(tab => {
+    getActiveDocument().querySelectorAll('.p2-gimmick-tab').forEach(tab => {
         tab.classList.toggle('active', tab.dataset.view === view);
     });
 
@@ -125,11 +133,11 @@ const P5_GIMMICK_KEY = 'kfk_p5_gimmick';
 window.setP5Gimmick = (gimmick) => {
     if (!['timeline', 'aa', 'flood', 'orch', 'stars', 'exa', 'missing'].includes(gimmick)) gimmick = 'timeline';
 
-    document.querySelectorAll('.p5-gimmick-panel').forEach(panel => {
+    getActiveDocument().querySelectorAll('.p5-gimmick-panel').forEach(panel => {
         panel.style.display = panel.dataset.gimmick === gimmick ? '' : 'none';
     });
 
-    document.querySelectorAll('.p5-gimmick-tab').forEach(tab => {
+    getActiveDocument().querySelectorAll('.p5-gimmick-tab').forEach(tab => {
         tab.classList.toggle('active', tab.dataset.gimmick === gimmick);
     });
 
@@ -174,7 +182,7 @@ function applyFit(areaEl) {
 }
 
 function fitAll() {
-    document.querySelectorAll('.fit-area').forEach(applyFit);
+    getActiveDocument().querySelectorAll('.fit-area').forEach(applyFit);
 }
 
 let fitScheduled = false;
@@ -192,14 +200,15 @@ function scheduleFit() {
 let lastPhase = 'P1';
 
 function applyPhaseDisplay() {
-    const isPc = document.body.classList.contains('pc-mode');
+    const activeDoc = getActiveDocument();
+    const isPc = activeDoc.body.classList.contains('pc-mode') || document.body.classList.contains('pc-mode');
     const phase = isPc ? lastPhase : 'P4';
-    document.getElementById('view-p1').style.display = (phase === 'P1') ? '' : 'none';
-    document.getElementById('view-p2').style.display = (phase === 'P2') ? '' : 'none';
-    document.getElementById('view-p3').style.display = (phase === 'P3') ? '' : 'none';
-    document.getElementById('view-p4').style.display = (phase === 'P4') ? '' : 'none';
-    document.getElementById('view-p5').style.display = (phase === 'P5') ? '' : 'none';
-    document.querySelectorAll('.phase-tab').forEach(b =>
+    activeDoc.getElementById('view-p1').style.display = (phase === 'P1') ? '' : 'none';
+    activeDoc.getElementById('view-p2').style.display = (phase === 'P2') ? '' : 'none';
+    activeDoc.getElementById('view-p3').style.display = (phase === 'P3') ? '' : 'none';
+    activeDoc.getElementById('view-p4').style.display = (phase === 'P4') ? '' : 'none';
+    activeDoc.getElementById('view-p5').style.display = (phase === 'P5') ? '' : 'none';
+    activeDoc.querySelectorAll('.phase-tab').forEach(b =>
         b.classList.toggle('active', b.dataset.phase === phase));
 }
 

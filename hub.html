@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
     <title>絶妖星乱舞 カンペアプリ統合</title>
     <link rel="stylesheet" href="solver-v2.css?v=20260701d">
-    <link rel="stylesheet" href="nav.css?v=20260630g">
+    <link rel="stylesheet" href="nav.css?v=20260701a">
     <style>
         .sp-text { display: inline; }
         .pc-text { display: none; }
@@ -47,8 +47,23 @@
         }
     </script>
 
-    <!-- バージョン表示：GitHubの最新コミットを取得し、pushごとに自動更新される -->
-    <a id="version-badge" class="version-badge" href="https://github.com/TaArakawa/umad-p4-ptshare" target="_blank" rel="noopener" title="最新コミットを取得中...">v1.5.4 (最終更新日時: 2026-06-30 14:05)</a>
+    <!-- 右上の固定コントロール群。version-badge単体はposition:fixedだったが、
+         オーバーレイボタン追加に伴い、互いに重ならないよう共通のflexコンテナに
+         まとめて1箇所だけ固定配置するようにした。 -->
+    <div class="top-right-controls">
+        <!-- バージョン表示：GitHubの最新コミットを取得し、pushごとに自動更新される -->
+        <a id="version-badge" class="version-badge" href="https://github.com/TaArakawa/umad-p4-ptshare" target="_blank" rel="noopener" title="最新コミットを取得中...">v1.5.4 (最終更新日時: 2026-06-30 14:05)</a>
+
+        <!-- オーバーレイモード：カンペ本体（.hub-root）をDocument Picture-in-Picture
+             ウィンドウへ実体移動し、ゲーム画面より常に手前に表示する。
+             .hub-root の外に置くことで、移動後もこのボタン自体はメインウィンドウに
+             残り続け、PiP側からだけでなくこちらからも解除できる。
+             Document Picture-in-Picture APIはChrome/Edge等Chromium系ブラウザのみ
+             対応のため、その旨を常時表示しておく（非対応時はoverlay.js側で
+             ボタン自体もdisabledになる）。 -->
+        <span class="overlay-mode-hint">Chrome推奨</span>
+        <button id="overlay-mode-btn" class="overlay-mode-btn" type="button">オーバーレイモード</button>
+    </div>
 
     <div class="hub-root">
     <!-- フェーズタブ（常時表示・全員同期。画面最上部に固定） -->
@@ -1167,8 +1182,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <!-- Core Logic & Navigation (通常のスクリプトとして読み込むことで、file:// スキーム時の CORS ブロックを回避) -->
-    <script src="solver-v2.js?v=20260701c"></script>
-    <script src="nav.js?v=20260624"></script>
+    <script src="solver-v2.js?v=20260701d"></script>
+    <script src="nav.js?v=20260701b"></script>
     <script src="theme.js?v=20260630"></script>
+    <script src="overlay.js?v=20260701a"></script>
 </body>
 </html>
