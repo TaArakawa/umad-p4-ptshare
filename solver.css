@@ -310,6 +310,20 @@ body.pc-mode .page-select {
     white-space: nowrap;
 }
 
+/* ギミック名列はアイコン+短い単語のみで50%も要らないため縮小し、
+   判定結果列（例: 「そのまま」等4文字）がはみ出さないよう幅を回す */
+.card-half .solver-table th:nth-child(1),
+.card-half .solver-table td:nth-child(1) {
+    width: 34%;
+}
+
+.card-half .solver-table th:nth-child(2),
+.card-half .solver-table td:nth-child(2),
+.card-half .solver-table th:nth-child(3),
+.card-half .solver-table td:nth-child(3) {
+    width: 33%;
+}
+
 /* 真偽カラムヘッダーボタン */
 .truth-header-btn {
     cursor: pointer;
