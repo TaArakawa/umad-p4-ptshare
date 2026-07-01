@@ -363,8 +363,8 @@ function updateTimeline() {
         const ready = isValReady(currentState.earlyWater) && isValReady(currentState.earlyLightning);
         setStepReady('v3-tl-step2', ready);
         t2.innerHTML = 
-            getRowHtml(iconWater, '早水', 'earlyWater', currentState.earlyWater, '頭割り', 'ひとり受け', 'green', 'red') +
-            getRowHtml(iconLightning, '早雷', 'earlyLightning', currentState.earlyLightning, 'ひとり受け', '頭割り', 'red', 'green');
+            getRowHtml(iconWater, '早水', 'earlyWater', currentState.earlyWater, '頭割', '散開', 'green', 'red') +
+            getRowHtml(iconLightning, '早雷', 'earlyLightning', currentState.earlyLightning, '散開', '頭割', 'red', 'green');
     }
 
     // Step 3: 早視線 ＆ 雷床記録
@@ -373,7 +373,7 @@ function updateTimeline() {
         const ready = isValReady(currentState.earlyEye) && isValReady(currentState.lineLightning);
         setStepReady('v3-tl-step3', ready);
         t3.innerHTML = 
-            getRowHtml(iconEye, '早視線', 'earlyEye', currentState.earlyEye, '見ない', '見る', 'purple', 'yellow') +
+            getRowHtml(iconEye, '1回目視線', 'earlyEye', currentState.earlyEye, '早見ない', '早見る', 'purple', 'yellow') +
             getRowHtml(iconLineLightning, '雷床', 'lineLightning', currentState.lineLightning, '踏まない', '踏む', 'green', 'yellow');
     }
 
@@ -383,7 +383,7 @@ function updateTimeline() {
         const ready = isValReady(currentState.fire);
         setStepReady('v3-tl-step4', ready);
         t4.innerHTML = 
-            getRowHtml(iconFire, 'ほのお', 'fire', currentState.fire, '離れる', '近づく', 'orange', 'blue');
+            getRowHtml(iconFire, 'ほのお', 'fire', currentState.fire, '離れる', 'そのまま', 'orange', 'blue');
     }
 
     // Step 5: 遅水 ＆ 遅雷 ＆ 氷床記録
@@ -392,8 +392,8 @@ function updateTimeline() {
         const ready = isValReady(currentState.lateWater) && isValReady(currentState.lateLightning) && isValReady(currentState.iceFan);
         setStepReady('v3-tl-step5', ready);
         t5.innerHTML = 
-            getRowHtml(iconWater, '遅水', 'lateWater', currentState.lateWater, '頭割り', 'ひとり受け', 'green', 'red') +
-            getRowHtml(iconLightning, '遅雷', 'lateLightning', currentState.lateLightning, 'ひとり受け', '頭割り', 'red', 'green') +
+            getRowHtml(iconWater, '遅水', 'lateWater', currentState.lateWater, '頭割', '散開', 'green', 'red') +
+            getRowHtml(iconLightning, '遅雷', 'lateLightning', currentState.lateLightning, '散開', '頭割', 'red', 'green') +
             getRowHtml(iconIceFan, '氷床', 'iceFan', currentState.iceFan, '踏まない', '踏む', 'green', 'yellow');
     }
 
@@ -403,7 +403,7 @@ function updateTimeline() {
         const ready = isValReady(currentState.lateEye);
         setStepReady('v3-tl-step6', ready);
         t6.innerHTML = 
-            getRowHtml(iconEye, '遅視線', 'lateEye', currentState.lateEye, '見ない', '見る', 'purple', 'yellow');
+            getRowHtml(iconEye, '2回目視線', 'lateEye', currentState.lateEye, '遅見ない', '遅見る', 'purple', 'yellow');
     }
 
     // Step 7: つなみ ＆ 雷床 ＆ 氷床
@@ -412,7 +412,7 @@ function updateTimeline() {
         const ready = isValReady(currentState.water) && isValReady(currentState.lineLightning) && isValReady(currentState.iceFan);
         setStepReady('v3-tl-step7', ready);
         t7.innerHTML = 
-            getRowHtml(iconWave, 'つなみ', 'water', currentState.water, '近づく', '離れる', 'blue', 'orange') +
+            getRowHtml(iconWave, 'つなみ', 'water', currentState.water, 'そのまま', '離れる', 'blue', 'orange') +
             getRowHtml(iconLineLightning, '雷床', 'lineLightning', currentState.lineLightning, '踏まない', '踏む', 'green', 'yellow') +
             getRowHtml(iconIceFan, '氷床', 'iceFan', currentState.iceFan, '踏まない', '踏む', 'green', 'yellow');
     }
