@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
     <title>絶妖星乱舞 カンペアプリ統合</title>
-    <link rel="stylesheet" href="solver-v2.css?v=20260701c">
+    <link rel="stylesheet" href="solver-v2.css?v=20260701d">
     <link rel="stylesheet" href="nav.css?v=20260630g">
     <style>
         .sp-text { display: inline; }
@@ -801,13 +801,15 @@
                             <!-- 水 -->
                             <tr class="debuff-row" id="row-1-water" data-debuff="water">
                                 <td class="debuff-cell">
-                                    <div class="debuff-info">
-                                        <img src="img/water.jpg" alt="水" class="debuff-icon">
-                                        <span>水<span class="en-text"> (Water)</span></span>
-                                    </div>
-                                    <div class="timing-toggle-group">
-                                        <button class="timing-btn" id="gc1-water-early" data-timing="early">早</button>
-                                        <button class="timing-btn" id="gc1-water-late" data-timing="late">遅</button>
+                                    <div class="debuff-cell-inner">
+                                        <div class="debuff-info">
+                                            <img src="img/water.jpg" alt="水" class="debuff-icon">
+                                            <span>水<span class="en-text"> (Water)</span></span>
+                                        </div>
+                                        <div class="timing-toggle-group">
+                                            <button class="timing-btn" id="gc1-water-early" data-timing="early">早</button>
+                                            <button class="timing-btn" id="gc1-water-late" data-timing="late">遅</button>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="effect-cell true-effect" id="1-water-true">頭割</td>
@@ -816,13 +818,15 @@
                             <!-- 雷 -->
                             <tr class="debuff-row" id="row-1-lightning" data-debuff="lightning">
                                 <td class="debuff-cell">
-                                    <div class="debuff-info">
-                                        <img src="img/lightning.jpg" alt="雷" class="debuff-icon">
-                                        <span>雷<span class="en-text"> (Lightning)</span></span>
-                                    </div>
-                                    <div class="timing-toggle-group">
-                                        <button class="timing-btn" id="gc1-lightning-early" data-timing="early">早</button>
-                                        <button class="timing-btn" id="gc1-lightning-late" data-timing="late">遅</button>
+                                    <div class="debuff-cell-inner">
+                                        <div class="debuff-info">
+                                            <img src="img/lightning.jpg" alt="雷" class="debuff-icon">
+                                            <span>雷<span class="en-text"> (Lightning)</span></span>
+                                        </div>
+                                        <div class="timing-toggle-group">
+                                            <button class="timing-btn" id="gc1-lightning-early" data-timing="early">早</button>
+                                            <button class="timing-btn" id="gc1-lightning-late" data-timing="late">遅</button>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="effect-cell true-effect" id="1-lightning-true">散開</td>
@@ -831,9 +835,11 @@
                             <!-- 視線 -->
                             <tr class="debuff-row" id="row-1-sight" data-debuff="sight">
                                 <td class="debuff-cell">
-                                    <div class="debuff-info">
-                                        <img src="img/sight.jpg" alt="視線" class="debuff-icon">
-                                        <span>視線<span class="en-text"> (Sight)</span></span>
+                                    <div class="debuff-cell-inner">
+                                        <div class="debuff-info">
+                                            <img src="img/sight.jpg" alt="視線" class="debuff-icon">
+                                            <span>視線<span class="en-text"> (Sight)</span></span>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="effect-cell true-effect" id="1-sight-true">早見ない</td>
@@ -842,9 +848,11 @@
                             <!-- 加速度 -->
                             <tr class="debuff-row" id="row-1-bomb" data-debuff="bomb">
                                 <td class="debuff-cell">
-                                    <div class="debuff-info">
-                                        <img src="img/bomb.jpg" alt="加速度" class="debuff-icon">
-                                        <span>加速度<span class="en-text"> (Bomb)</span></span>
+                                    <div class="debuff-cell-inner">
+                                        <div class="debuff-info">
+                                            <img src="img/bomb.jpg" alt="加速度" class="debuff-icon">
+                                            <span>加速度<span class="en-text"> (Bomb)</span></span>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="effect-cell true-effect" id="1-bomb-true">止まる</td>
@@ -879,13 +887,15 @@
                             <!-- 水 -->
                             <tr class="debuff-row" id="row-2-water" data-debuff="water">
                                 <td class="debuff-cell">
-                                    <div class="debuff-info">
-                                        <img src="img/water.jpg" alt="水" class="debuff-icon">
-                                        <span>水<span class="en-text"> (Water)</span></span>
-                                    </div>
-                                    <div class="timing-toggle-group">
-                                        <button class="timing-btn" id="gc2-water-early" data-timing="early">早</button>
-                                        <button class="timing-btn" id="gc2-water-late" data-timing="late">遅</button>
+                                    <div class="debuff-cell-inner">
+                                        <div class="debuff-info">
+                                            <img src="img/water.jpg" alt="水" class="debuff-icon">
+                                            <span>水<span class="en-text"> (Water)</span></span>
+                                        </div>
+                                        <div class="timing-toggle-group">
+                                            <button class="timing-btn" id="gc2-water-early" data-timing="early">早</button>
+                                            <button class="timing-btn" id="gc2-water-late" data-timing="late">遅</button>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="effect-cell true-effect" id="2-water-true">頭割</td>
@@ -894,13 +904,15 @@
                             <!-- 雷 -->
                             <tr class="debuff-row" id="row-2-lightning" data-debuff="lightning">
                                 <td class="debuff-cell">
-                                    <div class="debuff-info">
-                                        <img src="img/lightning.jpg" alt="雷" class="debuff-icon">
-                                        <span>雷<span class="en-text"> (Lightning)</span></span>
-                                    </div>
-                                    <div class="timing-toggle-group">
-                                        <button class="timing-btn" id="gc2-lightning-early" data-timing="early">早</button>
-                                        <button class="timing-btn" id="gc2-lightning-late" data-timing="late">遅</button>
+                                    <div class="debuff-cell-inner">
+                                        <div class="debuff-info">
+                                            <img src="img/lightning.jpg" alt="雷" class="debuff-icon">
+                                            <span>雷<span class="en-text"> (Lightning)</span></span>
+                                        </div>
+                                        <div class="timing-toggle-group">
+                                            <button class="timing-btn" id="gc2-lightning-early" data-timing="early">早</button>
+                                            <button class="timing-btn" id="gc2-lightning-late" data-timing="late">遅</button>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="effect-cell true-effect" id="2-lightning-true">散開</td>
@@ -909,9 +921,11 @@
                             <!-- 視線 -->
                             <tr class="debuff-row" id="row-2-sight" data-debuff="sight">
                                 <td class="debuff-cell">
-                                    <div class="debuff-info">
-                                        <img src="img/sight.jpg" alt="視線" class="debuff-icon">
-                                        <span>視線<span class="en-text"> (Sight)</span></span>
+                                    <div class="debuff-cell-inner">
+                                        <div class="debuff-info">
+                                            <img src="img/sight.jpg" alt="視線" class="debuff-icon">
+                                            <span>視線<span class="en-text"> (Sight)</span></span>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="effect-cell true-effect" id="2-sight-true">遅見ない</td>
@@ -920,9 +934,11 @@
                             <!-- 加速度 -->
                             <tr class="debuff-row" id="row-2-bomb" data-debuff="bomb">
                                 <td class="debuff-cell">
-                                    <div class="debuff-info">
-                                        <img src="img/bomb.jpg" alt="加速度" class="debuff-icon">
-                                        <span>加速度<span class="en-text"> (Bomb)</span></span>
+                                    <div class="debuff-cell-inner">
+                                        <div class="debuff-info">
+                                            <img src="img/bomb.jpg" alt="加速度" class="debuff-icon">
+                                            <span>加速度<span class="en-text"> (Bomb)</span></span>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="effect-cell true-effect" id="2-bomb-true">止まる</td>
@@ -953,9 +969,11 @@
                         <tbody>
                             <tr class="debuff-row active">
                                 <td class="debuff-cell default-active">
-                                    <div class="debuff-info">
-                                        <img src="img/fire.jpg" alt="ほのお" class="debuff-icon">
-                                        <span>ほのお</span>
+                                    <div class="debuff-cell-inner">
+                                        <div class="debuff-info">
+                                            <img src="img/fire.jpg" alt="ほのお" class="debuff-icon">
+                                            <span>ほのお</span>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="effect-cell true-effect" id="fire-resolver-true">離れる</td>
@@ -986,9 +1004,11 @@
                         <tbody>
                             <tr class="debuff-row active">
                                 <td class="debuff-cell default-active">
-                                    <div class="debuff-info">
-                                        <img src="img/tsunami.jpg" alt="つなみ" class="debuff-icon">
-                                        <span>つなみ</span>
+                                    <div class="debuff-cell-inner">
+                                        <div class="debuff-info">
+                                            <img src="img/tsunami.jpg" alt="つなみ" class="debuff-icon">
+                                            <span>つなみ</span>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="effect-cell true-effect" id="tsunami-resolver-true">そのまま</td>
@@ -1019,9 +1039,11 @@
                         <tbody>
                             <tr class="debuff-row active">
                                 <td class="debuff-cell default-active">
-                                    <div class="debuff-info">
-                                        <span class="debuff-icon-emoji">⚡</span>
-                                        <span>雷床</span>
+                                    <div class="debuff-cell-inner">
+                                        <div class="debuff-info">
+                                            <span class="debuff-icon-emoji">⚡</span>
+                                            <span>雷床</span>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="effect-cell true-effect" id="lineLightning-resolver-true">踏まない</td>
@@ -1052,9 +1074,11 @@
                         <tbody>
                             <tr class="debuff-row active">
                                 <td class="debuff-cell default-active">
-                                    <div class="debuff-info">
-                                        <span class="debuff-icon-emoji">❄️</span>
-                                        <span>氷床</span>
+                                    <div class="debuff-cell-inner">
+                                        <div class="debuff-info">
+                                            <span class="debuff-icon-emoji">❄️</span>
+                                            <span>氷床</span>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="effect-cell true-effect" id="iceFan-resolver-true">踏まない</td>
