@@ -2,7 +2,7 @@
     --bg-color: #121214;
     --card-bg: #1e1e24;
     --text-color: #e2e8f0;
-    --accent-true: #22c55e;
+    --accent-true: #3b82f6;
     --accent-false: #ef4444;
     --btn-idle: #334155;
     --border-color: #2d3748;
@@ -383,7 +383,7 @@ body.pc-mode .page-select {
 }
 
 .truth-header-btn.active-true {
-    background-color: rgba(34, 197, 94, 0.15);
+    background-color: rgba(59, 130, 246, 0.15);
     border-color: var(--accent-true);
     color: var(--accent-true) !important;
 }
@@ -511,10 +511,10 @@ body.pc-mode .debuff-info {
 
 /* ボスの真偽が一致して、さらにデバフがアクティブな場合のハイライト */
 .debuff-row.active .effect-cell.highlight-true {
-    background-color: rgba(34, 197, 94, 0.18);
+    background-color: rgba(59, 130, 246, 0.18);
     color: var(--accent-true);
     font-size: 0.8rem;
-    box-shadow: inset 0 0 2px rgba(34, 197, 94, 0.1);
+    box-shadow: inset 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
 .debuff-row.active .effect-cell.highlight-false {
@@ -876,7 +876,7 @@ body.pc-mode .solver-timeline {
     color: #cbd5e1;
 }
 .debuff-row.active .debuff-cell.default-active.lit-true {
-    background-color: rgba(34, 197, 94, 0.18);
+    background-color: rgba(59, 130, 246, 0.18);
     border-color: var(--accent-true);
     color: var(--accent-true);
 }

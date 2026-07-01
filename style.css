@@ -2,7 +2,7 @@
     --bg-color: #121214;
     --card-bg: #1e1e24;
     --text-color: #e2e8f0;
-    --accent-true: #22c55e;
+    --accent-true: #3b82f6;
     --accent-false: #ef4444;
     --btn-idle: #334155;
     --border-color: #2d3748;
@@ -259,8 +259,8 @@ h1 {
 
 .action-btn.active-true {
     background-color: var(--accent-true);
-    color: #052e16;
-    box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+    color: #172554;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
 }
 
 .action-btn.active-false {
@@ -657,7 +657,7 @@ body.hud-mode #tl-step7 {
 /* ギミックアイコンの点灯：ほのお・つなみ・雷床・氷床で真偽が選択されたらアイコンを光らせる（真=緑 / 偽=赤） */
 /* ギミック欄の点灯：真偽が選択されたらギミックのラベル行をGCのように色付け（真=緑 / 偽=赤） */
 .label-row.lit-true {
-    background-color: rgba(34, 197, 94, 0.18);
+    background-color: rgba(59, 130, 246, 0.18);
     border: 1px solid var(--accent-true);
     color: var(--accent-true);
     border-radius: 4px;
