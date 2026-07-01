@@ -100,8 +100,8 @@ function updateTimeline() {
         const ready = isValReady(currentState.earlyWater) && isValReady(currentState.earlyLightning);
         setStepReady('tl-step2', ready);
         t2.innerHTML = 
-            getRowHtml(iconWater, '早水', 'earlyWater', currentState.earlyWater, '頭割', '散開', 'green', 'red') +
-            getRowHtml(iconLightning, '早雷', 'earlyLightning', currentState.earlyLightning, '散開', '頭割', 'red', 'green');
+            getRowHtml(iconWater, '早水', 'earlyWater', currentState.earlyWater, '頭割', '散開', 'blue', 'red') +
+            getRowHtml(iconLightning, '早雷', 'earlyLightning', currentState.earlyLightning, '散開', '頭割', 'red', 'blue');
     }
 
     // Step 3: 早視線 ＆ 雷床記録
@@ -111,7 +111,7 @@ function updateTimeline() {
         setStepReady('tl-step3', ready);
         t3.innerHTML = 
             getRowHtml(iconEye, '早視線', 'earlyEye', currentState.earlyEye, '早見ない', '早見る', 'purple', 'yellow') +
-            getRowHtml(iconLineLightning, '雷床', 'lineLightning', currentState.lineLightning, '踏まない', '踏む', 'green', 'yellow');
+            getRowHtml(iconLineLightning, '雷床', 'lineLightning', currentState.lineLightning, '踏まない', '踏む', 'blue', 'yellow');
     }
 
     // Step 4: ほのお
@@ -129,9 +129,9 @@ function updateTimeline() {
         const ready = isValReady(currentState.lateWater) && isValReady(currentState.lateLightning) && isValReady(currentState.iceFan);
         setStepReady('tl-step5', ready);
         t5.innerHTML = 
-            getRowHtml(iconWater, '遅水', 'lateWater', currentState.lateWater, '頭割', '散開', 'green', 'red') +
-            getRowHtml(iconLightning, '遅雷', 'lateLightning', currentState.lateLightning, '散開', '頭割', 'red', 'green') +
-            getRowHtml(iconIceFan, '氷床', 'iceFan', currentState.iceFan, '踏まない', '踏む', 'green', 'yellow');
+            getRowHtml(iconWater, '遅水', 'lateWater', currentState.lateWater, '頭割', '散開', 'blue', 'red') +
+            getRowHtml(iconLightning, '遅雷', 'lateLightning', currentState.lateLightning, '散開', '頭割', 'red', 'blue') +
+            getRowHtml(iconIceFan, '氷床', 'iceFan', currentState.iceFan, '踏まない', '踏む', 'blue', 'yellow');
     }
 
     // Step 6: 遅視線
@@ -150,8 +150,8 @@ function updateTimeline() {
         setStepReady('tl-step7', ready);
         t7.innerHTML = 
             getRowHtml(iconWave, 'つなみ', 'water', currentState.water, 'そのまま', '離れる', 'blue', 'orange') +
-            getRowHtml(iconLineLightning, '雷床', 'lineLightning', currentState.lineLightning, '踏まない', '踏む', 'green', 'yellow') +
-            getRowHtml(iconIceFan, '氷床', 'iceFan', currentState.iceFan, '踏まない', '踏む', 'green', 'yellow');
+            getRowHtml(iconLineLightning, '雷床', 'lineLightning', currentState.lineLightning, '踏まない', '踏む', 'blue', 'yellow') +
+            getRowHtml(iconIceFan, '氷床', 'iceFan', currentState.iceFan, '踏まない', '踏む', 'blue', 'yellow');
     }
 }
 
