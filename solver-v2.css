@@ -418,7 +418,8 @@ h1 {
     font-weight: bold;
     color: #cbd5e1;
     cursor: pointer;
-    padding: 0;
+    padding: 4px 5px;
+    border-radius: 3px;
     transition: all 0.15s ease;
 }
 
@@ -426,13 +427,10 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: space-between; /* Push name to left, timing group to right */
-    /* 横幅が足りない時は早/遅トグルを名前の下へ折り返し、隣の真/偽列へ
+    /* 横幅が足りない時は早/遅トグルを名前の下へ折り返し、隣 of 真/偽列へ
        はみ出してかぶらないようにする（特にPC表示で英名が出ると幅を食うため） */
     flex-wrap: wrap;
     gap: 4px;
-    border-radius: 3px;
-    padding: 4px 5px;
-    border: 1px solid transparent;
     white-space: nowrap;
     width: 100%;
     box-sizing: border-box;
@@ -481,7 +479,7 @@ h1 {
 }
 
 
-.debuff-cell:hover .debuff-cell-inner {
+.debuff-cell:hover {
     background-color: rgba(255, 255, 255, 0.05);
 }
 
@@ -505,12 +503,10 @@ h1 {
     flex-shrink: 0;
 }
 
-.debuff-row.active .debuff-cell .debuff-cell-inner {
-    background-color: rgba(56, 189, 248, 0.15);
-    border-color: var(--sky-blue);
-}
 .debuff-row.active .debuff-cell {
     color: var(--sky-blue);
+    background-color: rgba(56, 189, 248, 0.15);
+    box-shadow: inset 0 0 0 1px var(--sky-blue);
 }
 
 .debuff-row.inactive {
@@ -673,11 +669,11 @@ h1 {
 
     body.pc-mode .debuff-cell {
         font-size: 1.05rem;
-        padding: 0;
+        padding: 8px 10px;
     }
 
     body.pc-mode .debuff-cell-inner {
-        padding: 8px;
+        padding: 0;
         gap: 8px;
     }
 
@@ -916,26 +912,37 @@ h1 {
 /* ギミックアイコンの点灯：ほのお・つなみ・雷床・氷床で真偽が選択されたらアイコンを光らせる（真=緑 / 偽=赤） */
 /* ギミック欄はデフォルトでは無強調（GCの未選択セルと同じ）。ギミック行は常時 active のため、
    .default-active で GC のアクティブ青を打ち消し、真偽選択時のみ lit-* で緑/赤に点灯させる。 */
-.debuff-row.active .debuff-cell.default-active .debuff-cell-inner {
-    background-color: transparent;
-    border-color: transparent;
-}
 .debuff-row.active .debuff-cell.default-active {
     color: #cbd5e1;
-}
-.debuff-row.active .debuff-cell.default-active.lit-true .debuff-cell-inner {
-    background-color: rgba(59, 130, 246, 0.18);
-    border-color: var(--accent-true);
+    background-color: transparent;
+    box-shadow: none;
 }
 .debuff-row.active .debuff-cell.default-active.lit-true {
     color: var(--accent-true);
-}
-.debuff-row.active .debuff-cell.default-active.lit-false .debuff-cell-inner {
-    background-color: rgba(239, 68, 68, 0.18);
-    border-color: var(--accent-false);
+    background-color: rgba(59, 130, 246, 0.18);
+    box-shadow: inset 0 0 0 1px var(--accent-true);
 }
 .debuff-row.active .debuff-cell.default-active.lit-false {
     color: var(--accent-false);
+    background-color: rgba(239, 68, 68, 0.18);
+    box-shadow: inset 0 0 0 1px var(--accent-false);
+}
+
+/* ダークモード限定：ハイライト時の文字色白上書き（可読性向上） */
+body:not(.theme-light) .debuff-row.active .effect-cell.highlight-true,
+body:not(.theme-light) .debuff-row.active .effect-cell.highlight-false {
+    color: #ffffff;
+}
+body:not(.theme-light) .debuff-row.active .debuff-cell.default-active.lit-true,
+body:not(.theme-light) .debuff-row.active .debuff-cell.default-active.lit-false {
+    color: #ffffff;
+}
+body:not(.theme-light) .debuff-row.active .debuff-cell {
+    color: #ffffff;
+}
+body:not(.theme-light) .truth-header-btn.active-true,
+body:not(.theme-light) .truth-header-btn.active-false {
+    color: #ffffff !important;
 }
 
 /* =====================================================================
